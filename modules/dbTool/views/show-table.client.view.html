@@ -1,0 +1,51 @@
+<section data-ng-controller="ShowTableCtrl">
+	<div style="text-align:center;">
+		<h3>{{newQuery.name}}</h3>
+	</div>
+	<div class="col-sm-12">
+		<table st-table="currentData.query" class="table table-striped">
+			<thead>
+				<tr>
+					<th></th>
+					<th lr-drag-src="headers" lr-drop-target="headers" ng-repeat="header in currentData.tableHeaders" style="font-size:14px;min-width:150px;" >
+						{{header}}
+						<span class="dropdown">
+							<a href="" class="dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
+								<ul class="dropdown-menu" role="menu">
+									<li>
+										<a href="" ng-click="removeColumn(header)">Remove Column</a>
+									</li>
+									<li>
+										<a href="" ng-click="sortAsc(header)">Sort Ascending</a>
+									</li>
+									<li>
+										<a href="" ng-click="sortDesc(header)">Sort Descending</a>
+									</li>
+									<li>
+										<a href="" ng-click="showQueryModal(header)">Query Server</a>
+									</li>
+								</ul>							
+						</span>
+					</th>
+				</tr>
+				<tr>
+					<th></th>
+					<th ng-repeat="header in currentData.tableHeaders">
+						<input class="input-sm form-control" st-search="{{header}}" style="min-width:150px;" type="search"></input>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="row in currentData.query">
+					<td>
+						<button type="button" ng-click="removeItem(row)" class="btn btn-sm btn-danger">X
+						</button>
+					</td>
+					<td ng-repeat="key in currentData.tableHeaders" style="min-width:150px;">
+						{{row[key]}}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</section>
