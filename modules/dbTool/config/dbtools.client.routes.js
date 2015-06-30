@@ -17,7 +17,7 @@ angular.module('dbtools').config(['$stateProvider', '$urlRouterProvider', '$loca
 			templateUrl: 'modules/dbTool/views/new-table.client.view.html'
 		})
 		.state('dbtools.table', {
-			url:'/:database/:table',
+			url:'/:table',
 			templateUrl: 'modules/dbTool/views/show-table.client.view.html'
 		})
 		.state('dbtools.new',{

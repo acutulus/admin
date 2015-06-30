@@ -2,61 +2,18 @@
 	<header class="navbar navbar-fixed-top navbar-inverse">
 		<section class="container">
 			<a class="navbar-brand" href="#!/app">Management</a>
-			<ul class="nav navbar-nav" data-ng-show="authentication.user">
+			<ul class="nav navbar-nav">
 				<li class="dropdown">
-					<a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{currentDatabase.dbName || 'Select Database' }} <span class="caret"></span></a>
+					<a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{currentTable || 'Select Table'}}<span class="caret"></span></a>
 					<ul class="dropdown-menu" role="menu">
-						<li ng-repeat="db in databases"><a  href="" ng-click="selectDb(db)">
-							{{db.dbName}}
-						</a></li>
-						<li><a href="#!/dbtools/newDatabase">Add New Database</a></li>
-					</ul>
-				</li>
-				<li class="dropdown" ng-show="currentDatabase">
-					<a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{currentTable.name || 'Select Table'}}<span class="caret"></span></a>
-					<ul class="dropdown-menu" role="menu">
-						<li ng-repeat="table in currentDatabase.schemas">
-							<a href="#!/dbtools/{{currentDatabase._id}}/{{table.name}}" ng-click="selectTable(table)">{{table.name}}</a>
-						</li>
-						<li><a href="#!/dbtools/{{currentDatabase._id}}/newTable">New Table</a></li>
-					</ul>
-				</li>
-			</ul>
-			<ul class="nav navbar-nav navbar-right" data-ng-hide="authentication.user">
-				<li class="divider-vertical"></li>
-				<li ui-route="/signin" ng-class="{active: $uiRoute}">
-					<a href="/#!/signin">Sign In</a>
-				</li>
-			</ul>
-			<ul class="nav navbar-nav navbar-right" data-ng-show="authentication.user">
-				<li class="dropdown">
-					<a href="" class="dropdown-toggle" data-toggle="dropdown">
-						<div class="profilePic-wrapper">
-							<div class="profilePic" style="background-image:url('{{authentication.user.profilePic}}');">
-							</div>
-						</div>
-						<span data-ng-bind="authentication.user.displayName"></span> <b class="caret"></b>
-					</a>
-					<ul class="dropdown-menu">
-						<li>
-							<a href="/#!/settings/profile">Edit Profile</a>
-						</li>
-						<li>
-							<a href="/#!/settings/accounts">Manage Social Accounts</a>
-						</li>
-						<li data-ng-show="authentication.user.provider === 'local'">
-							<a href="/#!/settings/password">Change Password</a>
-						</li>
-						<li class="divider"></li>
-						<li>
-							<a href="/auth/signout">Signout</a>
+						<li ng-repeat="table in currentDatabase">
+							<a href="#!/dbtools/{{table}}" ng-click="selectTable(table)">{{table}}</a>
 						</li>
 					</ul>
 				</li>
 			</ul>
 		</section>
 	</header>	
-	<link rel="stylesheet" href="/modules/dbTool/css/dbtools.css">
 
 	<div class="buffer-header" style="margin-top:70px;"></div>
 	<section data-ui-view></section>

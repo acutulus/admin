@@ -1,27 +1,18 @@
 'use strict';
 
 angular.module('dbtools')
-.controller('DBToolsController', ['$scope', '$stateParams', '$location', 'Authentication', '$http','$timeout','$modal','DataService', 
-	function($scope, $stateParams, $location, Authentication, $http, $timeout, $modal, DataService){
+.controller('DBToolsController', ['$scope', '$stateParams', '$location', '$http','$timeout','$modal','DataService', 
+	function($scope, $stateParams, $location, $http, $timeout, $modal, DataService){
 		
-		$scope.authentication = Authentication	
 		/*Grab All the Database information in the projects Database*/
-		$scope.databases;
-		$scope.currentDatabase;
-		if($scope.authentication.user){
-			console.log('got projects');
-			DataService.getQuery('projects').then(function(data){
-				$scope.databases = data;
-				if($stateParams.database){
-					for(var x in data){
-						if(data[x]._id === $stateParams.database){
-							$scope.currentDatabase = data[x];
-							checkTable();
-						}
-					}
-				}
-			})
-		}
+		$scope.currentDatabase = [];
+		DataService.getQuery('admin/schemas')
+		.then(function(data){
+
+			for(var x in data){
+				$scope.currentDatabase.push(x + 's');
+			}
+		});	
 		var checkTable = function(){
 			for(var x in $scope.currentDatabase.schemas){
 				if($stateParams.table === $scope.currentDatabase.schemas[x].name){
