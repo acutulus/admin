@@ -1,0 +1,7 @@
+<div class="modal-body" >	
+	<div ng-repeat="(key,value) in editItem">
+		<label>{{key}}</label>
+		<input ng-model="editItem[key]"></input>
+	</div>
+	<button class="btn btn-success" ng-click="submit()">Submit</button>
+</div>

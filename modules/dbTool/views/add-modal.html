@@ -1,0 +1,7 @@
+<div class="modal-body" >	
+	<div ng-repeat="(key,value) in newItemSchema">
+		<label>{{key}} ({{value.type}})</label>
+		<input ng-model="newItem[key]"></input>
+	</div>
+	<button class="btn btn-success" ng-click="submit()">Submit</button>
+</div>

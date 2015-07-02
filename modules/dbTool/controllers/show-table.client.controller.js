@@ -23,14 +23,14 @@ angular.module('dbtools')
 			DataService.getQuery('admin/rest/' + $scope.newQuery.name)
 			.then(function(data){
 				$scope.currentData.query = data;
-				//build a schema array to check if field is a table reference
+				//parse 's' off of table names
 				var table = $scope.newQuery.name.slice(0, $scope.newQuery.name.length - 1);
 				var currentSchema = false;
 				if(data.length > 0){
 					currentSchema = true;
 				}
 
-				//build the headers
+				//build the headers, check if ID or not
 				if(!currentSchema){
 					$scope.currentData.tableHeaders.push('no data');
 					$scope.currentData.query = [{'no data':'No Data in this Table'}];
@@ -42,8 +42,6 @@ angular.module('dbtools')
 							$scope.currentData.tableHeaderNames.push(x);
 							$scope.currentData.tableHeaders.push({name:x,id:schemaName})
 						}else{
-														console.log(x, 'tfasle')
-
 							$scope.currentData.tableHeaderNames.push(x);
 							$scope.currentData.tableHeaders.push({name:x,id:false})
 						}
@@ -147,7 +145,6 @@ angular.module('dbtools')
 						}
 					}
 				}
-
 				console.log(idArray);
 				for(var x in idArray){
 					DataService.get('admin/rest/'+selectedTable.id +'s', idArray[x]).then(function(data){
@@ -167,6 +164,41 @@ angular.module('dbtools')
 				}
 
 			});
+		}
+
+		//edit with modal
+		$scope.editItem = function(item){
+			var editModal = $modal.open({
+				templateUrl:'modules/dbTool/views/edit-modal.html',
+				controller:'EditModalCtrl',
+				resolve:{
+					item:function(){
+						return item;
+					}
+				}
+			})
+
+			editModal.result.then(function(updatedModel){
+
+				DataService.update('admin/rest/' + $scope.newQuery.name + '/' + updatedModel._id, updatedModel)
+				.then(function(data){
+					console.log(data);
+				})
+
+			})
+		}
+
+		$scope.addItem = function(){
+			var table = $scope.newQuery.name.slice(0, $scope.newQuery.name.length - 1)
+			var addModal = $modal.open({
+				templateUrl:'modules/dbTool/views/add-modal.html',
+				controller:'AddModalCtrl',
+				resolve:{
+					schema:function(){
+						return $scope.databaseSchemas[table];
+					}
+				}
+			})
 		}
 
 	}

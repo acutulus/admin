@@ -6,7 +6,10 @@
 		<table st-table="currentData.query" class="table table-striped">
 			<thead>
 				<tr>
-					<th></th>
+					<th>	
+						<button style="margin:0 auto;padding:0" type="button" ng-click="addItem()" class="btn btn-sm btn-success"><span class="glyphicon glyphicon-plus"></span>
+						</button>
+					</th>
 					<th lr-drag-src="headers" lr-drop-target="headers" ng-repeat="header in currentData.tableHeaders" style="font-size:14px;min-width:150px;" >
 						{{header.name}}
 						<span class="dropdown">
@@ -31,19 +34,18 @@
 						</span>
 					</th>
 				</tr>
-				<tr>
-					<th></th>
-					<th ng-repeat="header in currentData.tableHeaders">
-						<input class="input-sm form-control" st-search="{{header}}" style="min-width:150px;" type="search"></input>
-					</th>
-				</tr>
 			</thead>
 			<tbody>
 				<tr ng-repeat="row in currentData.query">
-					<td>
-						<button type="button" ng-click="removeItem(row)" class="btn btn-sm btn-danger">X
-						</button>
+					<td style="display:inline-block;width:70px;">
+						<div class="btn-group">
+							<button style="margin:0 auto;padding:0" type="button" ng-click="removeItem(row)" class="btn btn-sm btn-danger"><span class="glyphicon glyphicon-remove"></span>
+							</button>
+							<button style="margin:0 auto;padding:0" type="button" ng-click="editItem(row)" class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-pencil"></span>
+							</button>
+						</div>
 					</td>
+					
 					<td ng-repeat="key in currentData.tableHeaders" style="min-width:150px;">
 						{{row[key.name]}}
 					</td>
