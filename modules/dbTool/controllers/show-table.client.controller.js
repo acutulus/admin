@@ -199,6 +199,16 @@ angular.module('dbtools')
 					}
 				}
 			})
+			//NEED TO CLEAN UP INPUT ERROR CHECKING AND ADD IN POST
+			addModal.result.then(function(newItem){
+				console.log(newItem);
+
+				/*DataService.add('admin/rest/' + $scope.newQuery.name, newItem)
+				.then(function(data){
+					console.log(data)
+				})*/
+
+			})
 		}
 
 	}
