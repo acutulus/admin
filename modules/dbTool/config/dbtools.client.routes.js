@@ -24,5 +24,9 @@ angular.module('dbtools').config(['$stateProvider', '$urlRouterProvider', '$loca
 			url:'/newDatabase',
 			templateUrl:'modules/dbTool/views/new-database.client.view.html'
 		})
+		.state('signin',{
+			url:'/signin',
+			templateUrl:'modules/dbTool/views/signin.html'
+		})
 	}
 ]);
