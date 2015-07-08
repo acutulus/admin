@@ -52,6 +52,10 @@
         var user = null;
         var userCallback = function(usr) {
             user = usr;
+            if (typeof user === 'undefined' || !user.admin) {
+            	alert('Not an Admin');
+            	location.href = '/admin/#!/signin';
+            }
         };
     </script>
     <script type="text/javascript" src="/users/me?callback=userCallback"></script>	
