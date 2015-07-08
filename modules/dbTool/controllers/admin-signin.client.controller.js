@@ -5,7 +5,9 @@ angular.module('dbtools').controller('AdminSigninController', ['$scope', '$http'
 		$scope.authentication = Authentication;
 
 		// If user is signed in then redirect back home
-		if ($scope.authentication.user.admin) $location.path('/admin');
+		if($scope.authentication.user){
+			if ($scope.authentication.user.admin) $location.path('/admin');
+		}
 
 		$scope.signin = function() {
 			$http.post('/auth/signin', $scope.credentials).success(function(response) {
