@@ -6,7 +6,7 @@ angular.module('dbtools')
 		
 		/*Grab All the Database information in the projects Database*/
 		$scope.currentDatabase = [];
-		DataService.getQuery('admin/schemas')
+		DataService.getQuery('admin/models')
 		.then(function(data){
 
 			for(var x in data){

@@ -5,7 +5,7 @@ angular.module('dbtools')
 	function($scope, DataService, $stateParams, $modal){
 
 
-		//hold query arguments
+		//hold query arguments, newQuery.query holds all the current data
 		$scope.newQuery = {};
 		$scope.newQuery.name = $stateParams.table;
 		$scope.newQuery.query = {}; 
@@ -14,39 +14,61 @@ angular.module('dbtools')
 		$scope.currentData = {};
 		$scope.currentData.tableHeaders = [];
 		$scope.currentData.tableHeaderNames = [];
-
-		$scope.schemas;
-		DataService.getQuery('admin/schemas')
+		
+		//get list of schemas for project
+		DataService.getQuery('admin/models')
 		.then(function(data){
 			$scope.databaseSchemas = data;
 			console.log($scope.databaseSchemas)
+			//get data for selected schema
 			DataService.getQuery('admin/rest/' + $scope.newQuery.name)
 			.then(function(data){
+				
+				//set up data as objects to preserve id field
+				for(var x in data){
+					for(var y in data[x]){
+						data[x][y] = {
+							id:data[x][y],
+							value:data[x][y]
+						}
+					}
+				}
 				$scope.currentData.query = data;
 				//parse 's' off of table names
 				var table = $scope.newQuery.name.slice(0, $scope.newQuery.name.length - 1);
-				var currentSchema = false;
-				if(data.length > 0){
-					currentSchema = true;
-				}
 
-				//build the headers, check if ID or not
-				if(!currentSchema){
+				//for iterating over current schema
+				var currentSchema = $scope.databaseSchemas[table].schema;
+				var currentProperties;
+
+				//if no data returned set to display no data message
+				if(data.length < 1){
 					$scope.currentData.tableHeaders.push('no data');
 					$scope.currentData.query = [{'no data':'No Data in this Table'}];
+
+				//data found set tableheaders and ID
 				}else{
-					for(var x in $scope.databaseSchemas[table]){
-						if(x in $scope.databaseSchemas || $scope.databaseSchemas[table][x].type.indexOf(':') > -1){
-							var schemaName = $scope.databaseSchemas[table][x].type.slice(1);
-							console.log(schemaName)
-							$scope.currentData.tableHeaderNames.push(x);
-							$scope.currentData.tableHeaders.push({name:x,id:schemaName})
+					for(var x in currentSchema){
+						if(currentSchema[x].type){
+							//check if field is a reference
+							if(currentSchema[x].type.indexOf(':') > -1){
+								currentProperties = $scope.databaseSchemas[currentSchema[x].type.slice(1)].properties;
+								$scope.currentData.tableHeaderNames.push(x);
+								$scope.currentData.tableHeaders.push({name:x,
+																	  displayAs:currentProperties.displayAs,
+																	  model:currentSchema[x].type.slice(1)})
+								//populate currentData.query reference fields with displayAs values
+								console.log('passingdispalys', currentProperties)
+								populateDisplayAs(x, currentSchema[x].type.slice(1), currentProperties.displayAs);
+							}else{
+								$scope.currentData.tableHeaderNames.push(x);
+								$scope.currentData.tableHeaders.push({name:x,model:false})
+							}
 						}else{
 							$scope.currentData.tableHeaderNames.push(x);
-							$scope.currentData.tableHeaders.push({name:x,id:false})
+							$scope.currentData.tableHeaders.push({name:x,model:false})
 						}
 					}
-			
 				}
 			});
 		});
@@ -71,8 +93,9 @@ angular.module('dbtools')
 
 		$scope.sortAsc = function(key){
 			$scope.currentData.query.sort(function(a,b){
-				if(a[key.name]<b[key.name])return -1;
-				if(a[key.name]>b[key.name])return 1;
+				if(!a[key.name])return -1;
+				if(a[key.name].value<b[key.name].value)return -1;
+				if(a[key.name].value>b[key.name].value)return 1;
 				return 0;
 			})
 
@@ -80,8 +103,9 @@ angular.module('dbtools')
 
 		$scope.sortDesc = function(key){
 			$scope.currentData.query.sort(function(a,b){
-				if(a[key.name]<b[key.name]) return 1;
-				if(a[key.name]>b[key.name]) return -1;
+				if(!a[key.name])return -1;
+				if(a[key.name].value<b[key.name].value) return 1;
+				if(a[key.name].value>b[key.name].value) return -1;
 				return 0;
 			})
 		}
@@ -123,7 +147,7 @@ angular.module('dbtools')
 		}
 
 		$scope.populateIdField = function(selectedTable){
-			var table = $scope.databaseSchemas[selectedTable.id];
+			var table = $scope.databaseSchemas[selectedTable.model].schema;
 
 			var populateModal = $modal.open({
 					templateUrl:'modules/dbTool/views/populate-modal.html',
@@ -134,29 +158,36 @@ angular.module('dbtools')
 						}
 					}
 				})
+
 			populateModal.result.then(function(selectedField){
 				var idArray = [];
 				for(var x in $scope.currentData.query){
+					//has already been populated and contains id/value object
 					if($scope.currentData.query[x][selectedTable.name]){
-						var id = $scope.currentData.query[x][selectedTable.name];
-						if(id in idArray){
+						var id = $scope.currentData.query[x][selectedTable.name].id;
+						if(idArray.indexOf(id) > -1){
 						}else{
 							idArray.push(id);
 						}
 					}
 				}
-				console.log(idArray);
+
 				for(var x in idArray){
-					DataService.get('admin/rest/'+selectedTable.id +'s', idArray[x]).then(function(data){
+					DataService.get('admin/rest/'+selectedTable.model +'s', idArray[x]).then(function(data){
 						//create object to store the new values
 						var newValues = {};
 						newValues[data._id] = data[selectedField]
-						
+						console.log('newvals', newValues)
 						//run through currentData replacing with value
 						for(x in $scope.currentData.query){
-							//see if _id in newValues
-							if(newValues[$scope.currentData.query[x][selectedTable.name]]){
-								$scope.currentData.query[x][selectedTable.name] = newValues[$scope.currentData.query[x][selectedTable.name]];
+							if($scope.currentData.query[x][selectedTable.name]){
+								//see if _id in newValues
+								if(newValues[$scope.currentData.query[x][selectedTable.name].id]){
+									$scope.currentData.query[x][selectedTable.name] = {
+													value : newValues[$scope.currentData.query[x][selectedTable.name].id],
+													id : $scope.currentData.query[x][selectedTable.name].id
+													};
+								}
 							}
 						}
 
@@ -211,5 +242,44 @@ angular.module('dbtools')
 			})
 		}
 
-	}
+		var populateDisplayAs = function(field, model, displayAs){
+			console.log('dispalyas', displayAs)
+			var idArray = [];
+			for(var x in $scope.currentData.query){
+				//has already been populated and contains id/value object
+				if($scope.currentData.query[x][field]){
+					var id = $scope.currentData.query[x][field].id;
+					if(idArray.indexOf(id) > -1){
+					}else{
+						idArray.push(id);
+					}
+				}
+			}
+			console.log('ID ARRAY FOR', field, '   ', idArray)
+			for(var x in idArray){
+				DataService.get('admin/rest/'+model+'s', idArray[x]).then(function(data){
+					console.log('data return', data)
+					//create object to store the new values
+					var newValues = {};
+					newValues[data._id] = data[displayAs]
+					console.log('newvals', newValues, field)
+					//run through currentData replacing with value
+					for(x in $scope.currentData.query){
+						if($scope.currentData.query[x][field]){
+							//see if _id in newValues
+							if(newValues[$scope.currentData.query[x][field].id]){
+
+								$scope.currentData.query[x][field] = {
+												value : newValues[$scope.currentData.query[x][field].id],
+												id : $scope.currentData.query[x][field].id
+												};			
+							}
+						}
+					}
+					console.log($scope.currentData.query)
+				})
+			}
+		}
+
+	}//end controller
 ]);

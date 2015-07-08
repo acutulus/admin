@@ -27,7 +27,7 @@
 									<li>
 										<a href="" ng-click="showQueryModal(header)">Query Server</a>
 									</li>
-									<li ng-show="header.id"> 
+									<li ng-show="header.model"> 
 										<a href="" ng-click="populateIdField(header)">Populate Id</a>
 									</li>
 								</ul>							
@@ -47,7 +47,7 @@
 					</td>
 					
 					<td ng-repeat="key in currentData.tableHeaders" style="min-width:150px;">
-						{{row[key.name]}}
+						{{row[key.name].value}}
 					</td>
 				</tr>
 			</tbody>
