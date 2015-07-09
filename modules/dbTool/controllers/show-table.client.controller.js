@@ -220,13 +220,35 @@ angular.module('dbtools')
 		}
 
 		$scope.addItem = function(){
-			var table = $scope.newQuery.name.slice(0, $scope.newQuery.name.length - 1)
+			var table = {};
+			table = $scope.currentData.tableHeaders;
+			var passData = [];
+			//build an object with dropdown data for reference fields
+			for(var x in table){
+				if(table[x].model){
+					//reference, build array of options/choices
+					passData.push({name:table[x].name,options:[]});
+					var foundIds = []//for fast duplicate checking
+					var currentItem;
+					for(var y in $scope.currentData.query){
+						currentItem = $scope.currentData.query[y][table[x].model];
+						if(foundIds.indexOf(currentItem.id) > -1){
+
+						}else{
+							foundIds.push(currentItem.id);
+							passData[x].options.push(currentItem);
+						}
+					}					
+				}else{
+					passData.push({name:table[x].name, options:false})
+				}
+			}
 			var addModal = $modal.open({
 				templateUrl:'modules/dbTool/views/add-modal.html',
 				controller:'AddModalCtrl',
 				resolve:{
-					schema:function(){
-						return $scope.databaseSchemas[table];
+					passData:function(){
+						return passData;
 					}
 				}
 			})
@@ -243,7 +265,6 @@ angular.module('dbtools')
 		}
 
 		var populateDisplayAs = function(field, model, displayAs){
-			console.log('dispalyas', displayAs)
 			var idArray = [];
 			for(var x in $scope.currentData.query){
 				//has already been populated and contains id/value object
@@ -255,7 +276,6 @@ angular.module('dbtools')
 					}
 				}
 			}
-			console.log('ID ARRAY FOR', field, '   ', idArray)
 			for(var x in idArray){
 				DataService.get('admin/rest/'+model+'s', idArray[x]).then(function(data){
 					console.log('data return', data)
@@ -276,7 +296,6 @@ angular.module('dbtools')
 							}
 						}
 					}
-					console.log($scope.currentData.query)
 				})
 			}
 		}

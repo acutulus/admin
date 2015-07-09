@@ -1,7 +1,22 @@
 <div class="modal-body" >	
-	<div ng-repeat="(key,value) in newItemSchema">
-		<label>{{key}} ({{value.type}})</label>
-		<input ng-model="newItem[key]"></input>
+	<div ng-repeat="field in passData">
+		<div ng-if="!field.options">
+			<label>{{field.name}}</label>
+			<input ng-model="newItem[field.name]"></input>
+		</div>
+		<div ng-if="field.options">
+			<label>{{field.name}}</label>
+			<div class="dropdown" style="display:inline-block;">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+					<span data-ng-bind="newItem[field.name]"></span> <b class="caret"></b>
+				</a>
+				<ul class="dropdown-menu">
+					<li ng-repeat="option in field.options">
+						<a href="" ng-click="newItem[field.name]=option.id">{{option.value}}, {{option.id}}</a> 
+					</li>
+				</ul>
+			</div>
+		</div>
 	</div>
 	<button class="btn btn-success" ng-click="submit()">Submit</button>
 </div>
