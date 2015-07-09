@@ -234,10 +234,10 @@ angular.module('dbtools')
 			addModal.result.then(function(newItem){
 				console.log(newItem);
 
-				/*DataService.add('admin/rest/' + $scope.newQuery.name, newItem)
+				DataService.add('admin/rest/' + $scope.newQuery.name, newItem)
 				.then(function(data){
 					console.log(data)
-				})*/
+				})
 
 			})
 		}
