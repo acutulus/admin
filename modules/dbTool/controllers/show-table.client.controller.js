@@ -291,11 +291,9 @@ angular.module('dbtools')
 			}
 			for(var x in idArray){
 				DataService.get('admin/rest/'+model+'s', idArray[x]).then(function(data){
-					console.log('data return', data)
 					//create object to store the new values
 					var newValues = {};
 					newValues[data._id] = data[displayAs]
-					console.log('newvals', newValues, field)
 					//run through currentData replacing with value
 					for(x in $scope.currentData.query){
 						if($scope.currentData.query[x][field]){
