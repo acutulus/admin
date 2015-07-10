@@ -2,7 +2,10 @@
 
 angular.module('dbtools').controller('EditModalCtrl', 
 	function($scope, $modalInstance, item){
-		$scope.editItem = {}
+		
+		$scope.editItem = {};
+		$scope.editSchema = item.schema;
+		
 		for(var x in item.schema){
 			$scope.editItem[x] = ''
 			if(x in item.data){

@@ -58,7 +58,6 @@ angular.module('dbtools')
 																	  displayAs:currentProperties.displayAs,
 																	  model:currentSchema[x].type.slice(1)})
 								//populate currentData.query reference fields with displayAs values
-								console.log('passingdispalys', currentProperties)
 								populateDisplayAs(x, currentSchema[x].type.slice(1), currentProperties.displayAs);
 							}else{
 								$scope.currentData.tableHeaderNames.push(x);
@@ -226,20 +225,24 @@ angular.module('dbtools')
 		}
 
 		$scope.addItem = function(){
+			var tableName = $scope.newQuery.name.slice(0, $scope.newQuery.name.length - 1)
+			var tableSchema = $scope.databaseSchemas[tableName].schema
+
 			var table = {};
 			table = $scope.currentData.tableHeaders;
 			var passData = [];
-			//build an object with dropdown data for reference fields
+			var currentType;
+			//this object puts all data for add-modal into passData
 			for(var x in table){
+				currentType = (typeof tableSchema[table[x].name].type !== 'undefined') ? tableSchema[table[x].name].type : '';
 				if(table[x].model){
 					//reference, build array of options/choices for id/value
-					passData.push({name:table[x].name,options:[]});
+					passData.push({name:table[x].name,type:currentType,options:[]});
 					var foundIds = []//for fast duplicate checking
 					var currentItem;
 					for(var y in $scope.currentData.query){
 						currentItem = $scope.currentData.query[y][table[x].model];
 						if(typeof currentItem !== 'undefined'){
-							console.log('curentmimd',currentItem)
 							if(foundIds.indexOf(currentItem.id) > -1){
 
 							}else{
@@ -249,7 +252,7 @@ angular.module('dbtools')
 						}
 					}					
 				}else{
-					passData.push({name:table[x].name, options:false})
+					passData.push({name:table[x].name, type:currentType, options:false})
 				}
 			}
 			var addModal = $modal.open({
