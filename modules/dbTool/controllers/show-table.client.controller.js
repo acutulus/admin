@@ -199,13 +199,18 @@ angular.module('dbtools')
 
 		//edit with modal
 		$scope.editItem = function(item){
+			var tableName = $scope.newQuery.name.slice(0, $scope.newQuery.name.length - 1)
+			var editItem = {
+							data:item,
+							schema:$scope.databaseSchemas[tableName].schema
+						}
 			var editModal = $modal.open({
 				templateUrl:'modules/dbTool/views/edit-modal.html',
 				controller:'EditModalCtrl',
 				size: 'lg',
 				resolve:{
 					item:function(){
-						return item;
+						return editItem;
 					}
 				}
 			})
@@ -227,17 +232,20 @@ angular.module('dbtools')
 			//build an object with dropdown data for reference fields
 			for(var x in table){
 				if(table[x].model){
-					//reference, build array of options/choices
+					//reference, build array of options/choices for id/value
 					passData.push({name:table[x].name,options:[]});
 					var foundIds = []//for fast duplicate checking
 					var currentItem;
 					for(var y in $scope.currentData.query){
 						currentItem = $scope.currentData.query[y][table[x].model];
-						if(foundIds.indexOf(currentItem.id) > -1){
+						if(typeof currentItem !== 'undefined'){
+							console.log('curentmimd',currentItem)
+							if(foundIds.indexOf(currentItem.id) > -1){
 
-						}else{
-							foundIds.push(currentItem.id);
-							passData[x].options.push(currentItem);
+							}else{
+								foundIds.push(currentItem.id);
+								passData[x].options.push(currentItem);
+							}
 						}
 					}					
 				}else{

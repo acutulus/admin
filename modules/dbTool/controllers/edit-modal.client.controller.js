@@ -2,14 +2,11 @@
 
 angular.module('dbtools').controller('EditModalCtrl', 
 	function($scope, $modalInstance, item){
-		console.log(item);
 		$scope.editItem = {}
-
-		for(var x in item){
-			if(x === '__v' || x === '_created_at' || x === '_updated_at' || x === '__id'){
-
-			}else{
-				$scope.editItem[x] = item[x];
+		for(var x in item.schema){
+			$scope.editItem[x] = ''
+			if(x in item.data){
+				$scope.editItem[x] = item.data[x];
 			}
 		}
 
@@ -18,6 +15,6 @@ angular.module('dbtools').controller('EditModalCtrl',
 			$modalInstance.close($scope.editItem);
 		};
 		$scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
-    };
+      		$modalInstance.dismiss('cancel');
+    	};
 	})
