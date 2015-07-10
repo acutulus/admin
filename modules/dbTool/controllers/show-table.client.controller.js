@@ -40,35 +40,28 @@ angular.module('dbtools')
 				//for iterating over current schema
 				var currentSchema = $scope.databaseSchemas[table].schema;
 				var currentProperties;
-
 				//if no data returned set to display no data message
-				if(data.length < 1){
-					$scope.currentData.tableHeaders.push('no data');
-					$scope.currentData.query = [{'no data':'No Data in this Table'}];
-
-				//data found set tableheaders and ID
-				}else{
-					for(var x in currentSchema){
-						if(currentSchema[x].type){
-							//check if field is a reference
-							if(currentSchema[x].type.indexOf(':') > -1){
-								currentProperties = $scope.databaseSchemas[currentSchema[x].type.slice(1)].properties;
-								$scope.currentData.tableHeaderNames.push(x);
-								$scope.currentData.tableHeaders.push({name:x,
-																	  displayAs:currentProperties.displayAs,
-																	  model:currentSchema[x].type.slice(1)})
-								//populate currentData.query reference fields with displayAs values
-								populateDisplayAs(x, currentSchema[x].type.slice(1), currentProperties.displayAs);
-							}else{
-								$scope.currentData.tableHeaderNames.push(x);
-								$scope.currentData.tableHeaders.push({name:x,model:false})
-							}
+				for(var x in currentSchema){
+					if(currentSchema[x].type){
+						//check if field is a reference
+						if(currentSchema[x].type.indexOf(':') > -1){
+							currentProperties = $scope.databaseSchemas[currentSchema[x].type.slice(1)].properties;
+							$scope.currentData.tableHeaderNames.push(x);
+							$scope.currentData.tableHeaders.push({name:x,
+																  displayAs:currentProperties.displayAs,
+																  model:currentSchema[x].type.slice(1)})
+							//populate currentData.query reference fields with displayAs values
+							populateDisplayAs(x, currentSchema[x].type.slice(1), currentProperties.displayAs);
 						}else{
 							$scope.currentData.tableHeaderNames.push(x);
 							$scope.currentData.tableHeaders.push({name:x,model:false})
 						}
+					}else{
+						$scope.currentData.tableHeaderNames.push(x);
+						$scope.currentData.tableHeaders.push({name:x,model:false})
 					}
 				}
+				
 			});
 		});
 
@@ -120,29 +113,6 @@ angular.module('dbtools')
 					}
 				}
 			});
-			/*
-			queryModal.result.then(function(queryString){
-
-				$scope.newQuery.query = queryString;
-				$scope.currentData.tableHeaders = [];
-
-				DataService.getQuery('projects/query/' + $scope.currentDatabase._id,
-									 {table:$scope.newQuery.name, query:$scope.newQuery.query})
-				.then(function(data){
-
-					for(var x in data[0]){
-						if(x !== '__v'){
-							$scope.currentData.tableHeaders.push(x);
-
-						}
-					}
-					//parse __v out of data, dont need to display it
-					for(var i=0;i<data.length;i++){
-						data[i].__v = undefined;
-					}
-					$scope.currentData.query = data;
-				})			
-			});*/
 		}
 
 		$scope.populateIdField = function(selectedTable){
@@ -176,7 +146,6 @@ angular.module('dbtools')
 						//create object to store the new values
 						var newValues = {};
 						newValues[data._id] = data[selectedField]
-						console.log('newvals', newValues)
 						//run through currentData replacing with value
 						for(x in $scope.currentData.query){
 							if($scope.currentData.query[x][selectedTable.name]){
@@ -234,6 +203,7 @@ angular.module('dbtools')
 			var currentType;
 			//this object puts all data for add-modal into passData
 			for(var x in table){
+				console.log(tableSchema)
 				currentType = (typeof tableSchema[table[x].name].type !== 'undefined') ? tableSchema[table[x].name].type : '';
 				if(table[x].model){
 					//reference, build array of options/choices for id/value
