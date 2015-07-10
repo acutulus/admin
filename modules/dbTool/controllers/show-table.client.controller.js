@@ -202,6 +202,7 @@ angular.module('dbtools')
 			var editModal = $modal.open({
 				templateUrl:'modules/dbTool/views/edit-modal.html',
 				controller:'EditModalCtrl',
+				size: 'lg',
 				resolve:{
 					item:function(){
 						return item;
@@ -211,7 +212,7 @@ angular.module('dbtools')
 
 			editModal.result.then(function(updatedModel){
 
-				DataService.update('admin/rest/' + $scope.newQuery.name + '/' + updatedModel._id, updatedModel)
+				DataService.update('admin/rest/' + $scope.newQuery.name + '/' + updatedModel._id.id, updatedModel)
 				.then(function(data){
 					console.log(data);
 				})
@@ -246,6 +247,7 @@ angular.module('dbtools')
 			var addModal = $modal.open({
 				templateUrl:'modules/dbTool/views/add-modal.html',
 				controller:'AddModalCtrl',
+				size: 'lg',
 				resolve:{
 					passData:function(){
 						return passData;

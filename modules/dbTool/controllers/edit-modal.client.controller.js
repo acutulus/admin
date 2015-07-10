@@ -2,6 +2,7 @@
 
 angular.module('dbtools').controller('EditModalCtrl', 
 	function($scope, $modalInstance, item){
+		console.log(item);
 		$scope.editItem = {}
 
 		for(var x in item){
@@ -15,5 +16,8 @@ angular.module('dbtools').controller('EditModalCtrl',
 
 		$scope.submit = function(){
 			$modalInstance.close($scope.editItem);
-		}
+		};
+		$scope.cancel = function () {
+      $modalInstance.dismiss('cancel');
+    };
 	})

@@ -7,5 +7,8 @@ angular.module('dbtools').controller('AddModalCtrl',
 		console.log('PASSDATA', passData);
 		$scope.submit = function(){
 			$modalInstance.close($scope.newItem);
-		}
+		};
+    $scope.cancel = function () {
+      $modalInstance.dismiss('cancel');
+    };
 	})
