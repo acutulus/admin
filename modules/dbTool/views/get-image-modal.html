@@ -1,0 +1,19 @@
+<div class="modal-header">
+
+	<button type="button" class="close" ng-click="cancel()" aria-label="Cancel"><span aria-hidden="true">&times;</span></button>
+	<h4 class="modal-title">Import Image</h4>
+
+</div>
+<div class="modal-body" ng-init="import = true;">
+	<div ng-show="import">
+		<label>Import image from computer:</label>
+		<input type="file" style="margin:10px;"accept="image/*"></input>
+		<a href="" ng-click="import = false;">Or.. Upload an image from url.</a>
+	</div>
+	<div ng-show="!import">
+		<label>Import image from url:</label>
+		<input type="text" class="form-control" ng-model="filepath"></input><br>
+		<a href="" ng-click="import = true;">Upload a file from computer</a>
+	</div>
+	<button class="btn btn-success">Submit</button>
+</div>

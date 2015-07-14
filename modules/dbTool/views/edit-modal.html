@@ -4,6 +4,7 @@
 </div>
 <div class="modal-body" >	
 	<div ng-repeat="(key,value) in editItem" class="form-group">
+
 		<label>{{key}}<span ng-if="editSchema[key].type">&nbsp({{editSchema[key].type}})</label>
 		<input ng-model="editItem[key].id" class="form-control" placeholder=""></input>
 	</div>

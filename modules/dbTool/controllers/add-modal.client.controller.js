@@ -7,7 +7,8 @@ angular.module('dbtools').controller('AddModalCtrl',
 		$scope.submit = function(){
 			$modalInstance.close($scope.newItem);
 		};
-    $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
-    };
+	    $scope.cancel = function () {
+	      $modalInstance.dismiss('cancel');
+	    };
 	})
+	//controller for geturl in textAngular modification

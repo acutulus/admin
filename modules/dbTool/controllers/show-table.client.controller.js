@@ -19,7 +19,6 @@ angular.module('dbtools')
 		DataService.getQuery('admin/models')
 		.then(function(data){
 			$scope.databaseSchemas = data;
-			console.log($scope.databaseSchemas)
 			//get data for selected schema
 			DataService.getQuery('admin/rest/' + $scope.newQuery.name)
 			.then(function(data){
@@ -201,13 +200,14 @@ angular.module('dbtools')
 			table = $scope.currentData.tableHeaders;
 			var passData = [];
 			var currentType;
-			//this object puts all data for add-modal into passData
-			for(var x in table){
-				console.log(tableSchema)
+
+			//force pass by copy rather than ref
+			passData = JSON.parse(JSON.stringify(table));
+			for(var x in passData){
 				currentType = (typeof tableSchema[table[x].name].type !== 'undefined') ? tableSchema[table[x].name].type : '';
 				if(table[x].model){
 					//reference, build array of options/choices for id/value
-					passData.push({name:table[x].name,type:currentType,options:[]});
+					passData[x].options = [];
 					var foundIds = []//for fast duplicate checking
 					var currentItem;
 					for(var y in $scope.currentData.query){
@@ -221,9 +221,8 @@ angular.module('dbtools')
 							}
 						}
 					}					
-				}else{
-					passData.push({name:table[x].name, type:currentType, options:false})
 				}
+				passData[x].type = currentType;
 			}
 			var addModal = $modal.open({
 				templateUrl:'modules/dbTool/views/add-modal.html',
