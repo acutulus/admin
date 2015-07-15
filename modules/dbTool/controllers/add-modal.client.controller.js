@@ -3,7 +3,11 @@
 angular.module('dbtools').controller('AddModalCtrl', 
 	function($scope, $modalInstance, passData){
 		$scope.passData = passData;
-		$scope.newItem = {};
+		$scope.newItem = [];
+
+		$scope.returnValue = function(data,index){
+			
+		}
 		$scope.submit = function(){
 			$modalInstance.close($scope.newItem);
 		};

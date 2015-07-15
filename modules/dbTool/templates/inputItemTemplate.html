@@ -1,4 +1,4 @@
-<div>
+<div ng-blur="returnValue">
 	<!--Reference Field display -->
 	<div class="dropdown" style="display:inline-block;margin-top:10px;margin-bottom:10px;" ng-show="inputField.model">
 		<a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -16,24 +16,24 @@
 		<label>{{inputField.name}}:<span ng-show="typeError" style="color:red">Did not find a useable input type, defaulting to string</span></label>
 		<!-- Start listing input types -->
 		<div ng-show="inputField.displayType === 'string'">
-			<input type="text" ng-model="inputField.inputValue" class="form-control"></input>
+			<input type="text" ng-model="inputField.inputValue.string" class="form-control"></input>
 		</div>
 		<div ng-show="inputField.displayType === 'number'">
-			<input type="number" ng-model="inputField.inputValue" class="form-control"></input>
+			<input type="number" ng-model="inputField.inputValue.number" class="form-control"></input>
 		</div>
 		<div ng-show="inputField.displayType === 'boolean'">
 			<div class="radio-inline">
-			  <label><input type="radio" ng-model="inputField.inputValue" ng-value="true">True</label>
+			  <label><input type="radio" ng-model="inputField.inputValue.boolean" ng-value="true">True</label>
 			</div>
 			<div class="radio-inline">
-			  <label><input type="radio" ng-model="inputField.inputValue" ng-value="false">False</label>
+			  <label><input type="radio" ng-model="inputField.inputValue.boolean" ng-value="false">False</label>
 			</div>		
 		</div>
 		<div ng-show="inputField.displayType === 'buffer'">
-			Buffer 
+			Buffer
 		</div>
 		<div ng-show="inputField.displayType === 'html'">
-			<text-angular ></text-angular>
+			<text-angular ng-model="inputField.inputValue.html"></text-angular>
 		</div>
 	</div>
 </div>

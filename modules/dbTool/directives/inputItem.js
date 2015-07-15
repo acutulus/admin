@@ -17,7 +17,9 @@ angular.module('dbtools')
 			Property- model: Not Optional, value or false if not a reference field*/
 
 			scope:{
-				inputField:"="
+				inputField:"=",
+				returnValue:"=",
+				returnIndex:"="
 			},
 
 			link: function(scope,element,attrs){
@@ -27,13 +29,14 @@ angular.module('dbtools')
 								"picture","file","string","number","buffer","boolean"];
 
 				scope.typeError = false;
-
+				scope.inputField.inputValue = {};
 				//resolve type of field
 				if(typeof scope.inputField.displayType !== 'undefined'){
 					scope.inputField.displayType = scope.inputField.displayType.toLowerCase();
 				}else{
 					scope.inputField.displayType = scope.inputField.type.toLowerCase();
 				}
+				console.log(scope.inputField.displayType)
 
 				//check if reference
 				if(scope.inputField.options){
@@ -47,7 +50,9 @@ angular.module('dbtools')
 						scope.inputField.displayType = "string"
 					}
 				}
-
+				scope.returnValue = function(){
+					
+				}
 
 			}
 		}

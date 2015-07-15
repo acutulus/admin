@@ -2,33 +2,11 @@
   <button type="button" class="close" ng-click="cancel()" aria-label="Cancel"><span aria-hidden="true">&times;</span></button>
   <h4 class="modal-title">Modal title</h4>
 </div>
-<!--
-<div class="modal-body" >	
-	<div ng-repeat="field in passData">
-		<div ng-if="!field.options" class="form-group">
-			<label>{{field.name}} <span ng-show="field.type">&nbsp({{field.type}})</span></label>
-			<input ng-model="newItem[field.name]" class="form-control" placeholder=""></input>
-		</div>
-		<div ng-if="field.options" class="form-group">
-			<label>{{field.name}} </label>
-			<div class="dropdown" style="display:inline-block;">
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-					<span data-ng-bind="newItem[field.name]"></span> <b class="caret"></b>
-				</a>
-				<ul class="dropdown-menu">
-					<li ng-repeat="option in field.options">
-						<a href="" ng-click="newItem[field.name]=option.id">{{option.value}}, {{option.id}}</a> 
-					</li>
-				</ul>
-			</div>
-		</div>
-	</div>
-</div>
--->
 <div class="modal-body">
-	<div ng-repeat="field in passData">
-			<input-item input-field="field"/>
+	<div ng-repeat="field in passData track by $index">
+			<input-item input-field="field" return-value="returnValue" return-index = "$index" ng-model="newItem[$index]"/>
 	</div>
+
 </div>
 <div class="modal-footer">
   <button class="btn btn-success" ng-click="submit()">Submit</button>

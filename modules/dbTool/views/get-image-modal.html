@@ -7,7 +7,7 @@
 <div class="modal-body" ng-init="import = true;">
 	<div ng-show="import">
 		<label>Import image from computer:</label>
-		<input type="file" onchange="angular.element(this).scope().fileChanged(event)" accept="image/*"></input>
+		<input type="file" style="margin:15px;" onchange="angular.element(this).scope().fileChanged(event)" accept="image/*"></input>
 
 		<a href="" ng-click="import = false;image.file = ''">Or... Upload an image from a url.</a>
 	</div>

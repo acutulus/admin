@@ -53,8 +53,8 @@ angular.module('dbtools')
 							size:'med'
 						})
 						urlModal.result.then(function(imageLink){
-							console.log(imageLink);
-							if(imageLink.length > 1000){
+							console.log(imageLink.length)
+							if(imageLink.length < 1000){
 								if(imageLink && imageLink !== '' && imageLink !== 'http://'){
 									selectedElement.focus();
 									return that.$editor().wrapSelection('insertImage', imageLink, true);

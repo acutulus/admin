@@ -1,5 +1,5 @@
 angular.module('dbtools')
-	.controller('GetImageModalCtrl', function($scope, $modalInstance, fileReader){
+	.controller('GetImageModalCtrl', function($scope, $modalInstance){
 	 	$scope.image = {};
 
 	 	var file = document.getElementById('imageUpload');
@@ -14,6 +14,7 @@ angular.module('dbtools')
 		       	read.onload = function(readerEvt) {
 		            $scope.image.file = read.result;
 		        }
+		        
 		        read.readAsDataURL(file);
 	        }
 	 	};
