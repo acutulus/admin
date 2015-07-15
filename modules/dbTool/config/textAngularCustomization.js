@@ -50,21 +50,53 @@ angular.module('dbtools')
 						var urlModal = $modal.open({
 							templateUrl:'modules/dbTool/views/get-image-modal.html',
 							controller:'GetImageModalCtrl',
-							size:'med',
-							resolve:{
-								modalReturnType:function(){
-									return 'Enter Image Url';
-								}
-							}
+							size:'med'
 						})
 						urlModal.result.then(function(imageLink){
-							if(imageLink && imageLink !== '' && imageLink !== 'http://'){
-								return this.$editor().wrapSelection('insertImage', imageLink, true);
+							console.log(imageLink);
+							if(imageLink.length > 1000){
+								if(imageLink && imageLink !== '' && imageLink !== 'http://'){
+									selectedElement.focus();
+									return that.$editor().wrapSelection('insertImage', imageLink, true);
+								}
+							}else{
+								selectedElement.append(imageLink);
 							}
 						});
 					}
-				})
+				});
+
+				taRegisterTool('acutulus-link',{
+					iconclass:'fa fa-link',
+					action: function(){
+						var that = this;
+						var selectedElement = document.activeElement;
+
+						var linkModal = $modal.open({
+							templateUrl:'modules/dbTool/views/get-link-modal.html',
+							controller:'GetLinkModalCtrl',
+							size:'med'
+						});
+						linkModal.result.then(function(urlLink){
+							if(urlLink && urlLink !== '' && urlLink !== 'http://'){
+								selectedElement.focus();
+								return that.$editor().wrapSelection('createLink', urlLink, true);
+							}
+						})
+					},
+					activeState: function(commonElement){
+						if(commonElement) return commonElement[0].tagName === 'A';
+						return false;
+					},
+					onElementSelect: {
+						element: 'a',
+						action: taToolFunctions.aOnSelectAction
+					}
+				});
+
 				taOptions.toolbar[1].push('acutulus-youtube');
+				taOptions.toolbar[1].push('acutulus-link');
+
 				taOptions.toolbar[1].push('acutulus-image');
         		return taOptions;
 			}

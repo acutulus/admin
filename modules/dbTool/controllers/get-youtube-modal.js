@@ -4,4 +4,7 @@
 				$scope.close = function(){
 					$modalInstance.close($scope.url);
 				}
+				 $scope.cancel = function () {
+	      			$modalInstance.dismiss('cancel');
+	    		};
 		})

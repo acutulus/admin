@@ -7,13 +7,14 @@
 <div class="modal-body" ng-init="import = true;">
 	<div ng-show="import">
 		<label>Import image from computer:</label>
-		<input type="file" style="margin:10px;"accept="image/*"></input>
-		<a href="" ng-click="import = false;">Or.. Upload an image from url.</a>
+		<input type="file" onchange="angular.element(this).scope().fileChanged(event)" accept="image/*"></input>
+
+		<a href="" ng-click="import = false;image.file = ''">Or... Upload an image from a url.</a>
 	</div>
 	<div ng-show="!import">
 		<label>Import image from url:</label>
-		<input type="text" class="form-control" ng-model="filepath"></input><br>
-		<a href="" ng-click="import = true;">Upload a file from computer</a>
+		<input type="text" class="form-control" ng-model="image.url" placeholder="Enter image url"></input><br>
+		<a href="" ng-click="import = true;">Or... Upload a file from your computer</a>
 	</div>
-	<button class="btn btn-success">Submit</button>
+	<button class="btn btn-success" ng-click="submit()">Submit</button>
 </div>
