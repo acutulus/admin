@@ -18,8 +18,7 @@ angular.module('dbtools')
 
 			scope:{
 				inputField:"=",
-				returnValue:"=",
-				returnIndex:"="
+				ngModel:"="
 			},
 
 			link: function(scope,element,attrs){
@@ -29,7 +28,6 @@ angular.module('dbtools')
 								"picture","file","string","number","buffer","boolean"];
 
 				scope.typeError = false;
-				scope.inputField.inputValue = {};
 				//resolve type of field
 				if(typeof scope.inputField.displayType !== 'undefined'){
 					scope.inputField.displayType = scope.inputField.displayType.toLowerCase();
@@ -50,10 +48,6 @@ angular.module('dbtools')
 						scope.inputField.displayType = "string"
 					}
 				}
-				scope.returnValue = function(){
-					
-				}
-
 			}
 		}
 	}]);
