@@ -17,12 +17,11 @@ angular.module('dbtools')
 			Property- model: Not Optional, value or false if not a reference field*/
 
 			scope:{
-				inputField:"=",
-				ngModel:"="
+				inputField:"="
 			},
 
 			link: function(scope,element,attrs){
-				
+
 				//constants
 				var itemTypes=["html","url","geopoint","email","datetime",
 								"picture","file","string","number","buffer","boolean"];

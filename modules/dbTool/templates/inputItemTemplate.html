@@ -3,37 +3,37 @@
 	<div class="dropdown" style="display:inline-block;margin-top:10px;margin-bottom:10px;" ng-if="inputField.model">
 		<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 			<span data-ng-bind="inputField.name"></span><b class="caret"></b>
-		</a>{{selectedVal}}
+		</a>{{inputField.data}}
 		<ul class="dropdown-menu">
 			<li ng-repeat="option in inputField.options">
-				<a href="" ng-click="ngModel = option.id">{{option.value}}, {{option.id}}</a> 
+				<a href="" ng-click="inputField.data = option.id">{{option.value}}, {{option.id}}</a> 
 			</li>
 		</ul>
-		{{inputField.inputValue}}
 	</div>
 	<!--Non reference Field display -->
 	<div ng-if="!inputField.model">
 		<label>{{inputField.name}}:<span ng-show="typeError" style="color:red">Did not find a useable input type, defaulting to string</span></label>
 		<!-- Start listing input types -->
 		<div ng-if="inputField.displayType === 'string'">
-			<input type="text" ng-model="ngModel" class="form-control"></input>
+			<input type="text" ng-model="inputField.data" class="form-control"></input>
 		</div>
 		<div ng-if="inputField.displayType === 'number'">
-			<input type="number" ng-model="ngModel" class="form-control"></input>
+			<input type="number" ng-model="inputField.data" class="form-control"></input>
 		</div>
 		<div ng-if="inputField.displayType === 'boolean'">
 			<div class="radio-inline">
-			  <label><input type="radio" ng-model="ngModel" ng-value="true">True</label>
+			  <label><input type="radio" ng-model="inputField.data" ng-value="true">True</label>
 			</div>
 			<div class="radio-inline">
-			  <label><input type="radio" ng-model="ngModel" ng-value="false">False</label>
+			  <label><input type="radio" ng-model="inputField.data" ng-value="false">False</label>
 			</div>		
 		</div>
 		<div ng-if="inputField.displayType === 'buffer'">
 			Buffer
 		</div>
 		<div ng-if="inputField.displayType === 'html'">
-			<text-angular ng-model="ngModel"></text-angular>
+			{{inputField.data}}
+			<text-angular ng-model="inputField.data"></text-angular>
 		</div>
 	</div>
 </div>

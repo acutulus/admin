@@ -46,6 +46,7 @@ angular.module('dbtools')
 					action:function(){
 						var that = this;
 						var selectedElement = document.activeElement;
+						var angularSelected = angular.element(document.activeElement);
 
 						var urlModal = $modal.open({
 							templateUrl:'modules/dbTool/views/get-image-modal.html',
@@ -60,7 +61,7 @@ angular.module('dbtools')
 									return that.$editor().wrapSelection('insertImage', imageLink, true);
 								}
 							}else{
-								selectedElement.append(imageLink);
+								angularSelected.append('<img src="'+imageLink + '"/>') 
 							}
 						});
 					}

@@ -2,11 +2,11 @@
   <button type="button" class="close" ng-click="cancel()" aria-label="Cancel"><span aria-hidden="true">&times;</span></button>
   <h4 class="modal-title">Modal title</h4>
 </div>
-<div class="modal-body">
-	<div ng-repeat="field in passData track by $index">
-			<input-item input-field="field" return-value="returnValue" return-index = "$index" ng-model="newItem[$index]"/>
-	</div>
 
+<div class="modal-body">
+	<div ng-repeat="field in passData">
+		<input-item input-field="field"/>
+	</div>
 </div>
 <div class="modal-footer">
   <button class="btn btn-success" ng-click="submit()">Submit</button>
