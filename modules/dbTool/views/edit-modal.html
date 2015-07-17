@@ -1,12 +1,10 @@
 <div class="modal-header">
   <button type="button" class="close" ng-click="cancel()" aria-label="Cancel"><span aria-hidden="true">&times;</span></button>
-  <h4 class="modal-title">Modal title</h4>
+  <h4 class="modal-title">Edit Item</h4>
 </div>
 <div class="modal-body" >	
-	<div ng-repeat="(key,value) in editItem" class="form-group">
-
-		<label>{{key}}<span ng-if="editSchema[key].type">&nbsp({{editSchema[key].type}})</label>
-		<input ng-model="editItem[key].id" class="form-control" placeholder=""></input>
+	<div ng-repeat="field in editData">
+		<input-item input-field="field"/>
 	</div>
 </div>
 <div class="modal-footer">

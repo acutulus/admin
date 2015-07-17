@@ -40,3 +40,15 @@
 	width:25px;
 	height:25px;
 }
+
+/*For Managing huge text in showtable*/
+td.ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    -ms-text-overflow: ellipsis;
+}
+td.manage-width{
+	max-width:150px;
+}

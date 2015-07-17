@@ -3,20 +3,22 @@
 angular.module('dbtools').controller('EditModalCtrl', 
 	function($scope, $modalInstance, item){
 		
-		$scope.editItem = {};
-		$scope.editSchema = item.schema;
-		
-		for(var x in item.schema){
-			$scope.editItem[x] = ''
-			if(x in item.data){
-				$scope.editItem[x] = item.data[x];
-			}
-		}
-
+		$scope.editData = item
+		var newItem = {};
 
 		$scope.submit = function(){
-			$modalInstance.close($scope.editItem);
+			for(var x in $scope.editData){
+				if($scope.editData[x].hasOwnProperty('data')){
+					if(typeof $scope.editData[x].data === $scope.editData[x].type.toLowerCase() ||
+						$scope.editData[x].type.indexOf(":") > -1 || $scope.editData[x].type === 'html'){
+
+						newItem[$scope.editData[x].name] = $scope.editData[x].data;
+					}
+				}
+			}
+			$modalInstance.close(newItem);		
 		};
+
 		$scope.cancel = function () {
       		$modalInstance.dismiss('cancel');
     	};

@@ -18,14 +18,11 @@ angular.module('dbtools')
 						$scope.currentDatabase.push(x + 's');
 					}
 				});	
-				var checkTable = function(){
-					for(var x in $scope.currentDatabase.schemas){
-						if($stateParams.table === $scope.currentDatabase.schemas[x].name){
-							console.log($scope.currentDatabase.schemas[x].name)
-							$scope.currentTable = $scope.currentDatabase.schemas[x];
-						}
-					}
+
+				if($stateParams.hasOwnProperty('table')){
+					$scope.currentTable = $stateParams.table
 				}
+				
 				$scope.selectDb = function(db){
 					$scope.currentDatabase = db;
 				}

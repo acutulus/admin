@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dbtools')
-.controller('ShowTableCtrl', ['$scope', 'DataService', '$stateParams', '$modal',
-	function($scope, DataService, $stateParams, $modal){
+.controller('ShowTableCtrl', ['$scope', 'DataService', '$stateParams', '$modal','$window',
+	function($scope, DataService, $stateParams, $modal, $window){
 
 
 		//hold query arguments, newQuery.query holds all the current data
@@ -166,27 +166,57 @@ angular.module('dbtools')
 
 		//edit with modal
 		$scope.editItem = function(item){
+			//remove leading ':'
+			//build another passData item but with the data field populated for each item
 			var tableName = $scope.newQuery.name.slice(0, $scope.newQuery.name.length - 1)
-			var editItem = {
-							data:item,
-							schema:$scope.databaseSchemas[tableName].schema
+			var tableSchema = $scope.databaseSchemas[tableName].schema
+
+			var table = {};
+			table = $scope.currentData.tableHeaders;
+			var editData = [];
+			var currentType;
+
+			editData = JSON.parse(JSON.stringify(table));
+			for(var x in editData){
+				currentType = (typeof tableSchema[table[x].name].type !== 'undefined') ? tableSchema[table[x].name].type : '';
+				if(table[x].model){
+					//reference, build array of options/choices for id/value
+					editData[x].options = [];
+					var foundIds = []//for fast duplicate checking
+					var currentItem;
+					for(var y in $scope.currentData.query){
+						currentItem = $scope.currentData.query[y][table[x].model];
+						if(typeof currentItem !== 'undefined'){
+							if(foundIds.indexOf(currentItem.id) > -1){
+
+							}else{
+								foundIds.push(currentItem.id);
+								editData[x].options.push(currentItem);
+							}
 						}
+					}					
+				}
+				editData[x].type = currentType;
+				if(item[editData[x].name]){
+					editData[x].data = item[editData[x].name].id;
+				}
+			}
 			var editModal = $modal.open({
 				templateUrl:'modules/dbTool/views/edit-modal.html',
 				controller:'EditModalCtrl',
 				size: 'lg',
 				resolve:{
 					item:function(){
-						return editItem;
+						return editData;
 					}
 				}
 			})
 
-			editModal.result.then(function(updatedModel){
-
-				DataService.update('admin/rest/' + $scope.newQuery.name + '/' + updatedModel._id.id, updatedModel)
+			editModal.result.then(function(updatedModal){
+				DataService.update('admin/rest/' + $scope.newQuery.name + '/' + item._id.id, updatedModal)
 				.then(function(data){
 					console.log(data);
+					//$window.location.reload();
 				})
 
 			})
@@ -241,11 +271,31 @@ angular.module('dbtools')
 				DataService.add('admin/rest/' + $scope.newQuery.name, newItem)
 				.then(function(data){
 					console.log(data)
+					$window.location.reload();
 				})
 
 			})
 		}
 
+		$scope.deleteItem = function(item){
+
+			var deleteModal = $modal.open({
+				templateUrl:'modules/dbTool/views/delete-item-modal.html',
+				controller:'DeleteModalCtrl',
+				size:"med"
+			})
+
+
+			deleteModal.result.then(function(choice){
+				console.log(choice)
+				if(choice === 'delete'){
+					DataService.delete('admin/rest/' + $scope.newQuery.name, {_id:item._id.id});
+					$window.location.reload();
+				}
+			})
+		}
+
+		//utility function to populate IDs on initial load
 		var populateDisplayAs = function(field, model, displayAs){
 			var idArray = [];
 			for(var x in $scope.currentData.query){

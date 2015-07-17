@@ -27,13 +27,27 @@ angular.module('dbtools')
 								"picture","file","string","number","buffer","boolean"];
 
 				scope.typeError = false;
+
+				scope.setReferenceData = function(option){
+					scope.inputField.data = option.id;
+					scope.inputField.showOption = option.value;
+				}
+
+				if(scope.inputField.model){
+					if(scope.inputField.data){
+						for(var x in scope.inputField.options){
+							if(scope.inputField.options[x].id === scope.inputField.data){
+								scope.inputField.showOption = scope.inputField.options[x].value;
+							}
+						}
+					}
+				}
 				//resolve type of field
 				if(typeof scope.inputField.displayType !== 'undefined'){
 					scope.inputField.displayType = scope.inputField.displayType.toLowerCase();
 				}else{
 					scope.inputField.displayType = scope.inputField.type.toLowerCase();
 				}
-				console.log(scope.inputField.displayType)
 
 				//check if reference
 				if(scope.inputField.options){
