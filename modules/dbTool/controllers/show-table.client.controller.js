@@ -216,7 +216,7 @@ angular.module('dbtools')
 				DataService.update('admin/rest/' + $scope.newQuery.name + '/' + item._id.id, updatedModal)
 				.then(function(data){
 					console.log(data);
-					//$window.location.reload();
+					$window.location.reload();
 				})
 
 			})

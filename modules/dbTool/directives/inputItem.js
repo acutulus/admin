@@ -27,14 +27,18 @@ angular.module('dbtools')
 								"picture","file","string","number","buffer","boolean"];
 
 				scope.typeError = false;
-
-				scope.setReferenceData = function(option){
-					scope.inputField.data = option.id;
-					scope.inputField.showOption = option.value;
+				scope.setReferenceData = function(){
+					for(var x in scope.inputField.options){
+						if(scope.inputField.options[x].value === scope.inputField.showOption){
+							scope.inputField.data = scope.inputField.options[x].id;
+						}
+					}
 				}
 
+				//item already populated edit loop
 				if(scope.inputField.model){
 					if(scope.inputField.data){
+						console.log('scope.inputField.name',scope.inputField.data)
 						for(var x in scope.inputField.options){
 							if(scope.inputField.options[x].id === scope.inputField.data){
 								scope.inputField.showOption = scope.inputField.options[x].value;

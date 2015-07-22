@@ -1,0 +1,13 @@
+<section data-ng-controller="EditorTableController">
+	<div style="text-align:center">
+		<h3>{{currentTable}}</h3>
+		<ul>
+			<li ng-repeat="prop in editableProperties">
+				{{prop}}
+			</li>
+		</ul>
+	</div>
+	<hr>
+	<section data-ui-view></section>
+</section>
+

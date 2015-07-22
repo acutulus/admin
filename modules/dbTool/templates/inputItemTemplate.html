@@ -2,10 +2,10 @@
 	<!--Reference Field display -->
 	<div ng-if="inputField.model">
 		<label>{{inputField.name}}:</label>
-	    <input type="text" list="{{inputField.name + 'options'}}" class="form-control" ng-model="inputField.showOption"></input>
+	    <input type="text" list="{{inputField.name + 'options'}}" class="form-control" ng-model="inputField.showOption" ng-blur="setReferenceData()"></input>
 	    <datalist id="{{inputField.name + 'options'}}">
 	    	<option ng-repeat="option in inputField.options" value="{{option.value}}" 
-	    	ng-click="setReferenceData(option)"></option>
+	    	></option>
 	    </datalist>
 	</div>
 	<!--Non reference Field display -->
