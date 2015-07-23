@@ -12,16 +12,21 @@ angular.module('editor')
 				.then(function(data){
 					for(var x in data){
 						if(x === $stateParams.table){
-							for(var y in data[x].schema){
-								if(data[x].schema[y].hasOwnProperty('editor')){
-									var temp = {};
-									temp.name = y;
-									temp.data = data[x].schema[y];
-									$scope.editableProperties.push(temp);
+							var schemaTable = data[x].schema;
+							for(var y in schemaTable){
+								if(schemaTable[y].hasOwnProperty('editor')){
+									if(!schemaTable[y].editor){
+
+									}else{
+										$scope.editableProperties.push({name:y,data:schemaTable[y]});
+									}
+								}else{
+										$scope.editableProperties.push({name:y,data:schemaTable[y]});
 								}
 							}
 						}
 					}
+					console.log($scope.editableProperties)
 				});			
 		}
 	])
