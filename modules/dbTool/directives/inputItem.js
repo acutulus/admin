@@ -36,7 +36,7 @@ angular.module('dbtools')
 				}
 
 
-				/*INTENSE DATA MASSAGING*/
+				/*INTENSE DATA MASSAGING  ;) */
 				//item already populated edit loop
 				if(scope.inputField.model){
 					if(scope.inputField.data){
@@ -68,11 +68,23 @@ angular.module('dbtools')
 					}
 				}
 
+
+				/*DATETIME STUFF*/
+				//changing date ms number to display as date/time fields
+				if(scope.inputField.displayType === 'datetime'){
+					scope.inputField.date = new Date(scope.inputField.data);
+					scope.inputField.time = new Date(scope.inputField.data);
+				}
+				//blur function to combine date/time strings to ms number
 				scope.makeTime = function(){
+					console.log(scope.inputField.time, 'TIME', scope.inputField.date, 'DATE');
 					if(scope.inputField.time && scope.inputField.date){
-						scope.inputField.data = scope.inputField.date.toString().slice(0,15) + scope.inputField.time.toString().slice(15);
+						scope.inputField.data = 
+						 new Date(scope.inputField.date.toString().slice(0,15) + scope.inputField.time.toString().slice(15)).getTime();
+
 					}
 				}
+
 					
 			}
 		}

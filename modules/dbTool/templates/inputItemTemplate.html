@@ -35,7 +35,7 @@
 		<div ng-if="inputField.displayType === 'datetime'">
 			<div class="row">
 				<div class="form-group col-xs-6">
-					<input type="date" class="form-control"  ng-model="inputField.date" ng-blur="makeTime()"></input>
+					<input type="date" class="form-control"  ng-model="inputField.date" ng-blur="makeTime()" placeholder="yyyy-MM-dd"></input>
 				</div>
 				<div class="form-group col-xs-6">
 					<input type="time" class="form-control"  ng-model="inputField.time" ng-blur="makeTime()"></input>
