@@ -32,5 +32,15 @@
 		<div ng-if="inputField.displayType === 'html'">
 			<text-angular ng-model="inputField.data"></text-angular>
 		</div>
+		<div ng-if="inputField.displayType === 'datetime'">
+			<div class="row">
+				<div class="form-group col-xs-6">
+					<input type="date" class="form-control"  ng-model="inputField.date" ng-blur="makeTime()"></input>
+				</div>
+				<div class="form-group col-xs-6">
+					<input type="time" class="form-control"  ng-model="inputField.time" ng-blur="makeTime()"></input>
+				</div>
+			</div>
+		</div>
 	</div>
 </section>

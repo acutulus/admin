@@ -35,6 +35,8 @@ angular.module('dbtools')
 					}
 				}
 
+
+				/*INTENSE DATA MASSAGING*/
 				//item already populated edit loop
 				if(scope.inputField.model){
 					if(scope.inputField.data){
@@ -65,6 +67,15 @@ angular.module('dbtools')
 						scope.inputField.displayType = "string"
 					}
 				}
+
+				scope.makeTime = function(){
+					if(scope.inputField.time && scope.inputField.date){
+						scope.inputField.data = scope.inputField.date.toString().slice(0,15) + scope.inputField.time.toString().slice(15);
+					}
+				}
+					
 			}
 		}
-	}]);
+	}
+	
+]);

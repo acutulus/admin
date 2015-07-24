@@ -95,12 +95,16 @@ angular.module('dbtools')
 		* @method get - http get object by Id
 		* 
 		*/
-		dataService.get = function(objectType, objectId) {
+		dataService.get = function(objectType, objectId, useCache) {
 			var timer = new Date().getTime();
 
 			var defer = $q.defer();
 			//check if specific objectId exists in cache
-			var cacheData = inCache(objectType, objectId, 'id');
+			if(useCache === 'undefined' || useCache === true){
+				var cacheData = inCache(objectType, objectId, 'id');
+			}else{
+				var cacheData = false;
+			}
 			if(cacheData){
 				defer.resolve(cacheData);
 				var timeTaken = new Date().getTime() - timer;
@@ -124,11 +128,15 @@ angular.module('dbtools')
 		* @method getQuery - http get single item from DB
 		* @property query - hash where each item appended as key=value to url
 		*/
-		dataService.getQuery = function(objectType, query) {
+		dataService.getQuery = function(objectType, query, useCache) {
 			var timer = new Date().getTime();
 
 			var defer = $q.defer();
-			var cacheData = inCache(objectType, query, 'query');
+			if(useCache === 'undefined' || useCache === true){
+				var cacheData = inCache(objectType, query, 'query');
+			}else{
+				var cacheData = false;
+			}
 			if(cacheData){
 				defer.resolve(cacheData);
 				var timeTaken = new Date().getTime() - timer;

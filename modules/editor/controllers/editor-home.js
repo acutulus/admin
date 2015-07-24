@@ -15,12 +15,31 @@ angular.module('editor')
 				$scope.editorDatabase = [];
 				DataService.getQuery('admin/models')
 				.then(function(data){
+					//build list of editor items
 					for(var x in data){
+						var temp = {};
 						$scope.currentDatabase.push(x + 's');
 						if(data[x].properties){
-							if(data[x].propertes.hasOwnProperty('editor')){
-								$scope.editorDatabase.push(data)
+							if(data[x].properties.hasOwnProperty('editor')){
+								//every model will get to editor except these specified editor:false ones
+								if(!data[x].properties.editor){
+									temp.name = x;
+									temp.data = data[x];
+									$scope.editorDatabase.push(Object.create(temp));
+								}else{
+									temp.name = x;
+									temp.data = data[x];
+									$scope.editorDatabase.push(Object.create(temp));								
+								}
+							}else{
+								temp.name = x;
+								temp.data = data[x];
+								$scope.editorDatabase.push(Object.create(temp));							
 							}
+						}else{
+							temp.name = x;
+							temp.data = data[x];
+							$scope.editorDatabase.push(Object.create(temp));						
 						}
 					}
 				});	

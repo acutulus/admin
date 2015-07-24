@@ -63,7 +63,22 @@ angular.module('dbtools')
 				
 			});
 		});
-
+		
+		var loadTableData = function(){
+			DataService.getQuery('admin/rest/' + $scope.newQuery.name, {}, false)
+			.then(function(data){		
+				//set up data as objects to preserve id field
+				for(var x in data){
+					for(var y in data[x]){
+						data[x][y] = {
+							id:data[x][y],
+							value:data[x][y]
+						}
+					}
+				}
+				$scope.currentData.query = data;				
+			});
+		}
 		//remove item from query list
 		$scope.removeItem = function(row) {
 	        var index = $scope.currentData.query.indexOf(row);
@@ -216,7 +231,7 @@ angular.module('dbtools')
 				DataService.update('admin/rest/' + $scope.newQuery.name + '/' + item._id.id, updatedModal)
 				.then(function(data){
 					console.log(data);
-					$window.location.reload();
+					loadTableData();
 				})
 
 			})
@@ -247,7 +262,6 @@ angular.module('dbtools')
 
 							}else{
 								foundIds.push(currentItem.id);
-								passData[x].options.push(currentItem);
 							}
 						}
 					}					
@@ -271,7 +285,7 @@ angular.module('dbtools')
 				DataService.add('admin/rest/' + $scope.newQuery.name, newItem)
 				.then(function(data){
 					console.log(data)
-					$window.location.reload();
+					loadTableData();
 				})
 
 			})
@@ -290,7 +304,7 @@ angular.module('dbtools')
 				console.log(choice)
 				if(choice === 'delete'){
 					DataService.delete('admin/rest/' + $scope.newQuery.name, {_id:item._id.id});
-					$window.location.reload();
+					loadTableData();
 				}
 			})
 		}
