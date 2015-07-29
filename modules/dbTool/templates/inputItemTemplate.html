@@ -1,7 +1,8 @@
 <section>
 	<!--Reference Field display -->
 	<div ng-if="inputField.model" class="modal-row">
-		<label>{{inputField.name}}:</label>
+		<label ng-if="inputField.display.label">{{inputField.display.label}}:</label>
+		<label ng-if="!inputField.display.label">{{inputField.name}}:</label>
 	    <input type="text" list="{{inputField.name + 'options'}}" class="form-control" ng-model="inputField.showOption" ng-blur="setReferenceData()"></input>
 	    <datalist id="{{inputField.name + 'options'}}">
 	    	<option ng-repeat="option in inputField.options" value="{{option.value}}" 
@@ -10,13 +11,15 @@
 	</div>
 	<!--Non reference Field display -->
 	<div ng-if="!inputField.model" class="modal-row">
-		<label>{{inputField.name}}:<span ng-show="typeError" style="color:red">Did not find a useable input type, defaulting to string</span></label>
+		<label ng-if="inputField.display.label">{{inputField.display.label}}:</label>
+		<label ng-if="!inputField.display.label">{{inputField.name}}:</label>
+		<span ng-show="typeError" style="color:red">Did not find a useable input type, defaulting to string</span>
 		<!-- Start listing input types -->
 		<div ng-if="inputField.displayType === 'string'">
-			<input type="text" ng-model="inputField.data" class="form-control"></input>
+			<input type="text" ng-required="inputField.required" ng-model="inputField.data" class="form-control" placeholder="{{inputField.display.placeholder}}"></input>
 		</div>
 		<div ng-if="inputField.displayType === 'number'">
-			<input type="number" ng-model="inputField.data" class="form-control"></input>
+			<input type="number" ng-required="inputField.required" ng-model="inputField.data" class="form-control"></input>
 		</div>
 		<div ng-if="inputField.displayType === 'boolean'">
 			<div class="radio-inline">
@@ -26,11 +29,11 @@
 			  <label><input type="radio" ng-model="inputField.data" ng-value="false">False</label>
 			</div>		
 		</div>
-		<div ng-if="inputField.displayType === 'buffer'">
-			Buffer
+		<div ng-if="inputField.displayType === 'file'">
+			File
 		</div>
 		<div ng-if="inputField.displayType === 'html'">
-			<text-angular ng-model="inputField.data"></text-angular>
+			<text-angular ng-model="inputField.data" ng-required="inputField.required" placeholder="{{inputField.display.placeholder}}"></text-angular>
 		</div>
 		<div ng-if="inputField.displayType === 'datetime'">
 			<div class="row">
@@ -64,5 +67,94 @@
 				</div>
 			</div>
 		</div>
+		<div ng-if="inputField.displayType === 'url'">
+			<input type="url" ng-required="inputField.required" ng-model="inputField.data" class="form-control" placeholder="{{inputField.display.placeholder}}"></input>
+		</div>
+		<div ng-if="inputField.displayType === 'geopoint'">
+			<div class="col-sm-8">
+				<div class="form-group">
+				  <label class="col-sm-4 control-label">Lat:</label>
+				  <div class="col-sm-8">
+				    <input type="text" class="form-control">
+				  </div>
+				</div>
+				<div class="form-group">
+				  <label class="col-sm-4 control-label">Lng:</label>
+				  <div class="col-sm-8">
+				    <input type="text" class="form-control">
+				  </div>
+				</div>
+			</div>
+			<div class="col-sm-4">
+				Preview
+			</div>
+		</div>
+		<div ng-if="inputField.displayType === 'email'">
+			<input type="email" ng-required="inputField.required" ng-model="inputField.data" class="form-control" placeholder="{{inputField.display.placeholder}}"></input>
+		</div>
+		<div ng-if="inputField.displayType === 'enum'">
+			enum
+		</div>
+		<div ng-if="inputField.displayType === 'multi'">
+			multi
+		</div>
+		<div ng-if="inputField.displayType === 'address'">
+http://ipinfo.io/
+			<div class="col-sm-8">
+				<div class="form-group">
+				  <label class="col-sm-4 control-label">Address Line1:</label>
+				  <div class="col-sm-8">
+				    <input type="text" class="form-control" placeholder="Email">
+				  </div>
+				  <span class="help-block">Street address, P.O. box, company name, c/o</span>
+				</div>
+				<div class="form-group">
+				  <label class="col-sm-4 control-label">Address Line2:</label>
+				  <div class="col-sm-8">
+				    <input type="text" class="form-control" placeholder="Email">
+				  </div>
+				  <span class="help-block">Apartment, suite, unit, building, floor, etc.</span>
+				</div>
+				<div class="form-group">
+				  <label class="col-sm-4 control-label">City:</label>
+				  <div class="col-sm-8">
+				    <input type="text" class="form-control" placeholder="Email">
+				  </div>
+				</div>
+				<div class="form-group">
+				  <label class="col-sm-4 control-label">State / Province / Region / County:</label>
+				  <div class="col-sm-8">
+				    <input type="text" class="form-control" placeholder="Email">
+				  </div>
+				</div>
+				<div class="form-group">
+				  <label class="col-sm-4 control-label">ZIP / Postal Code / Postcode:</label>
+				  <div class="col-sm-8">
+				    <input type="text" class="form-control" placeholder="Email">
+				  </div>
+				</div>
+				<div class="form-group">
+				  <label class="col-sm-4 control-label">Country:</label>
+				  <div class="col-sm-8">
+				    <input type="text" class="form-control" placeholder="Email">
+				  </div>
+				</div>
+			</div>
+			<div class="col-sm-4">
+				Preview
+				Zoom 17 for address
+				Zoom 9 for city
+				Zoom 5 for state / small country
+				Zoom 4 for country
+				<img class="map" src="https://maps.googleapis.com/maps/api/staticmap?center=37.7367,-122.4572&amp;zoom=17&amp;size=200x200&amp;sensor=false" alt="San Francisco, California, United States Map" title="San Francisco, California, United States Map">
+			</div>
+		</div>
+		<div ng-if="inputField.displayType === 'phone'">
+		http://jackocnr.com/intl-tel-input.html
+		http://ipinfo.io/
+			<input type="tel" ng-required="inputField.required" ng-model="inputField.data" class="form-control" placeholder="{{inputField.display.placeholder}}"></input>
+		</div>
+		<span class="help-block" ng-if="inputField.display.instructions">{{inputField.display.instructions}}</span>
+>>>>>>> Stashed changes
 	</div>
 </section>
