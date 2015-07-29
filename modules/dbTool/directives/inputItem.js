@@ -1,8 +1,7 @@
 angular.module('dbtools')
-	.directive('inputItem',[
-		function(){
+	.directive('inputItem',['$modal','DataService','$http',
+		function($modal, DataService, $http){
 		return {
-			
 			restrict: 'E',
 			
 			templateUrl:'/admin/modules/dbTool/templates/inputItemTemplate.html',
@@ -24,7 +23,7 @@ angular.module('dbtools')
 
 				//constants
 				var itemTypes=["html","url","geopoint","email","datetime",
-								"picture","file","string","number","buffer","boolean"];
+								"image","file","string","number","buffer","boolean"];
 
 				scope.typeError = false;
 				scope.setReferenceData = function(){
@@ -36,7 +35,7 @@ angular.module('dbtools')
 				}
 
 
-				/*INTENSE DATA MASSAGING*/
+				/*INTENSE DATA MASSAGING  ;) */
 				//item already populated edit loop
 				if(scope.inputField.model){
 					if(scope.inputField.data){
@@ -68,12 +67,83 @@ angular.module('dbtools')
 					}
 				}
 
+
+				/*TYPE: DATETIME STUFF*/
+				//changing date ms number to display as date/time fields
+				if(scope.inputField.displayType === 'datetime'){
+					scope.inputField.date = new Date(scope.inputField.data);
+					scope.inputField.time = new Date(scope.inputField.data);
+				}
+				//blur function to combine date/time strings to ms number
 				scope.makeTime = function(){
+					console.log(scope.inputField.time, 'TIME', scope.inputField.date, 'DATE');
 					if(scope.inputField.time && scope.inputField.date){
-						scope.inputField.data = scope.inputField.date.toString().slice(0,15) + scope.inputField.time.toString().slice(15);
+						scope.inputField.data = 
+						 new Date(scope.inputField.date.toString().slice(0,15) + scope.inputField.time.toString().slice(15)).getTime();
+
 					}
 				}
-					
+
+				/*TYPE: image STUFF*/
+			 	scope.fileChanged = function(evt){
+			 		var formdata = new FormData();
+			 		var width = document.createAttribute('width');
+				 	var height = document.createAttribute('height'); 
+				 	var canvas = document.getElementById('previewCanvas');
+				 	var filetype;
+				 	var ctx;	
+
+			 		if(evt.target.files[0].name.includes('.jpg')){
+			 			filetype ="image/jpg";
+			 		}else if(evt.target.files[0].name.includes('.png')){
+			 			filetype = "image/png";
+			 		}else{
+			 			console.log('IMAGE FILETYPE NOT FOUND');
+			 		}
+				 		console.log(evt.target.files[0])
+				 		//draw image preview
+	   					var img = new Image;
+					    img.src = URL.createObjectURL(evt.target.files[0]);
+					    img.onload = function() {
+					    	
+
+					    	//scale images reasonably
+					    	if(img.width > img.height){ 
+						    	width.value =  (img.width > 300)  ? 300 : img.width;
+						    	height.value = (img.width > 300)  ? img.height/img.width * 300 : img.height;
+						    }else if(img.height > img.width){
+						    	height.value = (img.height > 300) ? 300 : img.height;
+						    	width.value =  (img.height > 300) ? img.width/img.height * 300 : img.width;
+
+						    }
+
+					    	canvas.setAttributeNode(width);
+					    	canvas.setAttributeNode(height);
+					    	ctx = canvas.getContext('2d');
+					    	ctx.clearRect(0, 0, ctx.width, ctx.height);
+					        ctx.drawImage(img, 0,0, width.value, height.value);
+			 				ctx.fillStyle = "black";
+			 				ctx.font = "bold 16px serif";
+			 				ctx.fillText(img.height + " X " + img.width, width.value * 0.5, height.value-5);
+							
+							formdata.append('file', evt.target.files[0]);
+							formdata.append('data', evt.target.files[0]);
+							//formdata.append('filename', evt.target.files[0].name);
+							//formdata.append('size', evt.target.files[0].size);
+							var request = new XMLHttpRequest();
+							request.open('POST', '/admin/upload/image', true);
+							request.send(formdata);
+					    }
+
+				}
+
+				/*	
+				function getBase64Image(img) {
+
+				    var dataURL = canvas.toDataURL("image/png");
+
+				    return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+				}*/
 			}
 		}
 	}

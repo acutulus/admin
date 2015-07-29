@@ -1,6 +1,6 @@
 <section>
 	<!--Reference Field display -->
-	<div ng-if="inputField.model">
+	<div ng-if="inputField.model" class="modal-row">
 		<label>{{inputField.name}}:</label>
 	    <input type="text" list="{{inputField.name + 'options'}}" class="form-control" ng-model="inputField.showOption" ng-blur="setReferenceData()"></input>
 	    <datalist id="{{inputField.name + 'options'}}">
@@ -9,7 +9,7 @@
 	    </datalist>
 	</div>
 	<!--Non reference Field display -->
-	<div ng-if="!inputField.model">
+	<div ng-if="!inputField.model" class="modal-row">
 		<label>{{inputField.name}}:<span ng-show="typeError" style="color:red">Did not find a useable input type, defaulting to string</span></label>
 		<!-- Start listing input types -->
 		<div ng-if="inputField.displayType === 'string'">
@@ -35,10 +35,32 @@
 		<div ng-if="inputField.displayType === 'datetime'">
 			<div class="row">
 				<div class="form-group col-xs-6">
-					<input type="date" class="form-control"  ng-model="inputField.date" ng-blur="makeTime()"></input>
+					<input type="date" class="form-control"  ng-model="inputField.date" ng-blur="makeTime()" placeholder="yyyy-MM-dd"></input>
 				</div>
 				<div class="form-group col-xs-6">
 					<input type="time" class="form-control"  ng-model="inputField.time" ng-blur="makeTime()"></input>
+				</div>
+			</div>
+		</div>
+		<div ng-if="inputField.displayType === 'image'">
+			<div class="row">
+				<div class="form-group col-xs-4">
+					<div ng-show="!import">
+						<label>Import image from computer:</label>
+						<input type="file" style="margin:15px;" onchange="angular.element(this).scope().fileChanged(event)" accept="image/*"></input>
+						<a href="" ng-click="import = true;image.file = ''">Or... Upload an image from a url.</a>
+					</div>
+					<div ng-show="import">
+						<label>Import image from url:</label>
+						<input type="text" class="form-control" ng-model="image" placeholder="Enter image url"></input>
+						<button class="btn btn-sm btn-success" ng-click="getImageUrl(image)">Grab Image</button><br>
+						<a href="" ng-click="import = false;">Or... Upload a file from your computer</a>
+					</div>
+				</div>
+				<div class="col-xs-8" >
+					<canvas id="previewCanvas"></canvas>
+					<span ng-show="imageData.height && imageData.width">{{imageData.width + ' X ' + imageData.height}}</span>
+
 				</div>
 			</div>
 		</div>
