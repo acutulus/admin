@@ -99,13 +99,78 @@ angular.module('dbtools')
 			 			filetype = "image/png";
 			 		}else{
 			 			console.log('IMAGE FILETYPE NOT FOUND');
+			 			alert('image filetype not recognized')
 			 		}
-				 		console.log(evt.target.files[0])
-				 		//draw image preview
-	   					var img = new Image;
-					    img.src = URL.createObjectURL(evt.target.files[0]);
-					    img.onload = function() {
-					    	
+			 		
+			 		console.log(evt.target.files[0])
+			 		//draw image preview
+   					var img = new Image;
+				    img.src = URL.createObjectURL(evt.target.files[0]);
+				    img.onload = function() {
+				    	
+
+				    	//scale images reasonably
+				    	if(img.width > img.height){ 
+					    	width.value =  (img.width > 300)  ? 300 : img.width;
+					    	height.value = (img.width > 300)  ? img.height/img.width * 300 : img.height;
+					    }else if(img.height > img.width){
+					    	height.value = (img.height > 300) ? 300 : img.height;
+					    	width.value =  (img.height > 300) ? img.width/img.height * 300 : img.width;
+
+					    }
+
+				    	canvas.setAttributeNode(width);
+				    	canvas.setAttributeNode(height);
+				    	ctx = canvas.getContext('2d');
+				    	ctx.clearRect(0, 0, ctx.width, ctx.height);
+				        ctx.drawImage(img, 0,0, width.value, height.value);
+		 				ctx.fillStyle = "black";
+		 				ctx.font = "bold 16px serif";
+		 				ctx.fillText(img.height + " X " + img.width, width.value * 0.5, height.value-5);
+						
+						formdata.append('file', evt.target.files[0]);
+						formdata.append('data', evt.target.files[0]);
+						//formdata.append('filename', evt.target.files[0].name);
+						//formdata.append('size', evt.target.files[0].size);
+						var request = new XMLHttpRequest();
+						request.onreadystatechange = function(){
+							if(request.readyState === 4){
+								scope.inputField.data = JSON.parse(request.responseText);
+								console.log('RETURN FROM IMGFILE',scope.inputField.data)
+
+							}
+						}
+						request.open('POST', '/admin/upload/image', true);
+						request.send(formdata);
+				    }
+
+				}
+				scope.getImageUrl = function(){
+					if(scope.inputField.imageUrl.match(/(\S+\.[^/\s]+(\/\S+|\/|))/g)){
+				 		
+				 		var width = document.createAttribute('width');
+					 	var height = document.createAttribute('height'); 
+					 	var canvas = document.getElementById('previewCanvas');
+					 	var filetype;
+					 	var ctx;	
+						
+						var img = new Image();
+						img.src = scope.inputField.imageUrl;
+						img.onload = function(){
+							
+							//send url to backend, get image data
+							var formdata = new FormData();
+							formdata.append('url', scope.inputField.imageUrl);
+							var request = new XMLHttpRequest();
+							request.onreadystatechange = function(){
+								if(request.readyState === 4){
+									scope.inputField.data = JSON.parse(request.responseText);
+									console.log('RETURN FROM IMGURL',scope.inputField.data)
+								}
+							}
+							request.open('POST', '/admin/upload/image', true);
+							request.send(formdata);
+						
 
 					    	//scale images reasonably
 					    	if(img.width > img.height){ 
@@ -114,29 +179,18 @@ angular.module('dbtools')
 						    }else if(img.height > img.width){
 						    	height.value = (img.height > 300) ? 300 : img.height;
 						    	width.value =  (img.height > 300) ? img.width/img.height * 300 : img.width;
+ 							}
 
-						    }
-
-					    	canvas.setAttributeNode(width);
-					    	canvas.setAttributeNode(height);
-					    	ctx = canvas.getContext('2d');
-					    	ctx.clearRect(0, 0, ctx.width, ctx.height);
-					        ctx.drawImage(img, 0,0, width.value, height.value);
-			 				ctx.fillStyle = "black";
-			 				ctx.font = "bold 16px serif";
-			 				ctx.fillText(img.height + " X " + img.width, width.value * 0.5, height.value-5);
-							
-							formdata.append('file', evt.target.files[0]);
-							formdata.append('data', evt.target.files[0]);
-							//formdata.append('filename', evt.target.files[0].name);
-							//formdata.append('size', evt.target.files[0].size);
-							var request = new XMLHttpRequest();
-							request.open('POST', '/admin/upload/image', true);
-							request.send(formdata);
-					    }
-
+ 							canvas.setAttributeNode(width);
+ 							canvas.setAttributeNode(height);
+ 							ctx = canvas.getContext('2d');
+ 							ctx.drawImage(img,0,0,width.value,height.value);
+ 							ctx.fillStyle = "black";
+ 							ctx.font = "bold 16px serif";
+ 							ctx.fillText(img.height + ' X ' + img.width, width.value * 0.5, height.value - 5);
+ 						}						
+					}
 				}
-
 				/*	
 				function getBase64Image(img) {
 

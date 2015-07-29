@@ -55,8 +55,8 @@
 					</div>
 					<div ng-show="import">
 						<label>Import image from url:</label>
-						<input type="text" class="form-control" ng-model="image" placeholder="Enter image url"></input>
-						<button class="btn btn-sm btn-success" ng-click="getImageUrl(image)">Grab Image</button><br>
+						<input type="text" class="form-control" ng-model="inputField.imageUrl" placeholder="Enter image url"></input>
+						<button style="margin-top:5px;" class="btn btn-success" ng-click="getImageUrl()">Grab Image</button><br>
 						<a href="" ng-click="import = false;">Or... Upload a file from your computer</a>
 					</div>
 				</div>
@@ -155,6 +155,5 @@ http://ipinfo.io/
 			<input type="tel" ng-required="inputField.required" ng-model="inputField.data" class="form-control" placeholder="{{inputField.display.placeholder}}"></input>
 		</div>
 		<span class="help-block" ng-if="inputField.display.instructions">{{inputField.display.instructions}}</span>
->>>>>>> Stashed changes
 	</div>
 </section>
