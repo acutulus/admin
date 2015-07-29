@@ -24,6 +24,46 @@ angular.module('dbtools')
 				//constants
 				var itemTypes=["html","url","geopoint","email","datetime",
 								"image","file","string","number","buffer","boolean"];
+			
+				//UTILITY FUNCTIONS - to prepare view for certain inputs
+				var specialTypePreperations = function(){
+					if(scope.inputField.displayType === 'image'){
+						if(typeof scope.inputField.data === 'object'){
+							if(scope.inputField.data.absoluteFilePath !== 'undefined'){
+								var img = new Image();
+								img.src = scope.inputField.data.filePath;
+								console.log('img', img)
+								img.onload = function(){
+									drawToCanvas(img);
+								}
+							}
+						}
+					}
+					return;
+				}
+
+				var drawToCanvas = function(img){
+					var width = document.createAttribute('width');
+				 	var height = document.createAttribute('height'); 
+				 	var canvas = document.getElementById('previewCanvas');
+				 	var ctx;
+					//scale images reasonably
+			    	if(img.width > img.height){ 
+				    	width.value =  (img.width > 300)  ? 300 : img.width;
+				    	height.value = (img.width > 300)  ? img.height/img.width * 300 : img.height;
+				    }else if(img.height > img.width){
+				    	height.value = (img.height > 300) ? 300 : img.height;
+				    	width.value =  (img.height > 300) ? img.width/img.height * 300 : img.width;
+					}
+
+					canvas.setAttributeNode(width);
+					canvas.setAttributeNode(height);
+					ctx = canvas.getContext('2d');
+					ctx.drawImage(img,0,0,width.value,height.value);
+					ctx.fillStyle = "black";
+					ctx.font = "bold 16px serif";
+					ctx.fillText(img.height + ' X ' + img.width, width.value * 0.5, height.value - 5);
+				}
 
 				scope.typeError = false;
 				scope.setReferenceData = function(){
@@ -60,6 +100,8 @@ angular.module('dbtools')
 					scope.inputField.displayType = scope.inputField.displayType.slice(1);
 				}else{
 					if(itemTypes.indexOf(scope.inputField.displayType) > -1){
+						//handle special type preparations
+						specialTypePreperations();
 					}else{
 						scope.typeError = true;
 						scope.inputField.type = "string";
@@ -87,9 +129,7 @@ angular.module('dbtools')
 				/*TYPE: image STUFF*/
 			 	scope.fileChanged = function(evt){
 			 		var formdata = new FormData();
-			 		var width = document.createAttribute('width');
-				 	var height = document.createAttribute('height'); 
-				 	var canvas = document.getElementById('previewCanvas');
+
 				 	var filetype;
 				 	var ctx;	
 
@@ -109,24 +149,7 @@ angular.module('dbtools')
 				    img.onload = function() {
 				    	
 
-				    	//scale images reasonably
-				    	if(img.width > img.height){ 
-					    	width.value =  (img.width > 300)  ? 300 : img.width;
-					    	height.value = (img.width > 300)  ? img.height/img.width * 300 : img.height;
-					    }else if(img.height > img.width){
-					    	height.value = (img.height > 300) ? 300 : img.height;
-					    	width.value =  (img.height > 300) ? img.width/img.height * 300 : img.width;
-
-					    }
-
-				    	canvas.setAttributeNode(width);
-				    	canvas.setAttributeNode(height);
-				    	ctx = canvas.getContext('2d');
-				    	ctx.clearRect(0, 0, ctx.width, ctx.height);
-				        ctx.drawImage(img, 0,0, width.value, height.value);
-		 				ctx.fillStyle = "black";
-		 				ctx.font = "bold 16px serif";
-		 				ctx.fillText(img.height + " X " + img.width, width.value * 0.5, height.value-5);
+				    	drawToCanvas(img);
 						
 						formdata.append('file', evt.target.files[0]);
 						formdata.append('data', evt.target.files[0]);
@@ -171,26 +194,12 @@ angular.module('dbtools')
 							request.open('POST', '/admin/upload/image', true);
 							request.send(formdata);
 						
-
-					    	//scale images reasonably
-					    	if(img.width > img.height){ 
-						    	width.value =  (img.width > 300)  ? 300 : img.width;
-						    	height.value = (img.width > 300)  ? img.height/img.width * 300 : img.height;
-						    }else if(img.height > img.width){
-						    	height.value = (img.height > 300) ? 300 : img.height;
-						    	width.value =  (img.height > 300) ? img.width/img.height * 300 : img.width;
- 							}
-
- 							canvas.setAttributeNode(width);
- 							canvas.setAttributeNode(height);
- 							ctx = canvas.getContext('2d');
- 							ctx.drawImage(img,0,0,width.value,height.value);
- 							ctx.fillStyle = "black";
- 							ctx.font = "bold 16px serif";
- 							ctx.fillText(img.height + ' X ' + img.width, width.value * 0.5, height.value - 5);
+							drawToCanvas(img);
  						}						
 					}
 				}
+
+
 				/*	
 				function getBase64Image(img) {
 

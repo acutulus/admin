@@ -39,7 +39,6 @@ angular.module('dbtools')
 				//for iterating over current schema
 				var currentSchema = $scope.databaseSchemas[table].schema;
 				var currentProperties;
-				//if no data returned set to display no data message
 				for(var x in currentSchema){
 					if(currentSchema[x].type){
 						//check if field is a reference
@@ -74,6 +73,7 @@ angular.module('dbtools')
 							id:data[x][y],
 							value:data[x][y]
 						}
+
 					}
 				}
 				$scope.currentData.query = data;				
