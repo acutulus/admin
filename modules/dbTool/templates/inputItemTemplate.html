@@ -30,7 +30,17 @@
 			</div>		
 		</div>
 		<div ng-if="inputField.displayType === 'file'">
-			File
+			<div class="row">
+				<div class="form-group col-xs-6">
+					<label>Import file from computer</label>
+					<input type="file" style="margin:15px;" onchange="angular.element(this).scope().fileChanged(event)"></input>
+				</div>
+				<div class="col-xs-6">
+					<div ng-show="typeof inputField.data === 'object' ">
+						<p style="color:green">File Loaded Successfully</p>
+					</div>
+				</div>
+			</div>
 		</div>
 		<div ng-if="inputField.displayType === 'html'">
 			<text-angular ng-model="inputField.data" ng-required="inputField.required" placeholder="{{inputField.display.placeholder}}"></text-angular>
@@ -50,7 +60,7 @@
 				<div class="form-group col-xs-4">
 					<div ng-show="!import">
 						<label>Import image from computer:</label>
-						<input type="file" style="margin:15px;" onchange="angular.element(this).scope().fileChanged(event)" accept="image/*"></input>
+						<input type="file" style="margin:15px;" onchange="angular.element(this).scope().imageFileChanged(event)" accept="image/*"></input>
 						<a href="" ng-click="import = true;image.file = ''">Or... Upload an image from a url.</a>
 					</div>
 					<div ng-show="import">

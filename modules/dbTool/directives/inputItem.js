@@ -110,7 +110,7 @@ angular.module('dbtools')
 				}
 
 
-				/*TYPE: DATETIME STUFF*/
+				/*### TYPE: DATETIME STUFF ###*/
 				//changing date ms number to display as date/time fields
 				if(scope.inputField.displayType === 'datetime'){
 					scope.inputField.date = new Date(scope.inputField.data);
@@ -126,8 +126,8 @@ angular.module('dbtools')
 					}
 				}
 
-				/*TYPE: image STUFF*/
-			 	scope.fileChanged = function(evt){
+				/*### TYPE: IMAGE STUFF ###*/
+			 	scope.imageFileChanged = function(evt){
 			 		var formdata = new FormData();
 
 				 	var filetype;
@@ -159,7 +159,6 @@ angular.module('dbtools')
 						request.onreadystatechange = function(){
 							if(request.readyState === 4){
 								scope.inputField.data = JSON.parse(request.responseText);
-								console.log('RETURN FROM IMGFILE',scope.inputField.data)
 
 							}
 						}
@@ -188,7 +187,6 @@ angular.module('dbtools')
 							request.onreadystatechange = function(){
 								if(request.readyState === 4){
 									scope.inputField.data = JSON.parse(request.responseText);
-									console.log('RETURN FROM IMGURL',scope.inputField.data)
 								}
 							}
 							request.open('POST', '/admin/upload/image', true);
@@ -199,14 +197,20 @@ angular.module('dbtools')
 					}
 				}
 
+				/*### TYPE: FILE stuff ###*/
+				scope.fileChanged = function(evt){
+					var formdata = new FormData();
+					formdata.append('file', evt.target.files[0]);
+					var request = new XMLHttpRequest();
+					request.onreadystatechange = function(){
+						if(request.readyState === 4){
+							scope.inputField.data = JSON.parse(request.responseText);
+						}
+					}
+					request.open('POST', '/admin/upload/file', true);
+					request.send(formdata);
+				}
 
-				/*	
-				function getBase64Image(img) {
-
-				    var dataURL = canvas.toDataURL("image/png");
-
-				    return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-				}*/
 			}
 		}
 	}
