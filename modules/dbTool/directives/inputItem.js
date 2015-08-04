@@ -1,12 +1,12 @@
 angular.module('dbtools')
-	.directive('inputItem',['$modal','DataService','$http',
-		function($modal, DataService, $http){
+	.directive('inputItem',['$modal','DataService','$http', '$compile',
+		function($modal, DataService, $http, $compile){
 		return {
 			restrict: 'E',
 			
 			templateUrl:'/admin/modules/dbTool/templates/inputItemTemplate.html',
 			
-			/*inputField: OBJECT: 
+			/*kepsType: OBJECT: 
 			Property- displayAs: Optional, used for modifying reference types
 			Property- displayType: Optional, will define field type, set to type if not provided
 			Property- options: Optional, array of id/value that matches the reference type
@@ -16,28 +16,56 @@ angular.module('dbtools')
 			Property- model: Not Optional, value or false if not a reference field*/
 
 			scope:{
-				inputField:"="
+				kepsType:"=",
+				kepsModel:"="
 			},
 
 			link: function(scope,element,attrs){
-
+				console.log(scope.kepsModel);
 				//constants
-				var itemTypes=["html","url","geopoint","email","datetime",
+				var itemTypes=["html","url","geopoint","email","datetime","array",
 								"image","file","string","number","buffer","boolean"];
 			
 				//UTILITY FUNCTIONS - to prepare view for certain inputs
 				var specialTypePreperations = function(){
-					if(scope.inputField.displayType === 'image'){
-						if(typeof scope.inputField.data === 'object'){
-							if(scope.inputField.data.absoluteFilePath !== 'undefined'){
+					if(scope.kepsType.displayType === 'image'){
+						if(typeof scope.kepsModel === 'object'){
+							if(scope.kepsModel.absoluteFilePath !== 'undefined'){
 								var img = new Image();
-								img.src = scope.inputField.data.filePath;
-								console.log('img', img)
+								img.src = scope.kepsModel.filePath;
 								img.onload = function(){
 									drawToCanvas(img);
 								}
 							}
 						}
+					}
+					//build recursive inner element for arrays
+					if(scope.kepsType.displayType === 'array'){
+						scope.kepsType.showArray = [];
+						//this should hold an array of objects or single data types
+						scope.kepsModel[scope.kepsType.name]  = [];
+						console.log('DATA',scope.kepsType)
+						scope.kepsType.arrayData = [];
+						for(var i in scope.kepsType.type[0]){
+							var temp = scope.kepsType.type[0][i];
+							scope.kepsType.arrayData.push({	name:i,
+															type:temp.type,
+															model:false
+														});
+						}
+						console.log(scope.kepsType.arrayData);
+						//no data yet pass value of array template
+						if(!scope.kepsModel[scope.kepsType.name]){
+							scope.kepsModel[scope.kepsType.name] = [{test:'woo'}];
+						}
+						var appendHTML = "{{kepsModel}}<div style='width:95%;margin-left:auto;margin-right:auto;display:block;'>";
+						appendHTML += "<ul class='list-group'><li class='list-group-item' ng-repeat='obj in kepsModel[kepsType.name] track by $index'>";
+						appendHTML += "<a href='' style='color:inherit;' ng-click='kepsType.showArray[$index] = !kepsType.showArray[$index]'>";
+						appendHTML += "{{$index}} {{kepsType.showArray[$index] ? 'Hide Contents' : 'Show Contents'}}</a><a href='' ng-click='removeArrayItem($index)' class='badge'><span class='glyphicon glyphicon-remove'></span></a>"
+						appendHTML += "<a href='' ng-click='addArrayItem()' class='badge'><span class='glyphicon glyphicon-plus'></span></a> "
+						appendHTML += "<div ng-show='kepsType.showArray[$index]'><form>{{obj}}<keps-form keps-type='kepsType.arrayData' keps-model='obj'></keps-form></div></form></li></ul></div>";
+						element.append(appendHTML);
+						$compile(element.contents())(scope);
 					}
 					return;
 				}
@@ -67,9 +95,9 @@ angular.module('dbtools')
 
 				scope.typeError = false;
 				scope.setReferenceData = function(){
-					for(var x in scope.inputField.options){
-						if(scope.inputField.options[x].value === scope.inputField.showOption){
-							scope.inputField.data = scope.inputField.options[x].id;
+					for(var x in scope.kepsType.options){
+						if(scope.kepsType.options[x].value === scope.kepsType.showOption){
+							scope.kepsModel = scope.kepsType.options[x].id;
 						}
 					}
 				}
@@ -77,51 +105,52 @@ angular.module('dbtools')
 
 				/*INTENSE DATA MASSAGING  ;) */
 				//item already populated edit loop
-				if(scope.inputField.model){
-					if(scope.inputField.data){
-						console.log('scope.inputField.name',scope.inputField.data)
-						for(var x in scope.inputField.options){
-							if(scope.inputField.options[x].id === scope.inputField.data){
-								scope.inputField.showOption = scope.inputField.options[x].value;
-							}
+				if(scope.kepsType.model){
+					for(var x in scope.kepsType.options){
+						if(scope.kepsType.options[x].id === scope.kepsModel){
+							scope.kepsType.showOption = scope.kepsType.options[x].value;
 						}
 					}
 				}
 				//resolve type of field
-				if(typeof scope.inputField.displayType !== 'undefined'){
-					scope.inputField.displayType = scope.inputField.displayType.toLowerCase();
+				if(typeof scope.kepsType.displayType !== 'undefined'){
+					scope.kepsType.displayType = scope.kepsType.displayType.toLowerCase();
 				}else{
-					scope.inputField.displayType = scope.inputField.type.toLowerCase();
+					if(scope.kepsType.type.constructor.toString().indexOf('Array') > -1){
+						scope.kepsType.displayType = 'array';
+					}else{
+						scope.kepsType.displayType = scope.kepsType.type.toLowerCase();
+					}
+					
 				}
 
 				//check if reference
-				if(scope.inputField.options){
+				if(scope.kepsType.options){
 					//parse off leading : for display
-					scope.inputField.displayType = scope.inputField.displayType.slice(1);
+					scope.kepsType.displayType = scope.kepsType.displayType.slice(1);
 				}else{
-					if(itemTypes.indexOf(scope.inputField.displayType) > -1){
+					if(itemTypes.indexOf(scope.kepsType.displayType) > -1){
 						//handle special type preparations
 						specialTypePreperations();
 					}else{
 						scope.typeError = true;
-						scope.inputField.type = "string";
-						scope.inputField.displayType = "string"
+						scope.kepsType.type = "string";
+						scope.kepsType.displayType = "string"
 					}
 				}
 
 
 				/*### TYPE: DATETIME STUFF ###*/
 				//changing date ms number to display as date/time fields
-				if(scope.inputField.displayType === 'datetime'){
-					scope.inputField.date = new Date(scope.inputField.data);
-					scope.inputField.time = new Date(scope.inputField.data);
+				if(scope.kepsType.displayType === 'datetime'){
+					scope.kepsType.date = new Date(scope.kepsModel);
+					scope.kepsType.time = new Date(scope.kepsModel);
 				}
 				//blur function to combine date/time strings to ms number
 				scope.makeTime = function(){
-					console.log(scope.inputField.time, 'TIME', scope.inputField.date, 'DATE');
-					if(scope.inputField.time && scope.inputField.date){
-						scope.inputField.data = 
-						 new Date(scope.inputField.date.toString().slice(0,15) + scope.inputField.time.toString().slice(15)).getTime();
+					if(scope.kepsType.time && scope.kepsType.date){
+						scope.kepsModel = 
+						 new Date(scope.kepsType.date.toString().slice(0,15) + scope.kepsType.time.toString().slice(15)).getTime();
 
 					}
 				}
@@ -158,8 +187,8 @@ angular.module('dbtools')
 						var request = new XMLHttpRequest();
 						request.onreadystatechange = function(){
 							if(request.readyState === 4){
-								scope.inputField.data = JSON.parse(request.responseText);
-
+								scope.kepsModel[scope.kepsType.name] = JSON.parse(request.responseText);
+								scope.$apply();
 							}
 						}
 						request.open('POST', '/admin/upload/image', true);
@@ -168,7 +197,7 @@ angular.module('dbtools')
 
 				}
 				scope.getImageUrl = function(){
-					if(scope.inputField.imageUrl.match(/(\S+\.[^/\s]+(\/\S+|\/|))/g)){
+					if(scope.kepsType.imageUrl.match(/(\S+\.[^/\s]+(\/\S+|\/|))/g)){
 				 		
 				 		var width = document.createAttribute('width');
 					 	var height = document.createAttribute('height'); 
@@ -177,16 +206,17 @@ angular.module('dbtools')
 					 	var ctx;	
 						
 						var img = new Image();
-						img.src = scope.inputField.imageUrl;
+						img.src = scope.kepsType.imageUrl;
 						img.onload = function(){
 							
 							//send url to backend, get image data
 							var formdata = new FormData();
-							formdata.append('url', scope.inputField.imageUrl);
+							formdata.append('url', scope.kepsType.imageUrl);
 							var request = new XMLHttpRequest();
 							request.onreadystatechange = function(){
 								if(request.readyState === 4){
-									scope.inputField.data = JSON.parse(request.responseText);
+									scope.kepsModel[scope.kepsType.name] = JSON.parse(request.responseText);
+									scope.$apply();
 								}
 							}
 							request.open('POST', '/admin/upload/image', true);
@@ -204,13 +234,21 @@ angular.module('dbtools')
 					var request = new XMLHttpRequest();
 					request.onreadystatechange = function(){
 						if(request.readyState === 4){
-							scope.inputField.data = JSON.parse(request.responseText);
+							scope.kepsModel[scope.kepsType.name] = JSON.parse(request.responseText);
+							scope.$apply();
 						}
 					}
 					request.open('POST', '/admin/upload/file', true);
 					request.send(formdata);
 				}
 
+				/*### TYPE: ARRAY stuff ###*/
+				scope.addArrayItem = function(){
+					scope.kepsModel.push(scope.kepsType.arrayTemplate.slice(0));
+				}
+				scope.removeArrayItem = function(index){
+					scope.kepsModel.splice(index,1);
+				}
 			}
 		}
 	}

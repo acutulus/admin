@@ -3,9 +3,9 @@
   <h4 class="modal-title">Edit Item</h4>
 </div>
 <div class="modal-body" >	
-	<div ng-repeat="field in editData">
-		<input-item input-field="field"/>
-	</div>
+
+	<keps-form pass-data="editData"></keps-form>
+
 </div>
 <div class="modal-footer">
   <button class="btn btn-success" ng-click="submit()">Submit</button>

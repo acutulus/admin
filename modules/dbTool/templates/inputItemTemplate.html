@@ -1,86 +1,88 @@
 <section>
 	<!--Reference Field display -->
-	<div ng-if="inputField.model" class="modal-row">
-		<label ng-if="inputField.display.label">{{inputField.display.label}}:</label>
-		<label ng-if="!inputField.display.label">{{inputField.name}}:</label>
-	    <input type="text" list="{{inputField.name + 'options'}}" class="form-control" ng-model="inputField.showOption" ng-blur="setReferenceData()"></input>
-	    <datalist id="{{inputField.name + 'options'}}">
-	    	<option ng-repeat="option in inputField.options" value="{{option.value}}" 
+	<div ng-if="kepsType.model" class="modal-row">
+		<label ng-if="kepsType.display.label">{{kepsType.display.label}}:</label>
+		<label ng-if="!kepsType.display.label">{{kepsType.name}}:</label>
+	    <input type="text" list="{{kepsType.name + 'options'}}" class="form-control" ng-model="kepsType.showOption" ng-blur="setReferenceData()"></input>
+	    <datalist id="{{kepsType.name + 'options'}}">
+	    	<option ng-repeat="option in kepsType.options" value="{{option.value}}" 
 	    	></option>
 	    </datalist>
 	</div>
 	<!--Non reference Field display -->
-	<div ng-if="!inputField.model" class="modal-row">
-		<label ng-if="inputField.display.label">{{inputField.display.label}}:</label>
-		<label ng-if="!inputField.display.label">{{inputField.name}}:</label>
+	<div ng-if="!kepsType.model" class="modal-row">
+		<label ng-if="kepsType.display.label">{{kepsType.display.label}}:</label>
+		<label ng-if="!kepsType.display.label">{{kepsType.name}}:</label>
 		<span ng-show="typeError" style="color:red">Did not find a useable input type, defaulting to string</span>
 		<!-- Start listing input types -->
-		<div ng-if="inputField.displayType === 'string'">
-			<input type="text" ng-required="inputField.required" ng-model="inputField.data" class="form-control" placeholder="{{inputField.display.placeholder}}"></input>
+		<div ng-if="kepsType.displayType === 'string'">
+			<input type="text" ng-required="kepsType.required" ng-model="kepsModel[kepsType.name]" class="form-control" placeholder="{{kepsType.display.placeholder}}"></input>
 		</div>
-		<div ng-if="inputField.displayType === 'number'">
-			<input type="number" ng-required="inputField.required" ng-model="inputField.data" class="form-control"></input>
+		<div ng-if="kepsType.displayType === 'number'">
+			<input type="number" ng-required="kepsType.required" ng-model="kepsModel[kepsType.name]" class="form-control"></input>
 		</div>
-		<div ng-if="inputField.displayType === 'boolean'">
+		<div ng-if="kepsType.displayType === 'boolean'">
 			<div class="radio-inline">
-			  <label><input type="radio" ng-model="inputField.data" ng-value="true">True</label>
+			  <label><input type="radio" ng-required="kepsType.required" ng-model="kepsModel[kepsType.name]" ng-value="true">True</label>
 			</div>
 			<div class="radio-inline">
-			  <label><input type="radio" ng-model="inputField.data" ng-value="false">False</label>
+			  <label><input type="radio" ng-required="kepsType.required" ng-model="kepsModel[kepsType.name]" ng-value="false">False</label>
 			</div>		
 		</div>
-		<div ng-if="inputField.displayType === 'file'">
+		<div ng-if="kepsType.displayType === 'file'">
 			<div class="row">
 				<div class="form-group col-xs-6">
 					<label>Import file from computer</label>
-					<input type="file" style="margin:15px;" onchange="angular.element(this).scope().fileChanged(event)"></input>
+					<input type="file" ng-required="kepsType.required" style="margin:15px;" onchange="angular.element(this).scope().fileChanged(event)"></input>
 				</div>
 				<div class="col-xs-6">
-					<div ng-show="typeof inputField.data === 'object' ">
-						<p style="color:green">File Loaded Successfully</p>
-					</div>
+					<ul style="list-style:none;">
+						<li><strong>File Info</strong></li>
+						<li>FileName: {{kepsModel[kepsType.name].fileName}}</li>
+						<li>Size: {{kepsModel[kepsType.name].fileSize}}</li>
+					</ul>
 				</div>
 			</div>
 		</div>
-		<div ng-if="inputField.displayType === 'html'">
-			<text-angular ng-model="inputField.data" ng-required="inputField.required" placeholder="{{inputField.display.placeholder}}"></text-angular>
+		<div ng-if="kepsType.displayType === 'html'">
+			<text-angular ng-model="kepsModel[kepsType.name]" ng-required="kepsType.required" placeholder="{{kepsType.display.placeholder}}"></text-angular>
 		</div>
-		<div ng-if="inputField.displayType === 'datetime'">
+		<div ng-if="kepsType.displayType === 'datetime'">
 			<div class="row">
 				<div class="form-group col-xs-6">
-					<input type="date" class="form-control"  ng-model="inputField.date" ng-blur="makeTime()" placeholder="yyyy-MM-dd"></input>
+					<input type="date" ng-required="kepsType.required" class="form-control"  ng-model="kepsType.date" ng-blur="makeTime()" placeholder="yyyy-MM-dd"></input>
 				</div>
 				<div class="form-group col-xs-6">
-					<input type="time" class="form-control"  ng-model="inputField.time" ng-blur="makeTime()"></input>
+					<input type="time" ng-required="kepsType.required" class="form-control"  ng-model="kepsType.time" ng-blur="makeTime()"></input>
 				</div>
 			</div>
 		</div>
-		<div ng-if="inputField.displayType === 'image'">
+		<div ng-if="kepsType.displayType === 'image'">
 			<div class="row">
-				<div class="form-group col-xs-4">
+				<div class="form-group col-xs-5">
 					<div ng-show="!import">
 						<label>Import image from computer:</label>
-						<input type="file" style="margin:15px;" onchange="angular.element(this).scope().imageFileChanged(event)" accept="image/*"></input>
+						<input type="file" ng-required="kepsType.required" style="margin:15px;" onchange="angular.element(this).scope().imageFileChanged(event)" accept="image/*"></input>
 						<a href="" ng-click="import = true;image.file = ''">Or... Upload an image from a url.</a>
 					</div>
 					<div ng-show="import">
 						<label>Import image from url:</label>
-						<input type="text" class="form-control" ng-model="inputField.imageUrl" placeholder="Enter image url"></input>
+						<input type="text" ng-required="kepsType.required" class="form-control" ng-model="kepsType.imageUrl" placeholder="Enter image url"></input>
 						<button style="margin-top:5px;" class="btn btn-success" ng-click="getImageUrl()">Grab Image</button><br>
 						<a href="" ng-click="import = false;">Or... Upload a file from your computer</a>
 					</div>
 				</div>
-				<div class="col-xs-8" >
+				<div class="col-xs-7" >
 					<canvas id="previewCanvas"></canvas>
 					<span ng-show="imageData.height && imageData.width">{{imageData.width + ' X ' + imageData.height}}</span>
 
 				</div>
 			</div>
 		</div>
-		<div ng-if="inputField.displayType === 'url'">
-			<input type="url" ng-required="inputField.required" ng-model="inputField.data" class="form-control" placeholder="{{inputField.display.placeholder}}"></input>
+		<div ng-if="kepsType.displayType === 'url'">
+			<input type="url" ng-required="kepsType.required" ng-model="kepsModel[kepsType.name]" class="form-control" placeholder="{{kepsType.display.placeholder}}"></input>
 		</div>
-		<div ng-if="inputField.displayType === 'geopoint'">
+		<div ng-if="kepsType.displayType === 'geopoint'">
 			<div class="col-sm-8">
 				<div class="form-group">
 				  <label class="col-sm-4 control-label">Lat:</label>
@@ -99,16 +101,16 @@
 				Preview
 			</div>
 		</div>
-		<div ng-if="inputField.displayType === 'email'">
-			<input type="email" ng-required="inputField.required" ng-model="inputField.data" class="form-control" placeholder="{{inputField.display.placeholder}}"></input>
+		<div ng-if="kepsType.displayType === 'email'">
+			<input type="email" ng-required="kepsType.required" ng-model="kepsModel[kepsType.name]" class="form-control" placeholder="{{kepsType.display.placeholder}}"></input>
 		</div>
-		<div ng-if="inputField.displayType === 'enum'">
+		<div ng-if="kepsType.displayType === 'enum'">
 			enum
 		</div>
-		<div ng-if="inputField.displayType === 'multi'">
+		<div ng-if="kepsType.displayType === 'multi'">
 			multi
 		</div>
-		<div ng-if="inputField.displayType === 'address'">
+		<div ng-if="kepsType.displayType === 'address'">
 http://ipinfo.io/
 			<div class="col-sm-8">
 				<div class="form-group">
@@ -159,11 +161,16 @@ http://ipinfo.io/
 				<img class="map" src="https://maps.googleapis.com/maps/api/staticmap?center=37.7367,-122.4572&amp;zoom=17&amp;size=200x200&amp;sensor=false" alt="San Francisco, California, United States Map" title="San Francisco, California, United States Map">
 			</div>
 		</div>
-		<div ng-if="inputField.displayType === 'phone'">
+		<div ng-if="kepsType.displayType === 'phone'">
 		http://jackocnr.com/intl-tel-input.html
 		http://ipinfo.io/
-			<input type="tel" ng-required="inputField.required" ng-model="inputField.data" class="form-control" placeholder="{{inputField.display.placeholder}}"></input>
+			<input type="tel" ng-required="kepsType.required" ng-model="kepsModel[kepsType.name]" class="form-control" placeholder="{{kepsType.display.placeholder}}"></input>
 		</div>
-		<span class="help-block" ng-if="inputField.display.instructions">{{inputField.display.instructions}}</span>
+		<div ng-if="kepsType.displayType === 'array'">
+		</div>
+		<div ng-if="kepsType.displayType === 'phone'">
+
+		</div>
+		<span class="help-block" ng-if="kepsType.display.instructions">{{kepsType.display.instructions}}</span>
 	</div>
 </section>

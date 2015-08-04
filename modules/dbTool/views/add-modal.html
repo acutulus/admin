@@ -4,9 +4,9 @@
 </div>
 
 <div class="modal-body">
-	<div ng-repeat="field in passData">
-		<input-item input-field="field"/>
-	</div>
+
+	<keps-form keps-data="passData" keps-model="newItem"></keps-form>
+
 </div>
 <div class="modal-footer">
   <button class="btn btn-success" ng-click="submit()">Submit</button>

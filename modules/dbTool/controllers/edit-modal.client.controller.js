@@ -5,7 +5,7 @@ angular.module('dbtools').controller('EditModalCtrl',
 		
 		$scope.editData = item
 		var newItem = {};
-
+		console.log('data bein past', $scope.editData);
 		$scope.submit = function(){
 			for(var x in $scope.editData){
 				if($scope.editData[x].hasOwnProperty('data')){

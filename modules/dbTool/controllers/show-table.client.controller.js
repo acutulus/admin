@@ -211,11 +211,19 @@ angular.module('dbtools')
 						}
 					}					
 				}
+
+				//if its some weird type that Ed added later to keep me nimble
+				if(!table[x].model && currentType === ''){
+					currentType = tableSchema[editData[x].name];
+				}
 				editData[x].type = currentType;
+
 				if(item[editData[x].name]){
 					editData[x].data = item[editData[x].name].id;
 				}
 			}
+							console.log('DATA FROM EDIT', editData);
+
 			var editModal = $modal.open({
 				templateUrl:'modules/dbTool/views/edit-modal.html',
 				controller:'EditModalCtrl',
@@ -245,7 +253,6 @@ angular.module('dbtools')
 			table = $scope.currentData.tableHeaders;
 			var passData = [];
 			var currentType;
-
 			//force pass by copy rather than ref
 			passData = JSON.parse(JSON.stringify(table));
 			for(var x in passData){
@@ -266,8 +273,16 @@ angular.module('dbtools')
 						}
 					}					
 				}
-				passData[x].type = currentType;
+
+				//if its some weird type that Ed added later to keep me nimble
+				if(!table[x].model && currentType === ''){
+					currentType = tableSchema[passData[x].name];
+				}
+				passData[x].type = currentType;				
+
+
 			}
+			console.log(passData);
 			var addModal = $modal.open({
 				templateUrl:'modules/dbTool/views/add-modal.html',
 				controller:'AddModalCtrl',
