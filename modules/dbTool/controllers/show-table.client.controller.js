@@ -222,7 +222,6 @@ angular.module('dbtools')
 					editData[x].data = item[editData[x].name].id;
 				}
 			}
-							console.log('DATA FROM EDIT', editData);
 
 			var editModal = $modal.open({
 				templateUrl:'modules/dbTool/views/edit-modal.html',

@@ -21,7 +21,10 @@ angular.module('dbtools')
 			},
 
 			link: function(scope,element,attrs){
-				console.log(scope.kepsModel);
+				scope.data = {};
+				if (scope.kepsModel) {
+					scope.data.value = scope.kepsModel;
+				}
 				//constants
 				var itemTypes=["html","url","geopoint","email","datetime","array",
 								"image","file","string","number","buffer","boolean"];
@@ -41,10 +44,7 @@ angular.module('dbtools')
 					}
 					//build recursive inner element for arrays
 					if(scope.kepsType.displayType === 'array'){
-						scope.kepsType.showArray = [];
 						//this should hold an array of objects or single data types
-						scope.kepsModel[scope.kepsType.name]  = [];
-						console.log('DATA',scope.kepsType)
 						scope.kepsType.arrayData = [];
 						for(var i in scope.kepsType.type[0]){
 							var temp = scope.kepsType.type[0][i];
@@ -53,19 +53,35 @@ angular.module('dbtools')
 															model:false
 														});
 						}
-						console.log(scope.kepsType.arrayData);
-						//no data yet pass value of array template
-						if(!scope.kepsModel[scope.kepsType.name]){
-							scope.kepsModel[scope.kepsType.name] = [{test:'woo'}];
+
+						if(typeof scope.kepsModel === 'undefined' || scope.kepsModel.length <1){
+							console.log('twas true')
+						
+								scope.kepsModel = [{}]
+							
 						}
-						var appendHTML = "{{kepsModel}}<div style='width:95%;margin-left:auto;margin-right:auto;display:block;'>";
-						appendHTML += "<ul class='list-group'><li class='list-group-item' ng-repeat='obj in kepsModel[kepsType.name] track by $index'>";
-						appendHTML += "<a href='' style='color:inherit;' ng-click='kepsType.showArray[$index] = !kepsType.showArray[$index]'>";
-						appendHTML += "{{$index}} {{kepsType.showArray[$index] ? 'Hide Contents' : 'Show Contents'}}</a><a href='' ng-click='removeArrayItem($index)' class='badge'><span class='glyphicon glyphicon-remove'></span></a>"
-						appendHTML += "<a href='' ng-click='addArrayItem()' class='badge'><span class='glyphicon glyphicon-plus'></span></a> "
-						appendHTML += "<div ng-show='kepsType.showArray[$index]'><form>{{obj}}<keps-form keps-type='kepsType.arrayData' keps-model='obj'></keps-form></div></form></li></ul></div>";
-						element.append(appendHTML);
-						$compile(element.contents())(scope);
+
+						var appendHTML = "<div style='width:95%;margin-left:auto;margin-right:auto;display:block;'>";
+
+						if(scope.kepsType.arrayData.length <= 1){
+							scope.kepsType.showArray = false;
+							appendHTML += "<ul class='list-group'><li class='list-group-item'><a href='' style='color:inherit;' ng-click='kepsType.showArray = !kepsType.showArray'>";
+							appendHTML += "{{kepsType.showArray ? 'Hide Contents' : 'Show Contents'}}</a>"
+							appendHTML += "<div ng-repeat='obj in kepsModel' ng-show='kepsType.showArray'><keps-form keps-data='kepsType.arrayData' keps-model='obj'></keps-form></div>"
+							appendHTML += "<a href='' ng-click='removeArrayItem($index)' class='badge'><span class='glyphicon glyphicon-remove'></span></a><a href='' ng-click='addArrayItem()' class='badge'><span class='glyphicon glyphicon-plus'></span></a></li></ul>"
+							element.append(appendHTML);
+							$compile(element.contents())(scope);
+						}else{
+							scope.kepsType.showArray = [];
+
+							appendHTML += "<ul class='list-group'><li class='list-group-item' ng-repeat='obj in kepsModel track by $index'>";
+							appendHTML += "<a href='' style='color:inherit;' ng-click='kepsType.showArray[$index] = !kepsType.showArray[$index]'>";
+							appendHTML += "{{$index}} {{kepsType.showArray[$index] ? 'Hide Contents' : 'Show Contents'}}</a><a href='' ng-click='removeArrayItem($index)' class='badge'><span class='glyphicon glyphicon-remove'></span></a>"
+							appendHTML += "<a href='' ng-click='addArrayItem()' class='badge'><span class='glyphicon glyphicon-plus'></span></a> "
+							appendHTML += "<div ng-show='kepsType.showArray[$index]'><form><keps-form keps-data='kepsType.arrayData' keps-model='obj'></keps-form></div></form></li></ul></div>";
+							element.append(appendHTML);
+							$compile(element.contents())(scope);
+						}
 					}
 					return;
 				}
@@ -139,6 +155,11 @@ angular.module('dbtools')
 					}
 				}
 
+				scope.$watch('data.value', function(newVal) {
+					if (typeof newVal !== 'undefined') {
+						scope.kepsModel = newVal; 
+					}
+				})
 
 				/*### TYPE: DATETIME STUFF ###*/
 				//changing date ms number to display as date/time fields
@@ -244,7 +265,12 @@ angular.module('dbtools')
 
 				/*### TYPE: ARRAY stuff ###*/
 				scope.addArrayItem = function(){
-					scope.kepsModel.push(scope.kepsType.arrayTemplate.slice(0));
+					if(typeof scope.kepsModel[0] === 'object'){
+						scope.kepsModel.push({});
+					}
+					else{
+						scope.kepsModel.push('');
+					}
 				}
 				scope.removeArrayItem = function(index){
 					scope.kepsModel.splice(index,1);
