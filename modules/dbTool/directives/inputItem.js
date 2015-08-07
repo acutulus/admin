@@ -25,19 +25,23 @@ angular.module('dbtools')
 				if (scope.kepsModel) {
 					scope.data.value = scope.kepsModel;
 				}
+				console.log('data for', scope.kepsType)
 				//constants
 				var itemTypes=["html","url","geopoint","email","datetime","array",
-								"image","file","string","number","buffer","boolean"];
+								"image","file","string","number","buffer","boolean","enum"];
 			
 				//UTILITY FUNCTIONS - to prepare view for certain inputs
 				var specialTypePreperations = function(){
 					if(scope.kepsType.displayType === 'image'){
+						//already have a canvas for array objects with multiple images :(
+						scope.kepsType.randomCanvasId = Math.random().toString()
+		
 						if(typeof scope.kepsModel === 'object'){
 							if(scope.kepsModel.absoluteFilePath !== 'undefined'){
 								var img = new Image();
 								img.src = scope.kepsModel.filePath;
 								img.onload = function(){
-									drawToCanvas(img);
+									drawToCanvas(img, scope.kepsType.randomCanvasId(scope.kepsType.randomCanvasId.length));
 								}
 							}
 						}
@@ -54,27 +58,29 @@ angular.module('dbtools')
 														});
 						}
 
-						if(typeof scope.kepsModel === 'undefined' || scope.kepsModel.length <1){
-							console.log('twas true')
-						
-								scope.kepsModel = [{}]
+						if(typeof scope.data.value === 'undefined' || scope.data.value.length < 1){
+							//add clone of object
+							scope.data.value = [{}];
 							
 						}
+						console.log('data on array postprocess', scope.kepsType, scope.kepsModel);
 
 						var appendHTML = "<div style='width:95%;margin-left:auto;margin-right:auto;display:block;'>";
 
 						if(scope.kepsType.arrayData.length <= 1){
 							scope.kepsType.showArray = false;
-							appendHTML += "<ul class='list-group'><li class='list-group-item'><a href='' style='color:inherit;' ng-click='kepsType.showArray = !kepsType.showArray'>";
+							appendHTML += "<ul class='list-group'><li  class='list-group-item'><a href='' style='color:inherit;' ng-click='kepsType.showArray = !kepsType.showArray'>";
 							appendHTML += "{{kepsType.showArray ? 'Hide Contents' : 'Show Contents'}}</a>"
-							appendHTML += "<div ng-repeat='obj in kepsModel' ng-show='kepsType.showArray'><keps-form keps-data='kepsType.arrayData' keps-model='obj'></keps-form></div>"
-							appendHTML += "<a href='' ng-click='removeArrayItem($index)' class='badge'><span class='glyphicon glyphicon-remove'></span></a><a href='' ng-click='addArrayItem()' class='badge'><span class='glyphicon glyphicon-plus'></span></a></li></ul>"
+							appendHTML += "<a  href='' ng-click='removeArrayItem($index)' class='badge'><span class='glyphicon glyphicon-remove'></span></a><a href='' ng-click='addArrayItem()' class='badge'><span class='glyphicon glyphicon-plus'></span></a>"
+							appendHTML += "<div ng-repeat='obj in data.value track by $index' ng-show='kepsType.showArray'>"
+							appendHTML += "<div class='input-group' style='margin-top:10px;'><span class='input-group-addon' id='counter'>{{$index}}</span>"
+ 							appendHTML += "<input type='text' style='height:30px;' class='form-control' aria-describedby='counter'></div></div>"
+							appendHTML += "</li></ul>"
 							element.append(appendHTML);
 							$compile(element.contents())(scope);
 						}else{
 							scope.kepsType.showArray = [];
-
-							appendHTML += "<ul class='list-group'><li class='list-group-item' ng-repeat='obj in kepsModel track by $index'>";
+							appendHTML += "<ul class='list-group'><li class='list-group-item' ng-repeat='obj in data.value track by $index'>";
 							appendHTML += "<a href='' style='color:inherit;' ng-click='kepsType.showArray[$index] = !kepsType.showArray[$index]'>";
 							appendHTML += "{{$index}} {{kepsType.showArray[$index] ? 'Hide Contents' : 'Show Contents'}}</a><a href='' ng-click='removeArrayItem($index)' class='badge'><span class='glyphicon glyphicon-remove'></span></a>"
 							appendHTML += "<a href='' ng-click='addArrayItem()' class='badge'><span class='glyphicon glyphicon-plus'></span></a> "
@@ -86,10 +92,10 @@ angular.module('dbtools')
 					return;
 				}
 
-				var drawToCanvas = function(img){
+				var drawToCanvas = function(img, canvasId){
 					var width = document.createAttribute('width');
 				 	var height = document.createAttribute('height'); 
-				 	var canvas = document.getElementById('previewCanvas');
+				 	var canvas = document.getElementById(canvasId);
 				 	var ctx;
 					//scale images reasonably
 			    	if(img.width > img.height){ 
@@ -132,7 +138,7 @@ angular.module('dbtools')
 				if(typeof scope.kepsType.displayType !== 'undefined'){
 					scope.kepsType.displayType = scope.kepsType.displayType.toLowerCase();
 				}else{
-					if(scope.kepsType.type.constructor.toString().indexOf('Array') > -1){
+					if(scope.kepsType.type.constructor === Array){
 						scope.kepsType.displayType = 'array';
 					}else{
 						scope.kepsType.displayType = scope.kepsType.type.toLowerCase();
@@ -275,6 +281,7 @@ angular.module('dbtools')
 				scope.removeArrayItem = function(index){
 					scope.kepsModel.splice(index,1);
 				}
+
 			}
 		}
 	}
