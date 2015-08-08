@@ -1,27 +1,23 @@
 <section>
-	<!--Reference Field display -->
-	<div ng-if="kepsType.model" class="modal-row">
-		<label ng-if="kepsType.display.label">{{kepsType.display.label}}:</label>
-		<label ng-if="!kepsType.display.label">{{kepsType.name}}:</label>
-	    <input type="text" list="{{kepsType.name + 'options'}}" class="form-control" ng-model="kepsType.showOption" ng-blur="setReferenceData()"></input>
-	    <datalist id="{{kepsType.name + 'options'}}">
-	    	<option ng-repeat="option in kepsType.options" value="{{option.value}}" 
-	    	></option>
-	    </datalist>
-	</div>
-	<!--Non reference Field display -->
-	<div ng-if="!kepsType.model" class="modal-row">
+	<div class="modal-row">
 		<label ng-if="kepsType.display.label">{{kepsType.display.label}}:</label>
 		<label ng-if="!kepsType.display.label">{{kepsType.name}}:</label>
 		<span ng-show="typeError" style="color:red">Did not find a useable input type, defaulting to string</span>
 		<!-- Start listing input types -->
-		<div ng-if="kepsType.displayType === 'string'">
+		<div ng-if="kepsType.type === 'ref'">
+		    <input type="text" list="{{kepsType.name + 'options'}}" class="form-control" ng-model="kepsType.showOption" ng-blur="setReferenceData()"></input>
+		    <datalist id="{{kepsType.name + 'options'}}">
+		    	<option ng-repeat="option in kepsType.options" value="{{option.value}}" 
+		    	></option>
+		    </datalist>
+		</div>
+		<div ng-if="kepsType.type === 'string'">
 			<input type="text" ng-required="kepsType.required" ng-model="data.value" class="form-control" placeholder="{{kepsType.display.placeholder}}"></input>
 		</div>
-		<div ng-if="kepsType.displayType === 'number'">
+		<div ng-if="kepsType.type === 'number'">
 			<input type="number" ng-required="kepsType.required" ng-model="data.value" class="form-control"></input>
 		</div>
-		<div ng-if="kepsType.displayType === 'boolean'">
+		<div ng-if="kepsType.type === 'boolean'">
 			<div class="radio-inline">
 			  <label><input type="radio" ng-required="kepsType.required" ng-model="data.value" ng-value="true">True</label>
 			</div>
@@ -29,7 +25,7 @@
 			  <label><input type="radio" ng-required="kepsType.required" ng-model="data.value" ng-value="false">False</label>
 			</div>		
 		</div>
-		<div ng-if="kepsType.displayType === 'file'">
+		<div ng-if="kepsType.type === 'file'">
 			<div class="row">
 				<div class="form-group col-xs-6">
 					<label>Import file from computer</label>
@@ -44,10 +40,10 @@
 				</div>
 			</div>
 		</div>
-		<div ng-if="kepsType.displayType === 'html'">
+		<div ng-if="kepsType.type === 'html'">
 			<text-angular ng-model="data.value" ng-required="kepsType.required" placeholder="{{kepsType.display.placeholder}}"></text-angular>
 		</div>
-		<div ng-if="kepsType.displayType === 'datetime'">
+		<div ng-if="kepsType.type === 'datetime'">
 			<div class="row">
 				<div class="form-group col-xs-6">
 					<input type="date" ng-required="kepsType.required" class="form-control"  ng-model="kepsType.date" ng-blur="makeTime()" placeholder="yyyy-MM-dd"></input>
@@ -57,7 +53,7 @@
 				</div>
 			</div>
 		</div>
-		<div ng-if="kepsType.displayType === 'image'">
+		<div ng-if="kepsType.type === 'image'">
 			<div class="row">
 				<div class="form-group col-xs-5">
 					<div ng-show="!import">
@@ -79,10 +75,10 @@
 				</div>
 			</div>
 		</div>
-		<div ng-if="kepsType.displayType === 'url'">
+		<div ng-if="kepsType.type === 'url'">
 			<input type="url" ng-required="kepsType.required" ng-model="data.value" class="form-control" placeholder="{{kepsType.display.placeholder}}"></input>
 		</div>
-		<div ng-if="kepsType.displayType === 'geopoint'">
+		<div ng-if="kepsType.type === 'geopoint'">
 			<div class="col-sm-8">
 				<div class="form-group">
 				  <label class="col-sm-4 control-label">Lat:</label>
@@ -101,10 +97,10 @@
 				Preview
 			</div>
 		</div>
-		<div ng-if="kepsType.displayType === 'email'">
+		<div ng-if="kepsType.type === 'email'">
 			<input type="email" ng-required="kepsType.required" ng-model="data.value" class="form-control" placeholder="{{kepsType.display.placeholder}}"></input>
 		</div>
-		<div ng-if="kepsType.displayType === 'enum'">
+		<div ng-if="kepsType.type === 'enum'">
 			<div style='width:95%;margin-left:auto;margin-right:auto;display:block;'>
 				<div class="list-group">
 				  <a href="#" class="list-group-item" ng-repeat="choice in kepsType.choices">
@@ -116,10 +112,10 @@
 				</div>
 			</div>
 		</div>
-		<div ng-if="kepsType.displayType === 'multi'">
+		<div ng-if="kepsType.type === 'multi'">
 			multi
 		</div>
-		<div ng-if="kepsType.displayType === 'address'">
+		<div ng-if="kepsType.type === 'address'">
 http://ipinfo.io/
 			<div class="col-sm-8">
 				<div class="form-group">
@@ -170,14 +166,14 @@ http://ipinfo.io/
 				<img class="map" src="https://maps.googleapis.com/maps/api/staticmap?center=37.7367,-122.4572&amp;zoom=17&amp;size=200x200&amp;sensor=false" alt="San Francisco, California, United States Map" title="San Francisco, California, United States Map">
 			</div>
 		</div>
-		<div ng-if="kepsType.displayType === 'phone'">
+		<div ng-if="kepsType.type === 'phone'">
 		http://jackocnr.com/intl-tel-input.html
 		http://ipinfo.io/
 			<input type="tel" ng-required="kepsType.required" ng-model="data.value" class="form-control" placeholder="{{kepsType.display.placeholder}}"></input>
 		</div>
-		<div ng-if="kepsType.displayType === 'array'">
+		<div ng-if="kepsType.type === 'array'">
 		</div>
-		<div ng-if="kepsType.displayType === 'phone'">
+		<div ng-if="kepsType.type === 'phone'">
 
 		</div>
 		<span class="help-block" ng-if="kepsType.display.instructions">{{kepsType.display.instructions}}</span>

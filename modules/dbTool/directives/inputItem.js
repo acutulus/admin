@@ -25,13 +25,37 @@ angular.module('dbtools')
 				if (scope.kepsModel) {
 					scope.data.value = scope.kepsModel;
 				}
+
+				if(scope.kepsType.constructor === Array){
+					scope.kepsType = {
+						type:'array',
+						arrayData: scope.kepsType[0]
+					};
+				}else if(scope.kepsType[x].type === 'undefined' && typeof scope.kepsData[x] === 'object'){
+					scope.kepsType[x] = {
+						type:'object',
+						objectTemplate: scope.kepsType
+					};
+				}else{
+					if(scope.kepsData[x].type.indexOf(':') > -1){
+						scope.kepsType.ref = scope.kepsData[x].type.slice(1);
+						scope.kepsType.type = 'ref';
+						DataService.getQuery('admin/rest/' + scope.kepsType.ref +'s', {})
+						.then(function(data){
+							scope.kepsType.options = data;
+							console.log(scope.kepsType);
+						})
+					}
+				}
+
+
 				//constants
 				var itemTypes=["html","url","geopoint","email","datetime","array",
 								"image","file","string","number","buffer","boolean","enum"];
 			
 				//UTILITY FUNCTIONS - to prepare view for certain inputs
 				var specialTypePreperations = function(){
-					if(scope.kepsType.displayType === 'image'){
+					if(scope.kepsType.type === 'image'){
 						//already have a canvas for array objects with multiple images :(
 						scope.kepsType.randomCanvasId = Math.random().toString()
 		
@@ -46,7 +70,7 @@ angular.module('dbtools')
 						}
 					}
 					//build recursive inner element for arrays
-					if(scope.kepsType.displayType === 'array'){
+					if(scope.kepsType.type === 'array'){
 						//this should hold an array of objects or single data types
 		
 						if(typeof scope.data.value === 'undefined' || scope.data.value.length < 1){
@@ -119,33 +143,19 @@ angular.module('dbtools')
 				/*INTENSE DATA MASSAGING  ;) */
 				//item is reference get references
 				if(scope.kepsType.model){
-					//DataService.get('')
+					console.log(scope.kepsType)
 				}
 				//resolve type of field
-				if(typeof scope.kepsType.displayType !== 'undefined'){
-					scope.kepsType.displayType = scope.kepsType.displayType.toLowerCase();
-				}else{
-					if(scope.kepsType.type === 'array'){
-						scope.kepsType.displayType = 'array';
-					}else{
-						scope.kepsType.displayType = scope.kepsType.type.toLowerCase();
-					}
-					
+				if(typeof scope.kepsType.type !== 'undefined'){
+					scope.kepsType.type = scope.kepsType.type.toLowerCase();
 				}
 
-				//check if reference
-				if(scope.kepsType.options){
-					//parse off leading : for display
-					scope.kepsType.displayType = scope.kepsType.displayType.slice(1);
+				if(itemTypes.indexOf(scope.kepsType.type) > -1){
+					//handle special type preparations
+					specialTypePreperations();
 				}else{
-					if(itemTypes.indexOf(scope.kepsType.displayType) > -1){
-						//handle special type preparations
-						specialTypePreperations();
-					}else{
-						scope.typeError = true;
-						scope.kepsType.type = "string";
-						scope.kepsType.displayType = "string"
-					}
+					scope.typeError = true;
+					scope.kepsType.type = "string";
 				}
 
 				scope.$watch('data.value', function(newVal) {
@@ -156,7 +166,7 @@ angular.module('dbtools')
 
 				/*### TYPE: DATETIME STUFF ###*/
 				//changing date ms number to display as date/time fields
-				if(scope.kepsType.displayType === 'datetime'){
+				if(scope.kepsType.type === 'datetime'){
 					scope.kepsType.date = new Date(scope.kepsModel);
 					scope.kepsType.time = new Date(scope.kepsModel);
 				}
@@ -201,7 +211,7 @@ angular.module('dbtools')
 						var request = new XMLHttpRequest();
 						request.onreadystatechange = function(){
 							if(request.readyState === 4){
-								scope.kepsModel[scope.kepsType.name] = JSON.parse(request.responseText);
+								scope.kepsModel = JSON.parse(request.responseText);
 								scope.$apply();
 							}
 						}
@@ -229,7 +239,7 @@ angular.module('dbtools')
 							var request = new XMLHttpRequest();
 							request.onreadystatechange = function(){
 								if(request.readyState === 4){
-									scope.kepsModel[scope.kepsType.name] = JSON.parse(request.responseText);
+									scope.kepsModel = JSON.parse(request.responseText);
 									scope.$apply();
 								}
 							}
@@ -248,7 +258,7 @@ angular.module('dbtools')
 					var request = new XMLHttpRequest();
 					request.onreadystatechange = function(){
 						if(request.readyState === 4){
-							scope.kepsModel[scope.kepsType.name] = JSON.parse(request.responseText);
+							scope.kepsModel = JSON.parse(request.responseText);
 							scope.$apply();
 						}
 					}
