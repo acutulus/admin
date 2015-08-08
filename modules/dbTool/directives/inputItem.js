@@ -25,7 +25,6 @@ angular.module('dbtools')
 				if (scope.kepsModel) {
 					scope.data.value = scope.kepsModel;
 				}
-				console.log('data for', scope.kepsType)
 				//constants
 				var itemTypes=["html","url","geopoint","email","datetime","array",
 								"image","file","string","number","buffer","boolean","enum"];
@@ -49,15 +48,7 @@ angular.module('dbtools')
 					//build recursive inner element for arrays
 					if(scope.kepsType.displayType === 'array'){
 						//this should hold an array of objects or single data types
-						scope.kepsType.arrayData = [];
-						for(var i in scope.kepsType.type[0]){
-							var temp = scope.kepsType.type[0][i];
-							scope.kepsType.arrayData.push({	name:i,
-															type:temp.type,
-															model:false
-														});
-						}
-
+		
 						if(typeof scope.data.value === 'undefined' || scope.data.value.length < 1){
 							//add clone of object
 							scope.data.value = [{}];
@@ -126,19 +117,15 @@ angular.module('dbtools')
 
 
 				/*INTENSE DATA MASSAGING  ;) */
-				//item already populated edit loop
+				//item is reference get references
 				if(scope.kepsType.model){
-					for(var x in scope.kepsType.options){
-						if(scope.kepsType.options[x].id === scope.kepsModel){
-							scope.kepsType.showOption = scope.kepsType.options[x].value;
-						}
-					}
+					//DataService.get('')
 				}
 				//resolve type of field
 				if(typeof scope.kepsType.displayType !== 'undefined'){
 					scope.kepsType.displayType = scope.kepsType.displayType.toLowerCase();
 				}else{
-					if(scope.kepsType.type.constructor === Array){
+					if(scope.kepsType.type === 'array'){
 						scope.kepsType.displayType = 'array';
 					}else{
 						scope.kepsType.displayType = scope.kepsType.type.toLowerCase();

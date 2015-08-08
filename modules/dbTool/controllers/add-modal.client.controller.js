@@ -5,7 +5,6 @@ angular.module('dbtools').controller('AddModalCtrl',
 	
 		$scope.passData = passData;
 		$scope.newItem = {};
-
 		$scope.submit = function(){
 			
 			$modalInstance.close($scope.newItem);

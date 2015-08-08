@@ -183,17 +183,19 @@ angular.module('dbtools')
 		$scope.editItem = function(item){
 			//remove leading ':'
 			//build another passData item but with the data field populated for each item
-			var tableName = $scope.newQuery.name.slice(0, $scope.newQuery.name.length - 1)
+			var tableName = $stateParams.table.slice(0,$stateParams.table.length -1);
+			console.log($scope.databaseSchemas, tableName)
+
 			var tableSchema = $scope.databaseSchemas[tableName].schema
 
-			var table = {};
-			table = $scope.currentData.tableHeaders;
+		//	var table = {};
+		//	table = $scope.currentData.tableHeaders;
 			var editData = [];
-			var currentType;
+		//	var currentType;
 
-			editData = JSON.parse(JSON.stringify(table));
+			editData = JSON.parse(JSON.stringify(tableSchema));
 			for(var x in editData){
-				currentType = (typeof tableSchema[table[x].name].type !== 'undefined') ? tableSchema[table[x].name].type : '';
+			/*	currentType = (typeof tableSchema[table[x].name].type !== 'undefined') ? tableSchema[table[x].name].type : '';
 				if(table[x].model){
 					//reference, build array of options/choices for id/value
 					editData[x].options = [];
@@ -217,12 +219,14 @@ angular.module('dbtools')
 					currentType = tableSchema[editData[x].name];
 				}
 				editData[x].type = currentType;
-
-				if(item[editData[x].name]){
-					editData[x].data = item[editData[x].name].id;
+*/	
+				if(item[x]){
+					if(item[x].id){
+						editData[x].data = item[x].id;
+					}
 				}
 			}
-
+			console.log('EDIT DATA', editData);
 			var editModal = $modal.open({
 				templateUrl:'modules/dbTool/views/edit-modal.html',
 				controller:'EditModalCtrl',
@@ -245,15 +249,15 @@ angular.module('dbtools')
 		}
 
 		$scope.addItem = function(){
-			var tableName = $scope.newQuery.name.slice(0, $scope.newQuery.name.length - 1)
+			var tableName = $stateParams.table.slice(0,$stateParams.table.length -1);
 			var tableSchema = $scope.databaseSchemas[tableName].schema
-
-			var table = {};
+			var passData;
+			/*var table = {};
 			table = $scope.currentData.tableHeaders;
-			var passData = [];
-			var currentType;
+			var currentType;*/
 			//force pass by copy rather than ref
-			passData = JSON.parse(JSON.stringify(table));
+			passData = JSON.parse(JSON.stringify(tableSchema));
+			/*console.log(passData);
 			for(var x in passData){
 				currentType = (typeof tableSchema[table[x].name].type !== 'undefined') ? tableSchema[table[x].name].type : '';
 				if(table[x].model){
@@ -272,6 +276,10 @@ angular.module('dbtools')
 						}
 					}					
 				}
+				//pass enum choices with type
+				if(tableSchema[table[x].name].choices){
+					passData[x].choices = tableSchema[table[x].name].choices;
+				}
 
 				//if its some weird type that Ed added later to keep me nimble
 				if(!table[x].model && currentType === ''){
@@ -280,8 +288,7 @@ angular.module('dbtools')
 				passData[x].type = currentType;				
 
 
-			}
-			console.log(passData);
+			}*/
 			var addModal = $modal.open({
 				templateUrl:'modules/dbTool/views/add-modal.html',
 				controller:'AddModalCtrl',

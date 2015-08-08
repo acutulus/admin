@@ -7,10 +7,9 @@ angular.module('dbtools').controller('EditModalCtrl',
 		$scope.newItem = {};
 		for(var x in $scope.editData){
 			if($scope.editData[x].hasOwnProperty('data')){
-				$scope.newItem[$scope.editData[x].name] = $scope.editData[x].data;
+				$scope.newItem[x] = $scope.editData[x].data;
 			}
 		}
-
 		$scope.submit = function(){
 
 			$modalInstance.close($scope.newItem);		
