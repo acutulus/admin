@@ -105,22 +105,15 @@
 			<input type="email" ng-required="kepsType.required" ng-model="data.value" class="form-control" placeholder="{{kepsType.display.placeholder}}"></input>
 		</div>
 		<div ng-if="kepsType.displayType === 'enum'">
-			<div style='width:95%;margin-left:auto;margin-right:auto;display:block;'>
-				<div class="list-group">
-				  <a href="#" class="list-group-item" ng-repeat="choice in kepsType.choices">
-				  </a>
-				  <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
-				  <a href="#" class="list-group-item">Morbi leo risus</a>
-				  <a href="#" class="list-group-item">Porta ac consectetur ac</a>
-				  <a href="#" class="list-group-item">Vestibulum at eros</a>
-				</div>
-			</div>
+			<select class="form-control" ng-model="data.value" ng-options="opt for opt in kepsType.options">
+			</select>
 		</div>
 		<div ng-if="kepsType.displayType === 'multi'">
-			multi
+			<select class="form-control" multiple ng-multiple="true" ng-model="data.value" ng-options="opt for opt in kepsType.options">
+			</select>
 		</div>
 		<div ng-if="kepsType.displayType === 'address'">
-http://ipinfo.io/
+			<!--http://ipinfo.io/-->
 			<div class="col-sm-8">
 				<div class="form-group">
 				  <label class="col-sm-4 control-label">Address Line1:</label>
@@ -171,14 +164,8 @@ http://ipinfo.io/
 			</div>
 		</div>
 		<div ng-if="kepsType.displayType === 'phone'">
-		http://jackocnr.com/intl-tel-input.html
-		http://ipinfo.io/
+			<!---http://jackocnr.com/intl-tel-input.html -->
 			<input type="tel" ng-required="kepsType.required" ng-model="data.value" class="form-control" placeholder="{{kepsType.display.placeholder}}"></input>
-		</div>
-		<div ng-if="kepsType.displayType === 'array'">
-		</div>
-		<div ng-if="kepsType.displayType === 'phone'">
-
 		</div>
 		<span class="help-block" ng-if="kepsType.display.instructions">{{kepsType.display.instructions}}</span>
 	</div>

@@ -28,7 +28,7 @@ angular.module('dbtools')
 				console.log('data for', scope.kepsType)
 				//constants
 				var itemTypes=["html","url","geopoint","email","datetime","array",
-								"image","file","string","number","buffer","boolean","enum"];
+								"image","file","string","number","buffer","boolean","enum","multi"];
 			
 				//UTILITY FUNCTIONS - to prepare view for certain inputs
 				var specialTypePreperations = function(){
