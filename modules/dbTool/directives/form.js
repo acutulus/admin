@@ -1,6 +1,6 @@
 angular.module('dbtools')
-	.directive('kepsForm',[
-		function(){
+	.directive('kepsForm',['DataService','$stateParams',
+		function(DataService, $stateParams){
 			return {
 				restrict: 'E',
 				
@@ -8,7 +8,21 @@ angular.module('dbtools')
 
 				scope: {
 					kepsData:'=',
-					kepsModel:'='
+					kepsModel:'=',
+					kepsName:'='
+				},
+				link:function(scope, element, attrs){
+					scope.data = {};
+        	if (scope.kepsModel) {
+          	scope.data.value = scope.kepsModel;
+        	}
+
+        	scope.$watch('data.value', function(newVal) {
+          	if (typeof newVal !== 'undefined') {
+	          	//console.log('change', scope.kepsName, newVal);
+            	scope.kepsModel = newVal; 
+          	}
+        	});
 				}
 			}
 		}

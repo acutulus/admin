@@ -1,15 +1,10 @@
 'use strict';
 
 angular.module('dbtools').controller('EditModalCtrl', 
-	function($scope, $modalInstance, item){
+	function($scope, $modalInstance, schema, item){
 		
-		$scope.editData = item
-		$scope.newItem = {};
-		for(var x in $scope.editData){
-			if($scope.editData[x].hasOwnProperty('data')){
-				$scope.newItem[$scope.editData[x].name] = $scope.editData[x].data;
-			}
-		}
+		$scope.schema = schema
+		$scope.item = item;
 
 		$scope.submit = function(){
 

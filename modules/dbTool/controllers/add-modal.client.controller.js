@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('dbtools').controller('AddModalCtrl', 
-	function($scope, $modalInstance, passData){
+	function($scope, $modalInstance, schema){
 	
-		$scope.passData = passData;
-		$scope.newItem = {};
-
+		$scope.schema = schema;
+		$scope.item = {};
+		
 		$scope.submit = function(){
 			
 			$modalInstance.close($scope.newItem);
