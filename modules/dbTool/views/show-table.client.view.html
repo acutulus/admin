@@ -1,16 +1,16 @@
 <section data-ng-controller="ShowTableCtrl">
 	<div style="text-align:center;">
-		<h3>{{newQuery.name}}</h3>
+		<h3>{{table}}</h3>
 	</div>
 	<div class="col-sm-12">
-		<table st-table="currentData.query" class="table table-bordered table-hover">
+		<table st-table="displayData" class="table table-bordered table-hover">
 			<thead>
 				<tr>
 					<th>	
 						<button style="margin:0 auto;padding:0" type="button" ng-click="addItem()" class="btn btn-sm btn-success"><span class="glyphicon glyphicon-plus"></span>
 						</button>
 					</th>
-					<th lr-drag-src="headers" lr-drop-target="headers" ng-repeat="header in currentData.tableHeaders" style="font-size:14px;" class="manage-width ellipses" >
+					<th lr-drag-src="headers" lr-drop-target="headers" ng-repeat="header in tableHeaders" style="font-size:14px;" class="manage-width ellipses" >
 						{{header.name}}
 						<span class="dropdown">
 							<a href="" class="dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
@@ -36,7 +36,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="row in currentData.query">
+				<tr ng-repeat="row in displayData">
 					<td style="display:inline-block;width:93px;" >
 						<div class="btn-group">
 							<button style="margin:0 auto;padding:0" type="button" ng-click="removeItem(row)" class="btn btn-sm btn-warning"><span class="glyphicon glyphicon-minus"></span>
@@ -47,8 +47,8 @@
 							</button>
 						</div>
 					</td>		
-					<td class="manage-width ellipsis"  ng-repeat="key in currentData.tableHeaders" style="min-width:150px;">
-						{{row[key.name].value}}
+					<td class="manage-width ellipsis"  ng-repeat="key in tableHeaders" style="min-width:150px;">
+						{{row[key.name]}}
 					</td>
 				</tr>
 			</tbody>
