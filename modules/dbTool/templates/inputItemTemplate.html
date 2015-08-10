@@ -47,10 +47,10 @@
 			<div ng-if="kepsType.type === 'datetime'">
 				<div class="row">
 					<div class="form-group col-xs-6">
-						<input type="date" ng-required="kepsType.required" class="form-control"  ng-model="kepsType.date" ng-blur="makeTime()" placeholder="yyyy-MM-dd"></input>
+						<input type="date" ng-required="kepsType.required" class="form-control"  ng-model="data.date" ng-blur="makeTime()" placeholder="yyyy-MM-dd"></input>
 					</div>
 					<div class="form-group col-xs-6">
-						<input type="time" ng-required="kepsType.required" class="form-control"  ng-model="kepsType.time" ng-blur="makeTime()"></input>
+						<input type="time" ng-required="kepsType.required" class="form-control"  ng-model="data.time" ng-blur="makeTime()"></input>
 					</div>
 				</div>
 			</div>
@@ -64,7 +64,7 @@
 						</div>
 						<div ng-show="import">
 							<label>Import image from url:</label>
-							<input type="text" ng-required="kepsType.required" class="form-control" ng-model="kepsType.imageUrl" placeholder="Enter image url"></input>
+							<input type="text" ng-required="kepsType.required" class="form-control" ng-model="data.imageUrl" placeholder="Enter image url"></input>
 							<button style="margin-top:5px;" class="btn btn-success" ng-click="getImageUrl()">Grab Image</button><br>
 							<a href="" ng-click="import = false;">Or... Upload a file from your computer</a>
 						</div>

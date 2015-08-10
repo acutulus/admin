@@ -25,7 +25,17 @@ angular.module('dbtools')
 
         scope.data = {};
         if (scope.kepsModel) {
-          scope.data.value = scope.kepsModel;
+          if (scope.kepsType.type && scope.kepsType.type === 'image') {
+            scope.data.value = scope.kepsModel;
+          } else if (scope.kepsType.type && scope.kepsType.type === 'file') {
+            scope.data.value = scope.kepsModel;
+          } else if (scope.kepsType.type && scope.kepsType.type === 'datetime') {
+            //changing date ms number to display as date/time fields
+            scope.data.date = new Date(scope.kepsModel);
+            scope.data.time = new Date(scope.kepsModel);
+          } else {
+            scope.data.value = scope.kepsModel;            
+          }
         }
 
         scope.$watch('data.value', function(newVal) {
@@ -121,32 +131,28 @@ angular.module('dbtools')
 
           if(itemTypes.indexOf(scope.kepsType.type) === -1){
             scope.typeError = true;
-  //          scope.kepsType.type = "string";
+            scope.kepsType.type = "string";
           }
           if (scope.kepsType.type === 'image') {
             //already have a canvas for array objects with multiple images :(
-            scope.kepsType.randomCanvasId = Math.random().toString()
+            scope.data.randomCanvasId = Math.random().toString()
     
             if(typeof scope.kepsModel === 'object'){
               if(scope.kepsModel.absoluteFilePath !== 'undefined'){
                 var img = new Image();
                 img.src = scope.kepsModel.filePath;
                 img.onload = function(){
-                  drawToCanvas(img, scope.kepsType.randomCanvasId(scope.kepsType.randomCanvasId.length));
+                  drawToCanvas(img, scope.data.randomCanvasId(scope.data.randomCanvasId.length));
                 }
               }
             }
           } else if(scope.kepsType.type === 'datetime'){
             /*### TYPE: DATETIME STUFF ###*/
-    
-            //changing date ms number to display as date/time fields
-            scope.kepsType.date = new Date(scope.kepsModel);
-            scope.kepsType.time = new Date(scope.kepsModel);
             //blur function to combine date/time strings to ms number
             scope.makeTime = function(){
-              if(scope.kepsType.time && scope.kepsType.date){
+              if(scope.data.time && scope.data.date){
                 scope.kepsModel = 
-                 new Date(scope.kepsType.date.toString().slice(0,15) + scope.kepsType.time.toString().slice(15)).getTime();
+                 new Date(scope.data.date.toString().slice(0,15) + scope.data.time.toString().slice(15)).getTime();
 
               }
             }
