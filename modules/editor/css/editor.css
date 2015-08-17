@@ -1,0 +1,16 @@
+.sidebar-anchors:link{
+	text-decoration:none;
+	color:white;
+}
+.sidebar-anchors:visited{
+	text-decoration:none;
+	color:white;
+}
+.sidebar-anchors:hover{
+	text-decoration:none;
+	color:rgb(150,150,150);
+}
+.sidebar-anchors:active{
+	text-decoration:none;
+	color:rgb(150,150,150);
+}

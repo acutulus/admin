@@ -2,7 +2,6 @@
 
 angular.module('editor').config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
 	function($stateProvider, $urlRouterProvider, $locationProvider){
-		$urlRouterProvider.otherwise('/editor');
 
 		$stateProvider
 		.state('editor',{
@@ -10,12 +9,15 @@ angular.module('editor').config(['$stateProvider', '$urlRouterProvider', '$locat
 			templateUrl:'modules/editor/views/editor-home.html'
 		})
 		.state('editor.table',{
-			url:'/:table',
-			templateUrl:'modules/editor/views/editor-table.html'
+			url:'/tables/:table',
+			templateUrl:'modules/editor/views/editor-sidebar.html'
 		})
 		.state('editor.table.field',{
-			url:'/:field',
+			url:'/documents/:document',
 			templateUrl:'modules/editor/views/editor-field.html'
 		})
+
+		$urlRouterProvider.otherwise('/editor');
+
 	}
 ])
