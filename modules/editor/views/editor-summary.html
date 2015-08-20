@@ -1,34 +1,70 @@
 <section ng-controller="EditorSummaryController">
-	<div class="container">
-		<div class="row" >
-		<a class="waves-effect waves-light btn" ng-click="show.routes.show = !show.routes.show" style="margin-top:10px;">See Routes</a>
-			<div ng-repeat="model in restRoutes" ng-show="show.routes.show">
-				<a class="waves-effect waves-light btn-small" ng-click="show.routes[model.name] = !show.routes[model.name]">{{model.name}} {{show[model.name] ? 'hide' : 'show'}}</a>
+	<div class="row">
+		<div class="col s2" style="">
+			<a class="waves-effect waves-light btn" ng-click="swapCurrentView('routes')" style="margin-top:5px;width:100%">Routes</a>
+			<br>
+			<a class="waves-effect waves-light btn" ng-click="swapCurrentView('models')" style="margin-top:5px;width:100%;">Models</a>
+			<br>
+			<a class="waves-effect waves-light btn" ng-click="swapCurrentView('uptime')" style="margin-top:5px;width:100%;">Uptime</a> 
+			<br>
+			<a class="waves-effect waves-light btn" ng-click="swapCurrentView('rebuild')" style="margin-top:5px;width:100%;">Rebuild</a>
+			<br>
+			<a class="waves-effect waves-light btn" ng-click="swapCurrentView('republish')" style="margin-top:5px;width:100%;">Republish</a>
 
-				<ul class="collection" ng-show="show.routes[model.name]">
-					<li class="collection-item" ng-repeat="route in model.data">
-						{{route}}
-					</li>
-				</ul>
-			</div>
 		</div>
-		<div class="row">
-			<a class="waves-effect waves-light btn" ng-click="show.models.show = !show.models.show" style="margin-top:10px;">See Models</a>
-			<div ng-repeat="schemaname in schemas"  ng-show="show.models.show">
-				<a class="waves-effect waves-light btn-small" ng-click="show.models[schemaname.name] = !show.models[schemaname.name]">{{schemaname.name}} {{show.models[schemaname] ? 'hide' : 'show'}}</a>
-				<ul class="collection" ng-show="show.models[schemaname.name]">
-					<a ng-click="show.models.properties[schemaname.name] = !show.models.properties[schemaname.name]">Properties</a>
-					<div ng-show="show.models.properties[schemaname.name]">
-						<li class="collection-item" ng-repeat="">
+		<div class="col s10" style="height:{{windowHeight}}px;overflow:scroll;background-color:rgba(230,230,230,0.5)">
+			<div ng-show="show.routes.show">
+				Routes:
+				<div ng-repeat="model in restRoutes">
+					<a class="waves-effect waves-light btn-small" ng-click="show.routes[model.name] = !show.routes[model.name]">{{model.name}}</a>
 
+					<ul class="collection" ng-show="show.routes[model.name]">
+						<li class="collection-item" ng-repeat="route in model.data">
+							{{route}}
 						</li>
-					</div>
-					<a ng-click="show.models.schemas[schemaname.name] = !show.models.schemas[schemaname.name]">Schemas</a>
-					<div ng-show="show.models.schema[schemaname.name]">
-						<li class="collection-item">
-						</li>
-					</div>
-				</ul>
+					</ul>
+				</div>
+			</div>
+			<div ng-show="show.models.show">
+				Models:
+				<div ng-repeat="schemaname in schemas"  ng-show="show.models.show">
+					<a class="waves-effect waves-light btn-small" ng-click="show.models[schemaname.name] = !show.models[schemaname.name]">{{schemaname.name}}</a>
+					<ul class="collection" ng-show="show.models[schemaname.name]">
+						<a href="" ng-click="show.models.properties[schemaname.name] = !show.models.properties[schemaname.name]">Properties</a>
+						<div ng-show="show.models.properties[schemaname.name]">
+							<ul class="collection">
+								<li class="collection-item" ng-repeat="(key,value) in schemaname.properties">
+									{{key}} : {{value}}
+								</li>
+							</ul>
+						</div>
+						<a href="" ng-click="show.models.schemas[schemaname.name] = !show.models.schemas[schemaname.name]">Schemas</a>
+						<div ng-show="show.models.schemas[schemaname.name]">
+							<ul class="collection">
+								<li class="collection-item" ng-repeat="(key,value) in schemaname.schema">
+									{{key}} : {{value.type}}
+								</li>
+							</ul>
+						</div>
+					</ul>
+				</div>
+			</div>
+			<div ng-show="show.uptime.show">
+				<h4>Server uptime: <span style="color:green;">{{uptime.hours}} : {{uptime.mins}} : {{uptime.secs}}</span></h4>
+			</div>
+			<div ng-show="show.rebuild.show">
+				<div style="width:100%;height:100%;margin:0 auto;text-align:center;margin-top:30px;">
+					<a class="btn-floating btn-large waves-effect waves-light red" style="height:100px;width:100px;font-size:18px;line-height:100px;" ng-click="rebuild()">Rebuild</a>
+					<h5>Status: {{rebuild.status}}<h5>
+					<h5>Server Response: {{rebuild.statusText}}</h5>
+				</div>
+			</div>
+			<div ng-show="show.republish.show">
+				<div style="width:100%;height:100%;margin:0 auto;text-align:center;margin-top:30px;">
+					<a class="btn-floating btn-large waves-effect waves-light red" style="height:100px;width:100px;font-size:18px;line-height:100px;" ng-click="republish()">Republish</a>
+					<h5>Status: {{republish.status}}<h5>
+					<h5>Server Response: {{republish.statusText}}</h5>
+				</div>
 			</div>
 		</div>
 	</div>
