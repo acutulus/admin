@@ -35,11 +35,6 @@ angular.module('editor')
 							$scope.editorDatabase.push(x);						
 						}
 					}
-					//set to first item if none selected yet
-					if($stateParams.hasOwnProperty('table')){
-					}else{
-						$location.path('/editor/tables/default');
-					}
 				});	
 				
 

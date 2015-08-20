@@ -1,0 +1,35 @@
+<section ng-controller="EditorSummaryController">
+	<div class="container">
+		<div class="row" >
+		<a class="waves-effect waves-light btn" ng-click="show.routes.show = !show.routes.show" style="margin-top:10px;">See Routes</a>
+			<div ng-repeat="model in restRoutes" ng-show="show.routes.show">
+				<a class="waves-effect waves-light btn-small" ng-click="show.routes[model.name] = !show.routes[model.name]">{{model.name}} {{show[model.name] ? 'hide' : 'show'}}</a>
+
+				<ul class="collection" ng-show="show.routes[model.name]">
+					<li class="collection-item" ng-repeat="route in model.data">
+						{{route}}
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="row">
+			<a class="waves-effect waves-light btn" ng-click="show.models.show = !show.models.show" style="margin-top:10px;">See Models</a>
+			<div ng-repeat="schemaname in schemas"  ng-show="show.models.show">
+				<a class="waves-effect waves-light btn-small" ng-click="show.models[schemaname.name] = !show.models[schemaname.name]">{{schemaname.name}} {{show.models[schemaname] ? 'hide' : 'show'}}</a>
+				<ul class="collection" ng-show="show.models[schemaname.name]">
+					<a ng-click="show.models.properties[schemaname.name] = !show.models.properties[schemaname.name]">Properties</a>
+					<div ng-show="show.models.properties[schemaname.name]">
+						<li class="collection-item" ng-repeat="">
+
+						</li>
+					</div>
+					<a ng-click="show.models.schemas[schemaname.name] = !show.models.schemas[schemaname.name]">Schemas</a>
+					<div ng-show="show.models.schema[schemaname.name]">
+						<li class="collection-item">
+						</li>
+					</div>
+				</ul>
+			</div>
+		</div>
+	</div>
+</section>

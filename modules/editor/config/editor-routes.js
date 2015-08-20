@@ -8,6 +8,10 @@ angular.module('editor').config(['$stateProvider', '$urlRouterProvider', '$locat
 			url:'/editor',
 			templateUrl:'modules/editor/views/editor-home.html'
 		})
+		.state('editor.summary',{
+			url:'/summary',
+			templateUrl:'modules/editor/views/editor-summary.html'
+		})
 		.state('editor.table',{
 			url:'/tables/:table',
 			templateUrl:'modules/editor/views/editor-sidebar.html'
@@ -17,7 +21,7 @@ angular.module('editor').config(['$stateProvider', '$urlRouterProvider', '$locat
 			templateUrl:'modules/editor/views/editor-field.html'
 		})
 
-		$urlRouterProvider.otherwise('/editor');
+		$urlRouterProvider.otherwise('/editor/summary');
 
 	}
 ])
