@@ -2,7 +2,7 @@
 	<div style="text-align:center">
 		<h5>{{tablename}} - {{documentData[schema.properties.displayAs]}}</h5>
 	</div>
-	<div class="container">
-		<keps-form keps-data="schema" keps-model="documentData"></keps-form>
+	<div class="container" ng-if="schema.schema && documentData">
+		<keps-form keps-data="schema.schema" keps-model="documentData"></keps-form>
 	</div>
 </section>

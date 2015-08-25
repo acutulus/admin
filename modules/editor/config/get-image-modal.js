@@ -1,4 +1,4 @@
-angular.module('dbtools')
+angular.module('editor')
 	.controller('GetImageModalCtrl', function($scope, $modalInstance){
 	 	$scope.image = {};
 

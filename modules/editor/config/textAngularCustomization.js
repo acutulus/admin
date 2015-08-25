@@ -1,4 +1,4 @@
-angular.module('dbtools')
+angular.module('editor')
 	.config(function($provide){
 		$provide.decorator('taOptions',['taRegisterTool', 'taToolFunctions','$delegate','$modal','$window',
 			function(taRegisterTool, taToolFunctions, taOptions, $modal, $window){
@@ -92,9 +92,10 @@ angular.module('dbtools')
 					onElementSelect: {
 						element: 'a',
 						action: taToolFunctions.aOnSelectAction
-					}
+					},
+					title:'Add a Link'
 				});
-
+				
 				taOptions.toolbar = [
 			      ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p'],
 			      ['pre', 'quote','bold', 'italics', 'underline', 'strikeThrough'],
@@ -102,6 +103,7 @@ angular.module('dbtools')
 			      ['justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent'],
 			      ['html', 'acutulus-youtube','acutulus-link', 'acutulus-image']
   				];
+
         		return taOptions;
 			}
 

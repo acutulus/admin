@@ -10,6 +10,7 @@ angular.module('editor')
 			DataService.get('admin/rest/' + $scope.tablename, $scope.documentId)
 				.then(function(data){
 					$scope.documentData = data;
+					console.log($scope.documentData);
 				})
 
 			DataService.getQuery('admin/models')

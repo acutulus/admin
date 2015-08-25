@@ -4,7 +4,7 @@ angular.module('editor')
     return {
       restrict: 'E',
       
-      templateUrl:'/admin/modules/dbTool/templates/inputItemTemplate.html',
+      templateUrl:'/admin/modules/editor/templates/inputItemTemplate.html',
       
       /*kepsType: OBJECT: 
       Property- displayAs: Optional, used for modifying reference types
@@ -22,7 +22,6 @@ angular.module('editor')
       },
 
       link: function(scope,element,attrs){
-
         scope.data = {};
         if (scope.kepsModel) {
           if (scope.kepsType.type && scope.kepsType.type === 'image') {

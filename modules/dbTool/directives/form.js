@@ -13,16 +13,18 @@ angular.module('dbtools')
 				},
 				link:function(scope, element, attrs){
 					scope.data = {};
-        	if (scope.kepsModel) {
-          	scope.data.value = scope.kepsModel;
-        	}
+					console.log('KTYPE', scope.kepsData);
+					console.log('KMOD',scope.kepsModel);
+		        	if (scope.kepsModel) {
+		          	scope.data.value = scope.kepsModel;
+		        	}
 
-        	scope.$watch('data.value', function(newVal) {
-          	if (typeof newVal !== 'undefined') {
-	          	//console.log('change', scope.kepsName, newVal);
-            	scope.kepsModel = newVal; 
-          	}
-        	});
+		        	scope.$watch('data.value', function(newVal) {
+		          	if (typeof newVal !== 'undefined') {
+			          	//console.log('change', scope.kepsName, newVal);
+		            	scope.kepsModel = newVal; 
+		          	}
+		        	});
 				}
 			}
 		}
