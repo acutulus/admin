@@ -12,13 +12,17 @@ angular.module('editor').config(['$stateProvider', '$urlRouterProvider', '$locat
 			url:'/summary',
 			templateUrl:'modules/editor/views/editor-summary.html'
 		})
-		.state('editor.table',{
-			url:'/tables/:table',
+		.state('editor.tables',{
+			url:'/tables',
 			templateUrl:'modules/editor/views/editor-sidebar.html'
 		})
-		.state('editor.table.field',{
-			url:'/documents/:document',
-			templateUrl:'modules/editor/views/editor-field.html'
+		.state('editor.tables.table',{
+			url:'/:tablename',
+			templateUrl:'modules/editor/views/editor-table-contents.html'
+		})
+		.state('editor.document',{
+			url:'/:tablename/:documentId',
+			templateUrl:'modules/editor/views/editor-document.html'
 		})
 
 		$urlRouterProvider.otherwise('/editor/summary');

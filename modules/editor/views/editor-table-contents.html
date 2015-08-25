@@ -1,0 +1,12 @@
+<section data-ng-controller="EditorTableContentsController">
+	<ul class="collection">
+		<li class="collection-item" ng-repeat="doc in documents">
+			<div style="width:70%;text-align:left;display:inline-block;">
+				<p>{{doc[schema.properties.displayAs] || schema.properties.displayAs + ' not found. Document ID: ' +  doc['_id'] }}</p>
+			</div>
+			<div style="width:25%;text-align:right;display:inline-block;">
+				<a class="btn-small btn-floating waves-effect waves-light blue" href="#!/editor/{{currentTable}}/{{doc._id}}">Edit&nbsp&nbsp</a>
+			</div>
+		</li>
+	</ul>
+</section>

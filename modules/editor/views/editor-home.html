@@ -3,8 +3,11 @@
 		<div class="nav-wrapper">
 			<a class="brand-logo" href="#!/editor/summary">Management</a>
 			<ul class="right">
+				<li ng-show="authentication.user.admin">
+					<a href="#!/editor/summary" role="button">Summary</a>
+				</li>
 				<li class="dropdown" ng-show="authentication.user.admin">
-					<a href="#!/editor/tables/default" role="button">{{ 'Editor'}}</a>
+					<a href="#!/editor/tables" role="button">Editor</a>
 				</li>
 
 				<li data-ng-hide="authentication.user">

@@ -4,15 +4,10 @@ angular.module('editor')
 	.controller('EditorSidebarController', ['$scope','$stateParams', 'DataService','$location',
 		function($scope, $stateParams, DataService, $location){
 
-			//capitalize title
-			console.log('TABLE', $stateParams.table)
-			if($stateParams.table === 'default'){
-			}else{	
-				$scope.currentTable = $stateParams.table;
-				$scope.currentTable = $scope.currentTable.slice(0,1).toUpperCase() + $scope.currentTable.slice(1) + 's';
+			if($stateParams.tablename){
+				$scope.currentTable = $stateParams.tablename + 's';
 			}
-			console.log($scope.currentTable)
-			$scope.field = 'test';
+
 			/*Data stores*/
 			$scope.sidebarTablesView = [];
 			$scope.sidebarCollectionView
@@ -39,7 +34,7 @@ angular.module('editor')
 			});
 
 			$scope.selectTable = function(table){
-				$scope.currentTable = table;
+				$scope.currentTable = table + 's';
 			}			
 		}
 	])
