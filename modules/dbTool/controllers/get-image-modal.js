@@ -1,5 +1,5 @@
 angular.module('dbtools')
-	.controller('GetImageModalCtrl', function($scope, $modalInstance, imageFormat){
+	.controller('GetImageModalCtrl', function($scope, $modalInstance){
 	 	$scope.image = {};
 
 	 	var file = document.getElementById('imageUpload');
@@ -9,16 +9,15 @@ angular.module('dbtools')
 		    
 		    console.log(currentFile);
 		    if (files && currentFile) {
+		    	console.log(files)
         		var read = new FileReader();
 		        
 		       	read.onload = function(readerEvt) {
 		            $scope.image.file = read.result;
 		        }
-		        if(imageFormat === 'buffer'){
-		        	read.readAsArrayBuffer(currentFile);
-		        }else{
-		        	read.readAsDataURL(currentFile);
-		        }
+		 
+		        read.readAsDataURL(currentFile);
+		        
 	        }
 	 	};
 
@@ -28,11 +27,8 @@ angular.module('dbtools')
 
 	    $scope.submit = function(){
 	    	if($scope.import){
-	    		if(imageFormat === 'buffer'){
-	    			$modalInstance.close({arrayBuffer:$scope.image.file, type:currentFile.type});
-	    		}else{
-	    			$modalInstance.close($scope.image.file);
-	    		}
+	    		//$modalInstance.close({arrayBuffer:$scope.image.file, type:currentFile.type});
+	    		$modalInstance.close($scope.image.file);
 	    	}else{
 	    		$modalInstance.close($scope.image.url);
 	    	}
