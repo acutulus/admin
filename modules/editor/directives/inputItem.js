@@ -340,13 +340,13 @@ angular.module('editor')
         scope.checkAddress = function(evt){
 
           if(scope.data.address1 && scope.data.city && scope.data.state){
-            if(scope.data.address1.length > 3 && scope.data.city.length > 2 && scope.data.state.length >0){
+            if(scope.data.address1.length > 3 && scope.data.city.length > 2 && scope.data.state.length > 0){
               console.log('test passt')
               if(timeoutPromise){
                 $timeout.cancel(timeoutPromise)
               }
 
-              $timeout(function(){
+              timeoutPromise = $timeout(function(){
                 $http.get('http://maps.googleapis.com/maps/api/geocode/json?address=' + scope.data.address1 + ',+' + scope.data.city + ',+' + scope.data.state)
                   .then(function(data){
                     console.log(data);
