@@ -1,6 +1,6 @@
 angular.module('editor')
-.directive('inputItem',['$modal','DataService','$http', '$compile','$window',
-  function($modal, DataService, $http, $compile, $window){
+.directive('inputItem',['$modal','DataService','$http', '$compile','$window','$timeout', 
+  function($modal, DataService, $http, $compile, $window, $timeout){
     return {
       restrict: 'E',
       
@@ -22,7 +22,6 @@ angular.module('editor')
       },
 
       link: function(scope,element,attrs){
-
         scope.data = {};
         if (scope.kepsModel) {
           if (scope.kepsType.type && scope.kepsType.type === 'image') {
@@ -45,18 +44,19 @@ angular.module('editor')
         });
 
         scope.typeError = false;
-
-        //build recursive inner element for arrays
+        /*### TYPE: array stuff ### */
         if(scope.kepsType.constructor === Array){
-          //this should hold an array of objects or single data types
-          if(typeof scope.data.value === 'undefined' || scope.data.value.length < 1){
-            //add clone of object
-            //scope.data.value = [];
-          }
+
 
           var size = 0;
           for (var i in scope.kepsType[0]) {
             size++;
+          }
+          //this should hold an array of objects or single data types
+          if(typeof scope.data.value === 'undefined' || scope.data.value.length < 1){
+            //add clone of object
+            scope.data.value = [];
+
           }
 
           var appendHTML = "<div style='width:95%;margin-left:auto;margin-right:auto;display:block;'>";
@@ -80,20 +80,21 @@ angular.module('editor')
           //console.log('data on array postprocess', scope.kepsType, scope.kepsModel, size);
 
           if(size === 1){
-            appendHTML += "<ul class='list-group'><li  class='list-group-item'><a href='' style='color:inherit;'>";
-            appendHTML += "<a  href='' ng-click='removeArrayItem($index)' class='badge'><span class='glyphicon glyphicon-remove'></span></a><a href='' ng-click='addArrayItem()' class='badge'><span class='glyphicon glyphicon-plus'></span></a>"
-            appendHTML += "<div ng-repeat='obj in data.value track by $index'>"
-            appendHTML += "<div class='input-group' style='margin-top:10px;'><span class='input-group-addon' id='counter'>{{$index}}</span>"
-            appendHTML += "<input type='text' style='height:30px;' class='form-control' aria-describedby='counter' ng-model='data.value[$index]'></div></div>"
+            appendHTML += "<ul class='collection'><li class='collection-item' style='text-align:right;'>";
+            appendHTML += "<a href='' ng-click='addArrayItem()' class='btn-floating green' title='add item' style='text-align:center;font-size:24px;'>+</a></li>"
+            appendHTML += "<li class='collection-item' ng-repeat='obj in data.value track by $index'>"
+            appendHTML += "<a  href='' ng-click='removeArrayItem($index)' class='btn-floating red' style='text-align:center;float:right;font-size:24px;' title='remove item' >-</a>"
+            appendHTML += "<div style='margin-top:10px;'><span class='input-group-addon' id='counter'>{{$index}}</span>"
+            appendHTML += "<input type='text' style='height:30px;' class='form-control' aria-describedby='counter' ng-model='data.value[$index]'></div>"
             appendHTML += "</li></ul>"
             element.append(appendHTML);
             $compile(element.contents())(scope);
           }else{
             scope.data.showArray = {};
-            appendHTML += "<ul class='list-group'><li class='list-group-item' ng-repeat='obj in data.value track by $index'>";
+            appendHTML += "<ul class='collection'><li class='collection-item' style='text-align:right;'><a href='' ng-click='addArrayItem()' class='btn-floating green' title='add item' style='font-size:24px;text-align:center;'>+</a>" 
+            appendHTML += "</li><li class='collection-item' ng-repeat='obj in data.value track by $index'>";
             appendHTML += "<a href='' style='color:inherit;' ng-click='data.showArray[$index] = !data.showArray[$index]'>";
-            appendHTML += "{{$index}} {{data.showArray[$index] ? 'Hide Contents' : 'Show Contents'}}</a><a href='' ng-click='removeArrayItem($index)' class='badge'><span class='glyphicon glyphicon-remove'></span></a>"
-            appendHTML += "<a href='' ng-click='addArrayItem()' class='badge'><span class='glyphicon glyphicon-plus'></span></a> "
+            appendHTML += "{{$index}} {{data.showArray[$index] ? 'Hide Contents' : 'Show Contents'}}</a><a href='' ng-click='removeArrayItem($index)' title='remove item' class='btn-floating red' style='font-size:24px;text-align:center;float:right;'>-</a>"
             appendHTML += "<div ng-show='data.showArray[$index]'><form><keps-form keps-name='kepsName+\".\"' keps-data='kepsType[0]' keps-model='data.value[$index]'></keps-form></form></div></li></ul></div>";
             element.append(appendHTML);
             $compile(element.contents())(scope);
@@ -120,7 +121,8 @@ angular.module('editor')
 
           //constants
           var itemTypes=["html","url","geopoint","email","datetime",
-                  "image","file","string","number","buffer","boolean","enum","multi"];
+                  "image","file","string","number","buffer","boolean","enum","multi",
+                  "address","phone"];
 
           //resolve type of field
           if(typeof scope.kepsType.type !== 'undefined'){
@@ -173,7 +175,6 @@ angular.module('editor')
           }else if(evt.target.files[0].name.includes('.png')){
             filetype = "image/png";
           }else{
-            console.log('IMAGE FILETYPE NOT FOUND');
             alert('image filetype not recognized')
           }
           
@@ -277,25 +278,85 @@ angular.module('editor')
 
         /*###TYPE: GEOPOINT stuff ###*/
         var firstMapRun = true;
+        var map;
+        var marker;
         scope.testLatLng = function(){
-          if(scope.kepsModel.lat && scope.kepsModel.lng && firstMapRun){
+          //normalize lat/lng for google map max/min
+          if(scope.kepsModel.lat && scope.kepsModel.lng){
+            
+            if(scope.kepsModel.lat < -85){ scope.kepsModel.lat = -85}
+            else if(scope.kepsModel.lat > 85){scope.kepsModel.lat = 85};
 
+            if(scope.kepsModel.lng < -180){scope.kepsModel.lng = -180}
+            else if(scope.kepsModel.lng > 180){scope.kepsModel.lng = 180}; 
+
+          }
+          if(scope.kepsModel.lat && scope.kepsModel.lng && firstMapRun){
+            document.getElementById('map').style.height = '400px';
             $window.initMap = function(){
-              map = new google.maps.Map(document.getElementById('map'),
+              var latLng = new google.maps.LatLng(scope.kepsModel.lat, scope.kepsModel.lng);
+                map = new google.maps.Map(document.getElementById('map'),
                 {
-                  center:{lat:scope.kepsModel.lat, lng: scope.kepsModel.lng},
+                  center:latLng,
                   zoom:8
                 });
-              console.log(map);
+                marker = new google.maps.Marker(
+                {
+                  position: latLng,
+                  map: map,
+                });
+              firstMapRun = false;
             }
+
             var s = document.createElement('script');
             s.src = "https://maps.googleapis.com/maps/api/js?callback=initMap"
             document.body.appendChild(s);
+
           }else{
-            console.log('map', map)
-            console.log(scope.kepsModel)
+            var latLng = new google.maps.LatLng(scope.kepsModel.lat, scope.kepsModel.lng);
+            marker.setMap(null)
+            marker = new google.maps.Marker({
+              position:latLng,
+              map:map
+            })
+            map.setCenter(marker.getPosition());
+          }
+
+        }
+
+        /*###TYPE email stuff ###*/
+        scope.testEmail = function(){
+          if(scope.kepsModel === undefined) scope.kepsModel = '';
+          if(scope.kepsModel.match(/.+@.+\..+/)){
+            scope.data.emailCorrect = true;
+          }else{
+            scope.data.emailCorrect = false;
           }
         }
+
+        
+        /*### TYPE address stuff ###*/
+        var timeoutPromise;
+        scope.checkAddress = function(evt){
+
+          if(scope.data.address1 && scope.data.city && scope.data.state){
+            if(scope.data.address1.length > 3 && scope.data.city.length > 2 && scope.data.state.length >0){
+              console.log('test passt')
+              if(timeoutPromise){
+                $timeout.cancel(timeoutPromise)
+              }
+
+              $timeout(function(){
+                $http.get('http://maps.googleapis.com/maps/api/geocode/json?address=' + scope.data.address1 + ',+' + scope.data.city + ',+' + scope.data.state)
+                  .then(function(data){
+                    console.log(data);
+                  })
+              }, 1000);
+
+            }
+          }
+        }
+
       }
     };
   }]);

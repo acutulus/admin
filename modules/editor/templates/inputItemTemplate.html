@@ -85,22 +85,24 @@
 				<input type="url" ng-required="kepsType.required" ng-model="data.value" class="form-control" placeholder="{{kepsType.display.placeholder}}"></input>
 			</div>
 			<div ng-if="kepsType.type === 'geopoint'">
-				<div class="row">
-					<div class="col s2">
+					<div style="width:20%;display:inline-block;">
 						  <label>Lat:</label>
 						  <input type="number" step="any" class="form-control" ng-model="data.value.lat">
 						  <label >Lng:</label>
 						  <input type="number" step="any" class="form-control" ng-model="data.value.lng">
 						  <button class="btn-floating waves-effect waves-light green" style="text-align:center" ng-click="testLatLng()">Test</button>
 					</div>
-				<div class="col s10" id="map">
-				</div>
+					<div style="width:79%;display:inline-block;" >
+						<div id="map" style="width:100%;">
+						</div>
+					</div>
 			</div>
 			<div ng-if="kepsType.type === 'email'">
-				<input type="email" ng-required="kepsType.required" ng-model="data.value" class="form-control" placeholder="{{kepsType.display.placeholder}}"></input>
+				<span ng-show="!data.emailCorrect && data.value.length > 2" style="color:red;">Not valid email</span><span ng-show="data.emailCorrect" style="color:green;">Valid Email</span>
+				<input type="email" ng-keydown="testEmail()" ng-required="kepsType.required" ng-model="data.value" class="form-control" placeholder="{{kepsType.display.placeholder}}"></input>
 			</div>
 			<div ng-if="kepsType.type === 'enum'">
-				<select class="form-control" ng-model="data.value" ng-options="opt for opt in kepsType.options">
+				<select ng-model="data.value" ng-options="opt for option in kepsType.options">
 				</select>
 			</div>
 			<div ng-if="kepsType.type === 'multi'">
@@ -109,58 +111,60 @@
 			</div>
 			<div ng-if="kepsType.type === 'address'">
 				<!--http://ipinfo.io/-->
-				<div class="col-sm-8">
-					<div class="form-group">
-					  <label class="col-sm-4 control-label">Address Line1:</label>
-					  <div class="col-sm-8">
-					    <input type="text" class="form-control" placeholder="Email">
-					  </div>
-					  <span class="help-block">Street address, P.O. box, company name, c/o</span>
-					</div>
-					<div class="form-group">
-					  <label class="col-sm-4 control-label">Address Line2:</label>
-					  <div class="col-sm-8">
-					    <input type="text" class="form-control" placeholder="Email">
-					  </div>
-					  <span class="help-block">Apartment, suite, unit, building, floor, etc.</span>
-					</div>
-					<div class="form-group">
-					  <label class="col-sm-4 control-label">City:</label>
-					  <div class="col-sm-8">
-					    <input type="text" class="form-control" placeholder="Email">
-					  </div>
-					</div>
-					<div class="form-group">
-					  <label class="col-sm-4 control-label">State / Province / Region / County:</label>
-					  <div class="col-sm-8">
-					    <input type="text" class="form-control" placeholder="Email">
-					  </div>
-					</div>
-					<div class="form-group">
-					  <label class="col-sm-4 control-label">ZIP / Postal Code / Postcode:</label>
-					  <div class="col-sm-8">
-					    <input type="text" class="form-control" placeholder="Email">
-					  </div>
-					</div>
-					<div class="form-group">
-					  <label class="col-sm-4 control-label">Country:</label>
-					  <div class="col-sm-8">
-					    <input type="text" class="form-control" placeholder="Email">
-					  </div>
-					</div>
+				<p style="margin-bottom:-10px;">
+					Address Line 1:
+				</p>
+			  	<div class="col s12">
+			    	<input type="text" ng-model="data.address1" ng-keydown="checkAddress()">
+			  	</div>
+			  	<label>Street address, P.O. box, company name, c/o</label>
+				
+				<p style="margin-bottom:-10px;">
+				 	Address Line2:
+				</p>
+				<div class="col s12">
+				   <input type="text" ng-model="data.address2">
 				</div>
-				<div class="col-sm-4">
-					Preview
-					Zoom 17 for address
-					Zoom 9 for city
-					Zoom 5 for state / small country
-					Zoom 4 for country
-					<img class="map" src="https://maps.googleapis.com/maps/api/staticmap?center=37.7367,-122.4572&amp;zoom=17&amp;size=200x200&amp;sensor=false" alt="San Francisco, California, United States Map" title="San Francisco, California, United States Map">
+			 	<label>Apartment, suite, unit, building, floor, etc.</label>
+				
+				<p>City:</p>
+			  	<div class="col s12">
+			    	<input type="text" ng-model="data.city" ng-keydown="checkAddress()">
+			  	</div>
+
+				<p>State / Province / Region / County: </p>
+				<div class="col s12">
+				    <input type="text" ng-model="data.state" ng-keydown="checkAddress(event)">
+				</div>
+			  	<label>Two capital letter abbreviation</label>
+
+				<p>ZIP / Postal Code / Postcode:</p>
+				<div class="col s12">
+					<input type="text" ng-model="data.zip">
+				</div>
+
+				<p>Country:</p>
+				<div class="col s12">
+					<input type="text" ng-model="data.country">
+				</div>
+				<div class="row">
+					<div class="col s4">
+						<p>Preview:
+						<br>
+						{{data.address1 + ' ' + data.address2}}
+						<br>
+						{{data.city + ', ' + data.state + ' ' + data.zip}}
+						<br>
+						{{data.country}}
+					</div>
+					<div class="col s7">
+						<img class="map" src="https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA">
+					</div>
 				</div>
 			</div>
 			<div ng-if="kepsType.type === 'phone'">
 				<!---http://jackocnr.com/intl-tel-input.html -->
-				<input type="tel" ng-required="kepsType.required" ng-model="data.value" class="form-control" placeholder="{{kepsType.display.placeholder}}"></input>
+				<input type="text" ng-required="kepsType.required" ng-model="data.value" class="form-control" placeholder="{{kepsType.display.placeholder}}"></input>
 			</div>
 			<span class="help-block" ng-if="kepsType.display.instructions">{{kepsType.display.instructions}}</span>
 		</div>
