@@ -1,12 +1,15 @@
 'use strict';
 
 angular.module('editor')
-	.controller('EditorDocumentController', ['$scope','DataService','$stateParams',
-		function($scope, DataService,$stateParams){
+	.controller('EditorDocumentController', ['$scope','DataService','$stateParams','$location',
+		function($scope, DataService,$stateParams, $location){
 
 			$scope.tablename = $stateParams.tablename + 's';
 			$scope.documentId = $stateParams.documentId;
 			$scope.windowHeight = window.innerHeight + 'px';
+			$scope.back = function(){
+				$location.path('/editor/tables/' + $stateParams.tablename);
+			}
 			if($scope.documentId === 'new'){
 				$scope.documentData = {};
 			}else{
