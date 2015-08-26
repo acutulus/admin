@@ -1,6 +1,6 @@
 angular.module('editor')
-.directive('inputItem',['$modal','DataService','$http', '$compile',
-  function($modal, DataService, $http, $compile){
+.directive('inputItem',['$modal','DataService','$http', '$compile','$window',
+  function($modal, DataService, $http, $compile, $window){
     return {
       restrict: 'E',
       
@@ -22,6 +22,7 @@ angular.module('editor')
       },
 
       link: function(scope,element,attrs){
+
         scope.data = {};
         if (scope.kepsModel) {
           if (scope.kepsType.type && scope.kepsType.type === 'image') {
@@ -59,7 +60,6 @@ angular.module('editor')
           }
 
           var appendHTML = "<div style='width:95%;margin-left:auto;margin-right:auto;display:block;'>";
-
 
           /*### TYPE: ARRAY stuff ###*/
           scope.addArrayItem = function(){
@@ -134,14 +134,14 @@ angular.module('editor')
           }
           if (scope.kepsType.type === 'image') {
             //already have a canvas for array objects with multiple images :(
-            scope.data.randomCanvasId = Math.random().toString()
+            scope.kepsType.randomCanvasId = Math.random().toString()
     
             if(typeof scope.kepsModel === 'object'){
               if(scope.kepsModel.absoluteFilePath !== 'undefined'){
                 var img = new Image();
                 img.src = scope.kepsModel.filePath;
                 img.onload = function(){
-                  drawToCanvas(img, scope.data.randomCanvasId(scope.data.randomCanvasId.length));
+                  scope.drawToCanvas(img, scope.data.randomCanvasId(scope.data.randomCanvasId.length));
                 }
               }
             }
@@ -184,7 +184,7 @@ angular.module('editor')
             img.onload = function() {
               
 
-              drawToCanvas(img);
+              scope.drawToCanvas(img);
             
             formdata.append('file', evt.target.files[0]);
             formdata.append('data', evt.target.files[0]);
@@ -203,7 +203,8 @@ angular.module('editor')
 
         }
         scope.getImageUrl = function(){
-          if(scope.kepsType.imageUrl.match(/(\S+\.[^/\s]+(\/\S+|\/|))/g)){
+          console.log(scope.kepsModel)
+          if(scope.data.imageUrl.match(/(\S+\.[^/\s]+(\/\S+|\/|))/g)){
             
             var width = document.createAttribute('width');
             var height = document.createAttribute('height'); 
@@ -212,23 +213,24 @@ angular.module('editor')
             var ctx;  
             
             var img = new Image();
-            img.src = scope.kepsType.imageUrl;
+            img.src = scope.data.imageUrl;
             img.onload = function(){
               
               //send url to backend, get image data
               var formdata = new FormData();
-              formdata.append('url', scope.kepsType.imageUrl);
+              formdata.append('url', scope.data.imageUrl);
               var request = new XMLHttpRequest();
               request.onreadystatechange = function(){
                 if(request.readyState === 4){
                   scope.kepsModel = JSON.parse(request.responseText);
+                  console.log(scope.kepsModel)
                   scope.$apply();
                 }
               }
               request.open('POST', '/admin/upload/image', true);
               request.send(formdata);
             
-              drawToCanvas(img);
+              scope.drawToCanvas(img);
             };            
           }
         }
@@ -236,7 +238,7 @@ angular.module('editor')
         scope.drawToCanvas = function(img, canvasId){
           var width = document.createAttribute('width');
           var height = document.createAttribute('height'); 
-          var canvas = document.getElementById(canvasId);
+          var canvas = document.getElementById(canvasId || scope.kepsType.randomCanvasId);
           var ctx;
           //scale images reasonably
             if(img.width > img.height){ 
@@ -263,6 +265,7 @@ angular.module('editor')
           var request = new XMLHttpRequest();
           request.onreadystatechange = function(){
             if(request.readyState === 4){
+              console.log(request.responseText);
               scope.kepsModel = JSON.parse(request.responseText);
               scope.$apply();
             }
@@ -270,6 +273,29 @@ angular.module('editor')
           request.open('POST', '/admin/upload/file', true);
           request.send(formdata);
         };
+
+
+        /*###TYPE: GEOPOINT stuff ###*/
+        var firstMapRun = true;
+        scope.testLatLng = function(){
+          if(scope.kepsModel.lat && scope.kepsModel.lng && firstMapRun){
+
+            $window.initMap = function(){
+              map = new google.maps.Map(document.getElementById('map'),
+                {
+                  center:{lat:scope.kepsModel.lat, lng: scope.kepsModel.lng},
+                  zoom:8
+                });
+              console.log(map);
+            }
+            var s = document.createElement('script');
+            s.src = "https://maps.googleapis.com/maps/api/js?callback=initMap"
+            document.body.appendChild(s);
+          }else{
+            console.log('map', map)
+            console.log(scope.kepsModel)
+          }
+        }
       }
     };
   }]);

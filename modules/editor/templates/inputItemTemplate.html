@@ -1,10 +1,10 @@
 <section>
-	<div class="modal-row">
-		<label ng-if="kepsType.display.label">{{kepsType.display.label}}:</label>
-		<label ng-if="!kepsType.display.label">{{kepsName}}:</label>
+	<div style="margin-bottom:20px;">
+		<h6 ng-if="kepsType.display.label" >{{kepsType.display.label}}:</h6>
+		<h6 ng-if="!kepsType.display.label">{{kepsName}}:</h6>
 		<span ng-show="typeError" style="color:red">Did not find a useable input type, defaulting to string</span>
 		<!-- Start listing input types -->
-		<div ng-if="kepsType.type">
+		<div ng-if="kepsType.type" style="padding:25px;border:1px solid rgba(50,50,50,.5)">
 			<div ng-if="kepsType.type.indexOf(':') > -1">
 			    <input type="text" list="{{kepsType.type + 'options'}}" class="form-control" ng-model="data.value" ng-blur="setReferenceData()"></input>
 			    <datalist id="{{kepsType.type + 'options'}}">
@@ -19,12 +19,13 @@
 				<input type="number" ng-required="kepsType.required" ng-model="data.value" class="form-control"></input>
 			</div>
 			<div ng-if="kepsType.type === 'boolean'">
-				<div class="radio-inline">
-				  <label><input type="radio" ng-required="kepsType.required" ng-model="data.value" ng-value="true">True</label>
+				<div style="width:40%;display:inline-block;">
+				  <label class="btn-floating blue" style="text-align:center;margin-right:20px;"><input  type="radio" ng-required="kepsType.required" ng-model="data.value" ng-value="true">True</label>
+				  <label class="btn-floating red" style="text-align:center"><input  type="radio" ng-required="kepsType.required" ng-model="data.value" ng-value="false">False</label>
 				</div>
-				<div class="radio-inline">
-				  <label><input type="radio" ng-required="kepsType.required" ng-model="data.value" ng-value="false">False</label>
-				</div>		
+				<div style="width:40%;display:inline-block;">
+					<h6>Current Value: {{data.value}}</h6>
+				</div>
 			</div>
 			<div ng-if="kepsType.type === 'file'">
 				<div class="row">
@@ -56,20 +57,24 @@
 			</div>
 			<div ng-if="kepsType.type === 'image'">
 				<div class="row">
-					<div class="form-group col-xs-5">
+					<div class="form-group col s4">
 						<div ng-show="!import">
 							<label>Import image from computer:</label>
-							<input type="file" ng-required="kepsType.required" style="margin:15px;" onchange="angular.element(this).scope().imageFileChanged(event)" accept="image/*"></input>
+							<div class="btn waves-effect waves-light" style="display:inline-block;position:relative;">
+								Upload Image
+								<input type="file" style="position: absolute; top: 0px; width: 107px; left: 0px; height: 35px; opacity: 0;" ng-required="kepsType.required" style="margin:15px;" onchange="angular.element(this).scope().imageFileChanged(event)" accept="image/*"></input>
+							</div>
+							<br>
 							<a href="" ng-click="import = true;image.file = ''">Or... Upload an image from a url.</a>
 						</div>
 						<div ng-show="import">
 							<label>Import image from url:</label>
-							<input type="text" ng-required="kepsType.required" class="form-control" ng-model="data.imageUrl" placeholder="Enter image url"></input>
+							<input type="text" ng-required="kepsType.required" class="form-control" ng-model="data.imageUrldga" placeholder="Enter image url"></input>
 							<button style="margin-top:5px;" class="btn btn-success" ng-click="getImageUrl()">Grab Image</button><br>
 							<a href="" ng-click="import = false;">Or... Upload a file from your computer</a>
 						</div>
 					</div>
-					<div class="col-xs-7" >
+					<div class="col s8" >
 						<canvas id="{{kepsType.randomCanvasId}}"></canvas>
 						<span ng-show="imageData.height && imageData.width">{{imageData.width + ' X ' + imageData.height}}</span>
 
@@ -80,22 +85,15 @@
 				<input type="url" ng-required="kepsType.required" ng-model="data.value" class="form-control" placeholder="{{kepsType.display.placeholder}}"></input>
 			</div>
 			<div ng-if="kepsType.type === 'geopoint'">
-				<div class="col-sm-8">
-					<div class="form-group">
-					  <label class="col-sm-4 control-label">Lat:</label>
-					  <div class="col-sm-8">
-					    <input type="text" class="form-control">
-					  </div>
+				<div class="row">
+					<div class="col s2">
+						  <label>Lat:</label>
+						  <input type="number" step="any" class="form-control" ng-model="data.value.lat">
+						  <label >Lng:</label>
+						  <input type="number" step="any" class="form-control" ng-model="data.value.lng">
+						  <button class="btn-floating waves-effect waves-light green" style="text-align:center" ng-click="testLatLng()">Test</button>
 					</div>
-					<div class="form-group">
-					  <label class="col-sm-4 control-label">Lng:</label>
-					  <div class="col-sm-8">
-					    <input type="text" class="form-control">
-					  </div>
-					</div>
-				</div>
-				<div class="col-sm-4">
-					Preview
+				<div class="col s10" id="map">
 				</div>
 			</div>
 			<div ng-if="kepsType.type === 'email'">

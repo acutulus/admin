@@ -44,6 +44,7 @@ angular.module('editor')
 				taRegisterTool('acutulus-image',{
 					iconclass:'fa fa-picture-o',
 					action:function(){
+						console.log(this);
 						var that = this;
 						var selectedElement = document.activeElement;
 						var angularSelected = angular.element(document.activeElement);
@@ -70,20 +71,29 @@ angular.module('editor')
 				taRegisterTool('acutulus-link',{
 					iconclass:'fa fa-link',
 					action: function(){
+												console.log(this);
+
+						console.log('in link function')
 						var that = this;
 						var selectedElement = document.activeElement;
-
+						selectedElement.appendChild('<div style="position:absolute;z-index:100;min-width:200px;padding:20px;margin-left:40%"'+
+											   'class="card" ng-init="showLinkInput = true" ng-show="showLinkInput">shown'+
+											   '<div class="btn-large" ng-click="showLinkInput=false;">Hide</div> '+
+											   '</div>')
+						console.log('openin modal')
 						var linkModal = $modal.open({
 							templateUrl:'modules/dbTool/views/get-link-modal.html',
 							controller:'GetLinkModalCtrl',
 							size:'med'
 						});
 						linkModal.result.then(function(urlLink){
+							console.log('modal result')
 							if(urlLink && urlLink !== '' && urlLink !== 'http://'){
 								selectedElement.focus();
 								return that.$editor().wrapSelection('createLink', urlLink, true);
 							}
 						})
+						console.log('modal did nothin')
 					},
 					activeState: function(commonElement){
 						if(commonElement) return commonElement[0].tagName === 'A';
@@ -97,10 +107,8 @@ angular.module('editor')
 				});
 				
 				taOptions.toolbar = [
-			      ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p'],
-			      ['pre', 'quote','bold', 'italics', 'underline', 'strikeThrough'],
-			      [ 'ul', 'ol', 'redo', 'undo', 'clear'],
-			      ['justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent'],
+			      ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p' ,'pre', 'quote','bold', 'italics', 'underline', 'strikeThrough'],
+			      [ 'ul', 'ol', 'redo', 'undo', 'clear','justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent'],
 			      ['html', 'acutulus-youtube','acutulus-link', 'acutulus-image']
   				];
 

@@ -6,12 +6,16 @@ angular.module('editor')
 
 			$scope.tablename = $stateParams.tablename + 's';
 			$scope.documentId = $stateParams.documentId;
-			
-			DataService.get('admin/rest/' + $scope.tablename, $scope.documentId)
-				.then(function(data){
-					$scope.documentData = data;
-					console.log($scope.documentData);
-				})
+			$scope.windowHeight = window.innerHeight + 'px';
+			if($scope.documentId === 'new'){
+				$scope.documentData = {};
+			}else{
+				DataService.get('admin/rest/' + $scope.tablename, $scope.documentId)
+					.then(function(data){
+						$scope.documentData = data;
+						console.log($scope.documentData);
+					})
+			}
 
 			DataService.getQuery('admin/models')
 				.then(function(data){

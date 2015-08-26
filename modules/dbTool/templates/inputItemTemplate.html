@@ -59,7 +59,9 @@
 					<div class="form-group col-xs-5">
 						<div ng-show="!import">
 							<label>Import image from computer:</label>
+							<div class="btn">
 							<input type="file" ng-required="kepsType.required" style="margin:15px;" onchange="angular.element(this).scope().imageFileChanged(event)" accept="image/*"></input>
+							</div>
 							<a href="" ng-click="import = true;image.file = ''">Or... Upload an image from a url.</a>
 						</div>
 						<div ng-show="import">
