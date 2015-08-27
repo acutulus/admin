@@ -348,8 +348,20 @@ angular.module('editor')
 
               timeoutPromise = $timeout(function(){
                 $http.get('http://maps.googleapis.com/maps/api/geocode/json?address=' + scope.data.address1 + ',+' + scope.data.city + ',+' + scope.data.state)
-                  .then(function(data){
-                    console.log(data);
+                  .then(function(mapInfo){
+                    console.log(mapInfo);
+                    if(mapInfo.status === 200){
+                      
+                      var addressInfo = mapInfo.data.results[0].address_components;
+                      for(var x in addressInfo){
+                        if(addressInfo[x].types[0] === 'postal_code'){
+                          scope.data.zip = addressInfo[x].long_name;
+                        } else if(addressInfo[x].types[0] === 'country'){
+                          scope.data.country = addressInfo[x].long_name;
+                        }
+                      }
+                      console.log(scope.data);
+                    }
                   })
               }, 1000);
 
