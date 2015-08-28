@@ -1,12 +1,12 @@
 <section>
 	<div style="margin-bottom:20px;">
-		<h6 ng-if="kepsType.display.label" >{{kepsType.display.label}}:</h6>
-		<h6 ng-if="!kepsType.display.label">{{kepsName}}:</h6>
+		<label ng-if="kepsType.display.label" >{{kepsType.display.label}}:</label>
+		<label ng-if="!kepsType.display.label">{{kepsName}}:</label>
 		<span ng-show="typeError" style="color:red">Did not find a useable input type, defaulting to string</span>
 		<!-- Start listing input types -->
-		<div ng-if="kepsType.type" style="padding:25px;border:1px solid rgba(50,50,50,.5)">
+		<div ng-if="kepsType.type" >
 			<div ng-if="kepsType.type.indexOf(':') > -1">
-			    <input type="text" list="{{kepsType.type + 'options'}}" class="form-control" ng-model="data.value" ng-blur="setReferenceData()"></input>
+			    <input type="text" list="{{kepsType.type + 'options'}}" class="{{}}" ng-model="data.value" ng-blur="setReferenceData()"></input>
 			    <datalist id="{{kepsType.type + 'options'}}">
 			    	<option ng-repeat="option in data.options" value="{{option.value}}" 
 			    	></option>

@@ -1,11 +1,11 @@
 <section data-ng-controller="EditorDocumentController">
-	<div style="position:absolute;margin-left:85%;text-align:center;">
+	<div style="margin-left:85%;text-align:center;">
 		<button class="waves-effect waves-light btn green" style="margin-bottom:10px;">Save</button>
 		<br>
 		<button class="waves-effect waves-light btn orange" ng-click="back()">Back </button>
 	</div>
-	<div style="text-align:center;margin-bottom:20px;">
-		<h5>{{tablename}} - {{documentData[schema.properties.displayAs]}}</h5>
+	<div style="text-align:center;margin-bottom:10px;margin-top:-70px;">
+		<h5>{{documentData[schema.properties.displayAs]}}</h5>
 	</div>
 	<div class="container" style="height:{{windowHeight}};overflow:scroll" ng-if="schema.schema && documentData">
 		<keps-form keps-data="schema.schema" keps-model="documentData"></keps-form>

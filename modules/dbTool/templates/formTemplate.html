@@ -1,7 +1,11 @@
 <section>
 	<form>
 		<div ng-repeat="(name, field) in kepsData">
-			<input-item keps-name="kepsName+name" keps-type="field" keps-model="data.value[name]"/>
+			<input-item
+				keps-name="kepsName+name"
+				keps-type="field"
+				keps-model="data.value[name]"
+				keps-label="{{scope.framework === 'bootstrap' ? 'form-label' : 'materialize'}}"/>
 			<div ng-message="required">{{inputField.required || 'This Field is Required.'}}</div>
 		</div>
 	</form>

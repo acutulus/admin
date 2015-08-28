@@ -1,6 +1,6 @@
 angular.module('editor')
 	.config(function($provide){
-		$provide.decorator('taOptions',['taRegisterTool', 'taToolFunctions','$delegate','$modal','$window',
+		$provide.decorator('taOptions',['taRegisterTool', 'taToolFunctions','$delegate','$kepsModal','$window',
 			function(taRegisterTool, taToolFunctions, taOptions, $modal, $window){
 				taRegisterTool('acutulus-youtube',{
 					iconclass:'fa fa-youtube-play',

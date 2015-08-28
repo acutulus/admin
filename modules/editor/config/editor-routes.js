@@ -20,7 +20,7 @@ angular.module('editor').config(['$stateProvider', '$urlRouterProvider', '$locat
 			url:'/:tablename',
 			templateUrl:'modules/editor/views/editor-table-contents.html'
 		})
-		.state('editor.document',{
+		.state('editor.tables.document',{
 			url:'/:tablename/:documentId',
 			templateUrl:'modules/editor/views/editor-document.html'
 		})

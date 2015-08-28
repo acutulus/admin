@@ -6,7 +6,7 @@ angular.module('editor')
 
 			$scope.tablename = $stateParams.tablename + 's';
 			$scope.documentId = $stateParams.documentId;
-			$scope.windowHeight = window.innerHeight + 'px';
+			$scope.windowHeight = (window.innerHeight - 100) + 'px';
 			$scope.back = function(){
 				$location.path('/editor/tables/' + $stateParams.tablename);
 			}
