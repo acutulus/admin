@@ -4,10 +4,10 @@
 		<br>
 		<button class="waves-effect waves-light btn orange" ng-click="back()">Back </button>
 	</div>
-	<div style="text-align:center;margin-bottom:10px;margin-top:-70px;">
-		<h5>{{documentData[schema.properties.displayAs]}}</h5>
+	<div style="text-align:center;margin-bottom:10px;margin-top:-70px;margin-right:20%;">
+		<h5>{{documentData[schema.properties.displayAs] || 'New'}}</h5>
 	</div>
-	<div class="container" style="height:{{windowHeight}};overflow:scroll" ng-if="schema.schema && documentData">
-		<keps-form keps-data="schema.schema" keps-model="documentData"></keps-form>
+	<div style="height:{{windowHeight}};overflow:scroll;" ng-if="schema.schema && documentData">
+		<keps-form keps-data="schema.schema" keps-model="documentData" keps-framework="'materialize'"></keps-form>
 	</div>
 </section>

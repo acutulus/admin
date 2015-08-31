@@ -1,6 +1,6 @@
 angular.module('editor')
-.directive('inputItem',['$modal','DataService','$http', '$compile','$window','$timeout', 
-  function($modal, DataService, $http, $compile, $window, $timeout){
+.directive('inputItem',['DataService','$http', '$compile','$window','$timeout', 
+  function( DataService, $http, $compile, $window, $timeout){
     return {
       restrict: 'E',
       
@@ -18,10 +18,17 @@ angular.module('editor')
       scope:{
         kepsType:"=",
         kepsModel:"=",
-        kepsName:"="
+        kepsName:"=",
+        kepsFramework:"="
       },
 
       link: function(scope,element,attrs){
+        if(scope.kepsFramework === 'materialize'){
+          console.log(angular.element('select'));
+        }
+        if(scope.kepsType.options){
+          console.log(scope.kepsType)
+        }
         scope.data = {};
         if (scope.kepsModel) {
           if (scope.kepsType.type && scope.kepsType.type === 'image') {
@@ -292,13 +299,13 @@ angular.module('editor')
 
           }
           if(scope.kepsModel.lat && scope.kepsModel.lng && firstMapRun){
-            document.getElementById('map').style.height = '400px';
+            document.getElementById('map').style.height = '200px';
             $window.initMap = function(){
               var latLng = new google.maps.LatLng(scope.kepsModel.lat, scope.kepsModel.lng);
                 map = new google.maps.Map(document.getElementById('map'),
                 {
                   center:latLng,
-                  zoom:8
+                  zoom:6
                 });
                 marker = new google.maps.Marker(
                 {

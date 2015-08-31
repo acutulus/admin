@@ -5,8 +5,7 @@
 				keps-name="kepsName+name"
 				keps-type="field"
 				keps-model="data.value[name]"
-				keps-framework="{{kepsFramework}}"
-				keps-label="{{kepsFramework === 'bootstrap' ? 'form-label' : 'materialize'}}"/>
+				keps-framework="kepsFramework"/>
 			<div ng-message="required">{{inputField.required || 'This Field is Required.'}}</div>
 		</div>
 	</form>

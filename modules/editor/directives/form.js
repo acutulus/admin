@@ -4,19 +4,17 @@ angular.module('editor')
 			return {
 				restrict: 'E',
 				
-				templateUrl:'/admin/modules/dbTool/templates/formTemplate.html',
+				templateUrl:'/admin/modules/editor/templates/formTemplate.html',
 
 				scope: {
 					kepsData:'=',
 					kepsModel:'=',
-					kepsName:'='
+					kepsFramework:'='
 				},
 				link:function(scope, element, attrs){
 					scope.data = {};
-					console.log('KTYPE', scope.kepsData);
-					console.log('KMOD',scope.kepsModel);
 		        	if (scope.kepsModel) {
-		          	scope.data.value = scope.kepsModel;
+		          		scope.data.value = scope.kepsModel;
 		        	}
 
 		        	scope.$watch('data.value', function(newVal) {
