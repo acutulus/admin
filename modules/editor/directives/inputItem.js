@@ -10,7 +10,6 @@ angular.module('editor')
       Property- displayAs: Optional, used for modifying reference types
       Property- displayType: Optional, will define field type, set to type if not provided
       Property- options: Optional, array of id/value that matches the reference type
-
       Property- name: Not Optional, will be used as label if no displayAs
       Property- type: Not Optional, will be field type if no displayType provided
       Property- model: Not Optional, value or false if not a reference field*/
@@ -23,12 +22,6 @@ angular.module('editor')
       },
 
       link: function(scope,element,attrs){
-        if(scope.kepsFramework === 'materialize'){
-          console.log(angular.element('select'));
-        }
-        if(scope.kepsType.options){
-          console.log(scope.kepsType)
-        }
         scope.data = {};
         if (scope.kepsModel) {
           if (scope.kepsType.type && scope.kepsType.type === 'image') {
@@ -53,8 +46,6 @@ angular.module('editor')
         scope.typeError = false;
         /*### TYPE: array stuff ### */
         if(scope.kepsType.constructor === Array){
-
-
           var size = 0;
           for (var i in scope.kepsType[0]) {
             size++;
@@ -65,10 +56,7 @@ angular.module('editor')
             scope.data.value = [];
 
           }
-
           var appendHTML = "<div style='width:95%;margin-left:auto;margin-right:auto;display:block;'>";
-
-          /*### TYPE: ARRAY stuff ###*/
           scope.addArrayItem = function(){
             if(typeof scope.data.value === 'undefined' || scope.data.value.length < 1){
               //add clone of object
@@ -83,8 +71,6 @@ angular.module('editor')
           scope.removeArrayItem = function(index){
             scope.data.value.splice(index,1);
           }
-
-          //console.log('data on array postprocess', scope.kepsType, scope.kepsModel, size);
 
           if(size === 1){
             appendHTML += "<ul class='collection'><li class='collection-item' style='text-align:right;'>";
@@ -165,8 +151,10 @@ angular.module('editor')
               }
             }
 
-          } else {
-            
+          } else if(scope.kepsType.type === 'multi'){
+              scope.data.value = [];
+          }else{
+
           }
         }
 
@@ -373,6 +361,18 @@ angular.module('editor')
               }, 1000);
 
             }
+          }
+        }
+
+        /*####TYPE: multi stuff####*/
+        scope.checkMulti = function(option){
+          console.log('called')
+          var index = scope.kepsModel.indexOf(option);
+          if(index > -1){
+            console.log('removin', option)
+            scope.kepsModel.splice(index,1);
+          }else{
+            scope.kepsModel.push(option);
           }
         }
 
