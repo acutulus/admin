@@ -287,7 +287,6 @@ angular.module('editor')
 
           }
           if(scope.kepsModel.lat && scope.kepsModel.lng && firstMapRun){
-            document.getElementById('map').style.height = '200px';
             $window.initMap = function(){
               var latLng = new google.maps.LatLng(scope.kepsModel.lat, scope.kepsModel.lng);
                 map = new google.maps.Map(document.getElementById('map'),
@@ -302,10 +301,13 @@ angular.module('editor')
                 });
               firstMapRun = false;
             }
-
-            var s = document.createElement('script');
-            s.src = "https://maps.googleapis.com/maps/api/js?callback=initMap"
-            document.body.appendChild(s);
+            if(typeof(google) === 'undefined'){
+              var s = document.createElement('script');
+              s.src = "https://maps.googleapis.com/maps/api/js?callback=initMap"
+              document.body.appendChild(s);
+            }else{
+              initMap();
+            }
 
           }else{
             var latLng = new google.maps.LatLng(scope.kepsModel.lat, scope.kepsModel.lng);
@@ -344,9 +346,8 @@ angular.module('editor')
               timeoutPromise = $timeout(function(){
                 $http.get('http://maps.googleapis.com/maps/api/geocode/json?address=' + scope.data.address1 + ',+' + scope.data.city + ',+' + scope.data.state)
                   .then(function(mapInfo){
-                    console.log(mapInfo);
+
                     if(mapInfo.status === 200){
-                      
                       var addressInfo = mapInfo.data.results[0].address_components;
                       for(var x in addressInfo){
                         if(addressInfo[x].types[0] === 'postal_code'){
@@ -355,7 +356,29 @@ angular.module('editor')
                           scope.data.country = addressInfo[x].long_name;
                         }
                       }
-                      console.log(scope.data);
+                      $window.initMapAddress = function(){
+                        console.log('mapinfo',mapInfo)
+                        var latLng = new google.maps.LatLng( mapInfo.data.results[0].geometry.location.lat,
+                                                             mapInfo.data.results[0].geometry.location.lng);
+
+                        var addressMap = new google.maps.Map(document.getElementById('addressMap'),
+                          {
+                            center:latLng,
+                            zoom:8
+                          });
+                        var marker = new google.maps.Marker(
+                          {
+                            position: latLng,
+                            map: addressMap,
+                          });
+                      }
+                      if(typeof(google) === 'undefined'){
+                        var s = document.createElement('script');
+                        s.src = "https://maps.googleapis.com/maps/api/js?callback=initMapAddress"
+                        document.body.appendChild(s);
+                      }else{
+                        initMapAddress();
+                      }
                     }
                   })
               }, 1000);
