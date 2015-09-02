@@ -44,12 +44,8 @@ angular.module('editor')
 
 			$http.get('/admin/models')
 				.then(function(response){
-					for(var x in response.data){
-						$scope.schemas.push({name:x, 
-											properties:response.data[x].properties, 
-											schema:response.data[x].schema});
-					
-					}
+					console.log(response);
+						$scope.schemas = response.data;
 				})
 
 			$http.get('/admin/uptime')
@@ -80,7 +76,15 @@ angular.module('editor')
 					})	
 				}
 			}*/
+			$scope.resetModelShow = function(){
+				for(var x in $scope.show.models){
+					if(x === 'show'){
 
+					}else{
+						$scope.show.models[x] = false;
+					}
+				}
+			}
 
 			$scope.republish = function(){
 				$http.get('/admin/republish')

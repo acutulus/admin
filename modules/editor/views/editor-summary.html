@@ -14,27 +14,49 @@
 				</div>
 			</div>
 			<div ng-show="show.models.show">
-				Models:
-				<div ng-repeat="schemaname in schemas"  ng-show="show.models.show">
-					<a class="waves-effect waves-light btn-small" ng-click="show.models[schemaname.name] = !show.models[schemaname.name]">{{schemaname.name}}</a>
-					<ul class="collection" ng-show="show.models[schemaname.name]">
-						<a href="" ng-click="show.models.properties[schemaname.name] = !show.models.properties[schemaname.name]">Properties</a>
-						<div ng-show="show.models.properties[schemaname.name]">
-							<ul class="collection">
-								<li class="collection-item" ng-repeat="(key,value) in schemaname.properties">
-									{{key}} : {{value}}
-								</li>
-							</ul>
+				<div class="row">
+					<div  class="col s2">
+						Models:
+						<div ng-repeat="(key,val) in schemas">
+							<a class="waves-effect waves-light btn-small" ng-click="resetModelShow();show.models[key] = !show.models[key]">{{key}}</a>
 						</div>
-						<a href="" ng-click="show.models.schemas[schemaname.name] = !show.models.schemas[schemaname.name]">Schemas</a>
-						<div ng-show="show.models.schemas[schemaname.name]">
-							<ul class="collection">
-								<li class="collection-item" ng-repeat="(key,value) in schemaname.schema">
-									{{key}} : {{value.type}}
-								</li>
-							</ul>
+					</div>
+					<div class="col s10">
+						<div ng-repeat="(key,val) in schemas">
+							<div ng-show="show.models[key]" >
+								<div class="row">
+									<h3>{{key}}</h3>
+									<div class="col s6" ng-repeat="(property,value) in val">
+										<h5>{{property}}</h5>
+										<table class="bordered" style="margin-left:20px;">
+											<tr ng-repeat="(prop,contents) in value">
+												<td>{{prop}}:</td>
+												<td style="overflow:scroll">{{contents}}</td>
+											</tr>
+										</table>
+									</div>
+								</div>
 						</div>
-					</ul>
+					</div>
+						<!--<ul class="collection" ng-show="show.models[schemaname.name]">
+							<a href="" ng-click="show.models.properties[schemaname.name] = !show.models.properties[schemaname.name]">Properties</a>
+							<div ng-show="show.models.properties[schemaname.name]">
+								<ul class="collection">
+									<li class="collection-item" ng-repeat="(key,value) in schemaname.properties">
+										{{key}} : {{value}}
+									</li>
+								</ul>
+							</div>
+							<a href="" ng-click="show.models.schemas[schemaname.name] = !show.models.schemas[schemaname.name]">Schemas</a>
+							<div ng-show="show.models.schemas[schemaname.name]">
+								<ul class="collection">
+									<li class="collection-item" ng-repeat="(key,value) in schemaname.schema">
+										{{key}} : {{value.type}}
+									</li>
+								</ul>
+							</div>
+						</ul>-->
+					</div>
 				</div>
 			</div>
 			<div ng-show="show.uptime.show">

@@ -18,7 +18,7 @@
 					<div class="row" style="margin-right:0px;margin-left:0px;">
 						<div class="input-field">
 							<input type="text" ng-required="kepsType.required" ng-model="data.value" class="validate" placeholder="{{kepsType.display.placeholder}}"></input>
-							<label class="active">{{kepsType.display.label || kepsName}}:</label>
+							<label ng-class="{active: kepsModel}">{{kepsType.display.label || kepsName}}:</label>
 						</div>
 					</div>
 				</div>
@@ -31,7 +31,7 @@
 					<div class="row" style="margin-right:0px;margin-left:0px;">
 						<div class="input-field">
 							<input type="number" ng-required="kepsType.required" ng-model="data.value"></input>
-							<label >{{kepsType.display.label || kepsName}}:</label>
+							<label ng-class="{active: kepsModel}">{{kepsType.display.label || kepsName}}:</label>
 						</div>						
 					</div>
 				</div>
@@ -178,7 +178,7 @@
 					<div class="row" style="margin-right:0px;margin-left:0px;">
 						<div class="input-field">
 							<input type="url" ng-required="kepsType.required" ng-model="data.value" placeholder="{{kepsType.display.placeholder}}"></input>
-							<label>{{kepsType.display.label || kepsName}}:</label>
+							<label ng-class="{active: kepsModel}">{{kepsType.display.label || kepsName}}:</label>
 						</div>
 					</div>
 				</div>
@@ -229,7 +229,7 @@
 					<div class="row" style="margin-right:0px;margin-left:0px;">
 						<div class="input-field">
 							<input type="email" ng-keydown="testEmail()" ng-required="kepsType.required" ng-model="data.value" class="form-control" placeholder="{{kepsType.display.placeholder}}"></input>
-							<label>{{kepsType.display.label || kepsName}}:</label>	
+							<label ng-class="{active: kepsModel}">{{kepsType.display.label || kepsName}}:</label>	
 						</div>
 					</div>
 				</div>
@@ -286,31 +286,31 @@
 							<div class="row">
 								<div class="input-field col s6">
 									<input type="text" ng-model="data.address1" ng-keydown="checkAddress()">
-									<label>Address Line 1:
+									<label ng-class="{active: kepsModel}">Address Line 1:
 								</div>
 								<div class="input-field col s6">
 									<input type="text" ng-model="data.address2" >
-									<label>Address Line 2:
+									<label ng-class="{active: kepsModel}">Address Line 2:
 								</div>
 							</div>
 							<div class="row">
 								<div class="input-field col s6">
 									<input type="text" ng-model="data.city" ng-keydown="checkAddress()">
-									<label>City:</label>
+									<label ng-class="{active: kepsModel}">City:</label>
 								</div>
 								<div class="input-field col s6">
 									<input type="text" ng-model="data.state" ng-keydown="checkAddress()">
-									<label>State/Province/Region:</label>
+									<label ng-class="{active: kepsModel}">State/Province/Region:</label>
 								</div>
 							</div>
 							<div class="row">
 								<div class="input-field col s6">
 									<input type="text" class="active" ng-model="data.zip">
-									<label>ZIP/Postal Code:</label>
+									<label ng-class="{active: kepsModel}" id="zipLabel">ZIP/Postal Code:</label>
 								</div>
 								<div class="input-field col s6">
 									<input type="text" class="active" ng-model="data.country">
-									<label>Country</label>
+									<label ng-class="{active: kepsModel}" id="countryLabel">Country</label>
 								</div>
 							</div>
 						</div>

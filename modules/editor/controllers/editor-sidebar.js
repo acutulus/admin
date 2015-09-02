@@ -1,3 +1,5 @@
+/*NO LONGER USED
+
 'use strict';
 
 angular.module('editor')
@@ -8,7 +10,6 @@ angular.module('editor')
 				$scope.currentTable = $stateParams.tablename + 's';
 			}
 
-			/*Data stores*/
 			$scope.sidebarTablesView = [];
 			$scope.sidebarCollectionView
 			$scope.editableProperties = [];
@@ -37,4 +38,4 @@ angular.module('editor')
 				$scope.currentTable = table + 's';
 			}			
 		}
-	])
+	])*/

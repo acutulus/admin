@@ -276,47 +276,51 @@ angular.module('editor')
         var map;
         var marker;
         scope.testLatLng = function(){
-          //normalize lat/lng for google map max/min
-          if(scope.kepsModel.lat && scope.kepsModel.lng){
-            
-            if(scope.kepsModel.lat < -85){ scope.kepsModel.lat = -85}
-            else if(scope.kepsModel.lat > 85){scope.kepsModel.lat = 85};
+          if(scope.kepsModel){
+            //normalize lat/lng for google map max/min
+            if(scope.kepsModel.lat && scope.kepsModel.lng){
+              
+              if(scope.kepsModel.lat < -85){ scope.kepsModel.lat = -85}
+              else if(scope.kepsModel.lat > 85){scope.kepsModel.lat = 85};
 
-            if(scope.kepsModel.lng < -180){scope.kepsModel.lng = -180}
-            else if(scope.kepsModel.lng > 180){scope.kepsModel.lng = 180}; 
+              if(scope.kepsModel.lng < -180){scope.kepsModel.lng = -180}
+              else if(scope.kepsModel.lng > 180){scope.kepsModel.lng = 180}; 
 
-          }
-          if(scope.kepsModel.lat && scope.kepsModel.lng && firstMapRun){
-            $window.initMap = function(){
-              var latLng = new google.maps.LatLng(scope.kepsModel.lat, scope.kepsModel.lng);
-                map = new google.maps.Map(document.getElementById('map'),
-                {
-                  center:latLng,
-                  zoom:6
-                });
-                marker = new google.maps.Marker(
-                {
-                  position: latLng,
-                  map: map,
-                });
-              firstMapRun = false;
             }
-            if(typeof(google) === 'undefined'){
-              var s = document.createElement('script');
-              s.src = "https://maps.googleapis.com/maps/api/js?callback=initMap"
-              document.body.appendChild(s);
+            if(scope.kepsModel.lat && scope.kepsModel.lng && firstMapRun){
+              $window.initMap = function(){
+                var latLng = new google.maps.LatLng(scope.kepsModel.lat, scope.kepsModel.lng);
+                  map = new google.maps.Map(document.getElementById('map'),
+                  {
+                    center:latLng,
+                    zoom:6
+                  });
+                  marker = new google.maps.Marker(
+                  {
+                    position: latLng,
+                    map: map,
+                  });
+                firstMapRun = false;
+              }
+              if(typeof(google) === 'undefined'){
+                var s = document.createElement('script');
+                s.src = "https://maps.googleapis.com/maps/api/js?callback=initMap"
+                document.body.appendChild(s);
+              }else{
+                initMap();
+              }
+
             }else{
-              initMap();
+              if(scope.kepsModel.lat && scope.kepsModel.lng){
+                var latLng = new google.maps.LatLng(scope.kepsModel.lat, scope.kepsModel.lng);
+                marker.setMap(null)
+                marker = new google.maps.Marker({
+                  position:latLng,
+                  map:map
+                })
+                map.setCenter(marker.getPosition());
+              }
             }
-
-          }else{
-            var latLng = new google.maps.LatLng(scope.kepsModel.lat, scope.kepsModel.lng);
-            marker.setMap(null)
-            marker = new google.maps.Marker({
-              position:latLng,
-              map:map
-            })
-            map.setCenter(marker.getPosition());
           }
 
         }
@@ -352,8 +356,10 @@ angular.module('editor')
                       for(var x in addressInfo){
                         if(addressInfo[x].types[0] === 'postal_code'){
                           scope.data.zip = addressInfo[x].long_name;
+                          if(scope.kepsFramework === 'materialize') document.getElementById('zipLabel').className = "active";
                         } else if(addressInfo[x].types[0] === 'country'){
                           scope.data.country = addressInfo[x].long_name;
+                          if(scope.kepsFramework === 'materialize') document.getElementById('countryLabel').className = "active";
                         }
                       }
                       $window.initMapAddress = function(){
