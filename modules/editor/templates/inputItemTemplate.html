@@ -15,10 +15,10 @@
 			</div>
 			<div ng-if="kepsType.type === 'string'">
 				<div ng-if="kepsFramework === 'materialize'">
-					<div class="row">
+					<div class="row" style="margin-right:0px;margin-left:0px;">
 						<div class="input-field">
 							<input type="text" ng-required="kepsType.required" ng-model="data.value" class="validate" placeholder="{{kepsType.display.placeholder}}"></input>
-							<label>{{kepsType.display.label || kepsName}}:</label>
+							<label class="active">{{kepsType.display.label || kepsName}}:</label>
 						</div>
 					</div>
 				</div>
@@ -28,7 +28,7 @@
 			</div>
 			<div ng-if="kepsType.type === 'number'">
 				<div ng-if="kepsFramework === 'materialize'">
-					<div class="row">
+					<div class="row" style="margin-right:0px;margin-left:0px;">
 						<div class="input-field">
 							<input type="number" ng-required="kepsType.required" ng-model="data.value"></input>
 							<label >{{kepsType.display.label || kepsName}}:</label>
@@ -39,9 +39,9 @@
 					<input type="number" ng-required="kepsType.required" ng-model="data.value" class="form-control"></input>
 				</div>
 			</div>
-			<div ng-if="kepsType.type === 'boolean'">
+			<div ng-if="kepsType.type === 'boolean'" >
 				<div ng-if="kepsFramework === 'materialize'">
-					<div class="row">
+					<div class="row" style="margin-right:0px;margin-left:0px;">
 						<label>{{kepsType.display.label || kepsName}}:</label><br>
 						<div class="col s3">
 							<label class="btn waves-effect waves-light blue" style="text-align:center;margin-right:20px;"><input  type="radio" ng-required="kepsType.required" ng-model="data.value" ng-value="true">True&nbsp</label><br>
@@ -63,7 +63,7 @@
 			</div>
 			<div ng-if="kepsType.type === 'file'">
 				<div ng-if="kepsFramework === 'materialize'">
-					<div class="row">
+					<div class="row" style="margin-right:0px;margin-left:0px;">
 						<div class="col s6">
 							<label>{{kepsType.display.label || kepsName}}:</label>
 							<br>
@@ -102,7 +102,7 @@
 			<div ng-if="kepsType.type === 'datetime'">
 				<div ng-if="kepsFramework === 'materialize'">
 					<label>{{kepsType.display.label || kepsName}}:</label>
-					<div class="row">
+					<div class="row" style="margin-right:0px;margin-left:0px;">
 						<div class="col s6">
 							<input type="date" ng-required="kepsType.required" class="form-control"  ng-model="data.date" ng-blur="makeTime()" placeholder="yyyy-MM-dd"></input>
 						</div>
@@ -112,7 +112,7 @@
 					</div>
 				</div>
 				<div ng-if="kepsFramework === 'bootstrap'">
-					<div class="row">
+					<div class="row" >
 						<div class="form-group col-xs-6">
 							<input type="date" ng-required="kepsType.required" class="form-control"  ng-model="data.date" ng-blur="makeTime()" placeholder="yyyy-MM-dd"></input>
 						</div>
@@ -125,7 +125,7 @@
 			<div ng-if="kepsType.type === 'image'">
 				<div ng-if="kepsFramework === 'materialize'">
 					<label>{{kepsType.display.label || kepsName}}:</label>
-					<div class="row">
+					<div class="row" style="margin-right:0px;margin-left:0px;">
 						<div class="col s4">
 							<div ng-show="!import">
 								<label>Import image from computer:</label>
@@ -175,7 +175,7 @@
 			</div>
 			<div ng-if="kepsType.type === 'url'">
 				<div ng-if="kepsFramework === 'materialize'">
-					<div class="row">
+					<div class="row" style="margin-right:0px;margin-left:0px;">
 						<div class="input-field">
 							<input type="url" ng-required="kepsType.required" ng-model="data.value" placeholder="{{kepsType.display.placeholder}}"></input>
 							<label>{{kepsType.display.label || kepsName}}:</label>
@@ -189,7 +189,7 @@
 			<div ng-if="kepsType.type === 'geopoint'">
 				<div ng-if="kepsFramework === 'materialize'">	
 					<label>{{kepsType.display.label || kepsName}}:</label>		
-					<div class="row">
+					<div class="row" style="margin-right:0px;margin-left:0px;">
 						<div class="col s4">
 							<div class="input-field">
 								<input type="number" step="any"  ng-model="data.value.lat">
@@ -226,7 +226,7 @@
 			<div ng-if="kepsType.type === 'email'">
 				<span ng-show="!data.emailCorrect && data.value.length > 2" style="color:red;">Not valid email</span><span ng-show="data.emailCorrect" style="color:green;">Valid Email</span>
 				<div ng-if="kepsFramework === 'materialize'">
-					<div class="row">
+					<div class="row" style="margin-right:0px;margin-left:0px;">
 						<div class="input-field">
 							<input type="email" ng-keydown="testEmail()" ng-required="kepsType.required" ng-model="data.value" class="form-control" placeholder="{{kepsType.display.placeholder}}"></input>
 							<label>{{kepsType.display.label || kepsName}}:</label>	
@@ -240,7 +240,7 @@
 			<div ng-if="kepsType.type === 'enum'">
 				<div ng-if="kepsFramework === 'materialize'">
 					<label>{{kepsType.display.label || kepsName}}:</label>
-					<div class="row">
+					<div class="row" style="margin-right:0px;margin-left:0px;">
 						<div class="input-field col s12">
 							<select style="display:block;" ng-model="data.value">
 								<option ng-repeat="opt in kepsType.options" value="{{opt}}">{{opt}}</option>
@@ -253,7 +253,7 @@
 			</div>
 			<div ng-if="kepsType.type === 'multi'">
 				<div ng-if="kepsFramework === 'materialize'">
-					<div class="row">
+					<div class="row" style="margin-right:0px;margin-left:0px;">
 						<div class="col s12">
 							<label>{{kepsType.display.label || kepsName}}:</label>
 							<div ng-repeat="opt in kepsType.options">
@@ -280,7 +280,7 @@
 			</div>
 			<div ng-if="kepsType.type === 'address'">
 				<div ng-if="kepsFramework === 'materialize'">
-					<div class="row">
+					<div class="row" style="margin-right:0px;margin-left:0px;">
 						<label>{{kepsType.display.label || kepsName}}:</label>	
 						<div class="col s12">
 							<div class="row">

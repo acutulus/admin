@@ -1,46 +1,47 @@
 <section data-ng-controller="EditorController">
-	<nav style="margin-left:15%;height:10%;background-color:white;">
-		<div class="nav-wrapper">
-			<span style="font-size:20px;margin-left:50px;">{{pageTitle || 'Editor'}}</span>
+	<nav class="top-nav" style="background-color:#00CCFF">
+		<div class="container">
+			<div class="nav-wrapper">
+				<a class="page-title" style="margin-left:20px;font-size:20px;">{{pageTitle || 'The Keps Platform'}}</a>
+			</div>
 		</div>
 	</nav>
-	<header>
-		<div >
-			<ul id="nav" class="side-nav fixed" style="width: 15%;left:0;">
-        		<li class="logo" style="height:10%;border-bottom:solid 1px #ddd;">
-        			<a id="logo-container" href="#!/editor/summary" class="brand-logo">
-   						<img src="http://img3.wikia.nocookie.net/__cb20100305015943/lotr/images/c/c8/Rings-frodofarewell.jpg"
-   						style="width:100%;height:80%;">
-   					</a>
-            	</li>
-	        	<ul class="collapsible collapsible-accordion" style="margin-top:20px;">
-	    			<li class="bold">
-						<a class="btn collapsible-header waves-effect waves-light grey" style="height:5%;width:100%;margin:0;"><b>Summary</b></a> 
-						<div class="collapsible-body">
-							<ul class="collection" style="margin-top:0px;margin-bottom:0px;">
-								<li class="collection-item"><a class="sidebar-dropdown-links" href="#!/editor/summary/uptime">Uptime</a></li>
-								<li class="collection-item"><a class="sidebar-dropdown-links" href="#!/editor/summary/routes">Routes</a></li>
-								<li class="collection-item"><a class="sidebar-dropdown-links" href="#!/editor/summary/models">Models</a></li>
-								<li class="collection-item"><a class="sidebar-dropdown-links" href="#!/editor/summary/rebuild">Rebuild</a></li>
-								<li class="collection-item"><a class="sidebar-dropdown-links" href="#!/editor/summary/republish">Republish</a></li>
-							</ul>
-						</div>
-					</li>
-				</ul>  
-				<ul class="collapsible collapsible-accordion"> 			
-	    			<li class="bold">
-	    				<a class="btn collapsible-header waves-effect waves-light grey" style="height:5%;width:100%;margin:0;"><b>Editor</b></a>
-	    				<div class="collapsible-body">
-	    					<ul class="collection" style="margin-top:0px;margin-bottom:0px;">
-	    						<li ng-repeat="table in sidebarTablesView" class="collection-item">
-	    							<a class="sidebar-dropdown-links" href="#!/editor/tables/{{table}}">{{table}}</a>
-	    						</li>	
-	    					</ul>	
-	    				</div>
-	    			</li>
-	    		</ul>
-         	</ul>
-        </div>
-	</header>	
-	<section data-ui-view></section>
+
+	<ul id="nav" class="side-nav fixed" style="width: 15%;left:0;">
+		<li class="logo" style="border-bottom:solid 1px #ddd;">
+			<a id="logo-container" href="#!/editor/summary" class="brand-logo">
+					<img src="http://img3.wikia.nocookie.net/__cb20100305015943/lotr/images/c/c8/Rings-frodofarewell.jpg"
+					style="width:100%;height:80%;">
+				</a>
+    	</li>
+    	<ul class="collapsible collapsible-accordion" style="margin-top:20px;">
+			<li class="bold">
+				<a class="btn collapsible-header waves-effect waves-light grey" style="height:5%;width:100%;margin:0;"><b>Summary</b></a> 
+				<div class="collapsible-body">
+					<ul class="collection" style="margin-top:0px;margin-bottom:0px;">
+						<li class="collection-item"><a class="sidebar-dropdown-links" href="#!/editor/summary/uptime">Uptime</a></li>
+						<li class="collection-item"><a class="sidebar-dropdown-links" href="#!/editor/summary/routes">Routes</a></li>
+						<li class="collection-item"><a class="sidebar-dropdown-links" href="#!/editor/summary/models">Models</a></li>
+						<li class="collection-item"><a class="sidebar-dropdown-links" href="#!/editor/summary/rebuild">Rebuild</a></li>
+						<li class="collection-item"><a class="sidebar-dropdown-links" href="#!/editor/summary/republish">Republish</a></li>
+					</ul>
+				</div>
+			</li>
+		</ul>  
+		<ul class="collapsible collapsible-accordion"> 			
+			<li class="bold">
+				<a class="btn collapsible-header waves-effect waves-light grey" style="height:5%;width:100%;margin:0;"><b>Editor</b></a>
+				<div class="collapsible-body">
+					<ul class="collection" style="margin-top:0px;margin-bottom:0px;">
+						<li ng-repeat="table in sidebarTablesView" class="collection-item">
+							<a class="sidebar-dropdown-links" href="#!/editor/tables/{{table}}">{{table}}</a>
+						</li>	
+					</ul>	
+				</div>
+			</li>
+		</ul>
+ 	</ul>
+ 	<div style="margin-left:15%;">
+		<section data-ui-view></section>
+	</div>
 </section>

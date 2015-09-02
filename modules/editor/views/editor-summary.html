@@ -1,18 +1,6 @@
-<section ng-controller="EditorSummaryController">
-	<div class="row">
-		<div class="col s2" style="">
-			<a class="waves-effect waves-light btn" ng-click="swapCurrentView('routes')" style="margin-top:5px;width:100%">Routes</a>
-			<br>
-			<a class="waves-effect waves-light btn" ng-click="swapCurrentView('models')" style="margin-top:5px;width:100%;">Models</a>
-			<br>
-			<a class="waves-effect waves-light btn" ng-click="swapCurrentView('uptime')" style="margin-top:5px;width:100%;">Uptime</a> 
-			<br>
-			<a class="waves-effect waves-light btn" ng-click="swapCurrentView('rebuild')" style="margin-top:5px;width:100%;">Rebuild</a>
-			<br>
-			<a class="waves-effect waves-light btn" ng-click="swapCurrentView('republish')" style="margin-top:5px;width:100%;">Republish</a>
-
-		</div>
-		<div class="col s10" style="height:{{windowHeight}}px;overflow:scroll;background-color:rgba(230,230,230,0.5)">
+<section ng-controller="EditorSummaryController">		
+	<div class="col s12" style="height:{{windowHeight}}px;overflow:scroll;background-color:rgba(230,230,230,0.5);">
+		<div style="margin-left:5px;">
 			<div ng-show="show.routes.show">
 				Routes:
 				<div ng-repeat="model in restRoutes">

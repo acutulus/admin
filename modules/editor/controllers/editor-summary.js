@@ -15,8 +15,19 @@ angular.module('editor')
 			$scope.restRoutes = [];
 			$scope.schemas = [];
 		
+
+			var moveClock = function(){
+				if($scope.uptime.secs + 1 === 60){
+					$scope.uptime.secs = 0;
+					$scope.uptime.mins++;
+				}else{
+					$scope.uptime.secs++;
+				}
+				$timeout(moveClock,1000);	
+			}
+
 			if($stateParams.summaryPage){
-				$scope.show[$stateParams.summaryPage] = true;
+				$scope.show[$stateParams.summaryPage].show = true;
 			}
 
 			$scope.windowHeight = $(window).height() - 40;
@@ -47,9 +58,10 @@ angular.module('editor')
 					$scope.uptime.hours = Math.floor(response.data.uptime/3600);
 					$scope.uptime.mins = Math.floor((response.data.uptime % 3600)/60);
 					$scope.uptime.secs = Math.floor(response.data.uptime % 60);
+					moveClock();
 				})
 
-			$scope.swapCurrentView = function(view){
+			/*$scope.swapCurrentView = function(view){
 				if($scope.show[view].show){
 					$scope.show[view].show = false;
 				}else{
@@ -67,17 +79,8 @@ angular.module('editor')
 						moveClock();
 					})	
 				}
-			}
+			}*/
 
-			var moveClock = function(){
-				if($scope.uptime.secs + 1 === 60){
-					$scope.uptime.secs = 0;
-					$scope.uptime.mins++;
-				}else{
-					$scope.uptime.secs++;
-				}
-				$timeout(moveClock,1000);	
-			}
 
 			$scope.republish = function(){
 				$http.get('/admin/republish')
