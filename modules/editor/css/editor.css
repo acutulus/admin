@@ -14,3 +14,7 @@
 	text-decoration:none;
 	color:rgb(150,150,150);
 }
+ul .sidebar-dropdown-links{
+	height:auto;
+	line-height:inherit;
+}

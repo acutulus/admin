@@ -9,7 +9,7 @@ angular.module('editor').config(['$stateProvider', '$urlRouterProvider', '$locat
 			templateUrl:'modules/editor/views/editor-home.html'
 		})
 		.state('editor.summary',{
-			url:'/summary',
+			url:'/summary/:summaryPage',
 			templateUrl:'modules/editor/views/editor-summary.html'
 		})
 		.state('editor.tables',{
@@ -25,7 +25,7 @@ angular.module('editor').config(['$stateProvider', '$urlRouterProvider', '$locat
 			templateUrl:'modules/editor/views/editor-document.html'
 		})
 
-		$urlRouterProvider.otherwise('/editor/summary');
+		$urlRouterProvider.otherwise('/editor/summary/uptime');
 
 	}
 ])

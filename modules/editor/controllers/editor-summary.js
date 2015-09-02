@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('editor')
-	.controller('EditorSummaryController',['$scope', 'DataService', '$http', '$timeout',
-		function($scope, DataService, $http, $timeout){
+	.controller('EditorSummaryController',['$scope', 'DataService', '$http', '$timeout', '$stateParams',
+		function($scope, DataService, $http, $timeout, $stateParams){
 
 			$scope.show = {}; //control what can be seen currently
 			$scope.show.routes = {};
@@ -15,6 +15,10 @@ angular.module('editor')
 			$scope.restRoutes = [];
 			$scope.schemas = [];
 		
+			if($stateParams.summaryPage){
+				$scope.show[$stateParams.summaryPage] = true;
+			}
+
 			$scope.windowHeight = $(window).height() - 40;
 			$http.get('/admin/restRoutes')
 				.then(function(response){
