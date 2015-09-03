@@ -145,7 +145,7 @@ angular.module('dbtools')
 			});
 
 			modal.result.then(function(updatedModal){
-				DataService.update('admin/rest/' + $scope.newQuery.name + '/' + item._id.id, updatedModal)
+				DataService.update('admin/rest/' + $scope.table + '/' + item._id.id, updatedModal)
 				.then(function(data){
 					console.log(data);
 					loadTableData();
@@ -179,7 +179,7 @@ angular.module('dbtools')
 			modal.result.then(function(newItem){
 				console.log(newItem);
 
-				DataService.add('admin/rest/' + $scope.newQuery.name, newItem)
+				DataService.add('admin/rest/' + $scope.table, newItem)
 				.then(function(data){
 					console.log(data)
 					loadTableData();
@@ -189,7 +189,7 @@ angular.module('dbtools')
 		}
 
 		$scope.deleteItem = function(item){
-
+			console.log(item);
 			var deleteModal = $modal.open({
 				templateUrl:'modules/dbTool/views/delete-item-modal.html',
 				controller:'DeleteModalCtrl',
@@ -200,7 +200,7 @@ angular.module('dbtools')
 			deleteModal.result.then(function(choice){
 				console.log(choice)
 				if(choice === 'delete'){
-					DataService.delete('admin/rest/' + $scope.newQuery.name, {_id:item._id.id});
+					DataService.delete('admin/rest/' + $scope.table, {_id:item._id});
 					loadTableData();
 				}
 			})

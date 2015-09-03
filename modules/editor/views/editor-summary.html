@@ -26,36 +26,18 @@
 							<div ng-show="show.models[key]" >
 								<div class="row">
 									<h3>{{key}}</h3>
-									<div class="col s6" ng-repeat="(property,value) in val">
+									<div class="col s6" ng-repeat="(property,value) in val" style="overflow:scroll;">
 										<h5>{{property}}</h5>
 										<table class="bordered" style="margin-left:20px;">
 											<tr ng-repeat="(prop,contents) in value">
 												<td>{{prop}}:</td>
-												<td style="overflow:scroll">{{contents}}</td>
+												<td>{{contents}}</td>
 											</tr>
 										</table>
 									</div>
 								</div>
+							</div>
 						</div>
-					</div>
-						<!--<ul class="collection" ng-show="show.models[schemaname.name]">
-							<a href="" ng-click="show.models.properties[schemaname.name] = !show.models.properties[schemaname.name]">Properties</a>
-							<div ng-show="show.models.properties[schemaname.name]">
-								<ul class="collection">
-									<li class="collection-item" ng-repeat="(key,value) in schemaname.properties">
-										{{key}} : {{value}}
-									</li>
-								</ul>
-							</div>
-							<a href="" ng-click="show.models.schemas[schemaname.name] = !show.models.schemas[schemaname.name]">Schemas</a>
-							<div ng-show="show.models.schemas[schemaname.name]">
-								<ul class="collection">
-									<li class="collection-item" ng-repeat="(key,value) in schemaname.schema">
-										{{key}} : {{value.type}}
-									</li>
-								</ul>
-							</div>
-						</ul>-->
 					</div>
 				</div>
 			</div>
