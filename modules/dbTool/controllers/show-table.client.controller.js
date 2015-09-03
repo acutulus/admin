@@ -227,15 +227,19 @@ angular.module('dbtools')
 					}
 				}
 			}
-			for(var x in idArray){
-				DataService.get('admin/rest/'+model+'s', idArray[x]).then(function(data){
-					for(var y in $scope.readOnlyData){
-						if($scope.readOnlyData[y][field] === idArray[x]){
-							$scope.displayData[y][field] = data[displayAs];
-						}
-					}
-				});
-			}
+			console.log('populating display with ', idArray);
+			DataService.get('admin/rest/'+model+'s', idArray).then(function(data){
+				var refTable = {};
+				for(var y in data){
+					if(idArray.indexOf(data[y]._id) > -1){
+						refTable[data[y]._id] = data[y][displayAs]
+					} 
+				}
+				for(y in $scope.readOnlyData){
+					$scope.displayData[y][field] = refTable[$scope.readOnlyData[y][field]] || $scope.readOnlyData[y][field];	
+				}
+			});
+			
 		}
 
 
