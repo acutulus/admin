@@ -39,11 +39,13 @@
 				<tr ng-repeat="row in displayData">
 					<td style="display:inline-block;width:93px;" >
 						<div class="btn-group">
-							<button style="margin:0 auto;padding:0" type="button" ng-click="removeItem(row)" class="btn btn-sm btn-warning"><span class="glyphicon glyphicon-minus"></span>
+							<button style="margin:0 auto;padding:0" type="button" title="hide" ng-click="removeItem(row)" class="btn btn-sm btn-warning"><span class="glyphicon glyphicon-minus"></span>
 							</button>
-							<button style="margin:0 auto;padding:0" type="button" ng-click="editItem(row)" class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-pencil"></span>
+							<button style="margin:0 auto;padding:0" type="button" title="edit" ng-click="editItem(row)" class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-pencil"></span>
 							</button>
-							<button style="margin:0 auto; padding:0" type="button" ng-click="deleteItem(row)" class="btn btn-sm btn-danger"><span class="glyphicon glyphicon-remove"></span>
+							<button style="margin:0 auto; padding:0" type="button" title="delete" ng-click="deleteItem(row)" class="btn btn-sm btn-danger"><span class="glyphicon glyphicon-remove"></span>
+							</button>
+							<button ng-show="table === 'devices'" style="margin:0 auto;padding:0" type="button" title="send notification" ng-click="pushNotification(row)" class="btn btn-sm btn-info"><span class="glyphicon glyphicon-phone"></span>
 							</button>
 						</div>
 					</td>		

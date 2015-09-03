@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dbtools')
-.controller('ShowTableCtrl', ['$scope', 'DataService', '$stateParams', '$modal','$window',
-	function($scope, DataService, $stateParams, $modal, $window){
+.controller('ShowTableCtrl', ['$scope', 'DataService', '$stateParams', '$modal','$window', '$http',
+	function($scope, DataService, $stateParams, $modal, $window, $http){
 
 
 		//hold query arguments, newQuery.query holds all the current data
@@ -206,6 +206,14 @@ angular.module('dbtools')
 			})
 		}
 
+		//devices table specific function
+		$scope.pushNotification = function(device){
+			$http.get('admin/devices/push/' + device._id) //made up fake route for now
+				.then(function(response){
+					console.log(response);
+				})
+		}
+
 		//utility function to populate IDs on initial load
 		var populateDisplayAs = function(field, model, displayAs){
 			var idArray = [];
@@ -229,6 +237,8 @@ angular.module('dbtools')
 				});
 			}
 		}
+
+
 
 	}//end controller
 ]);
