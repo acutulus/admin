@@ -405,6 +405,79 @@ angular.module('editor')
           }
         }
 
+
+        /*### VALIDATION stuff ###*/
+        scope.validation = function(){
+          if(scope.kepsType.validators && scope.kepsModel){
+            scope.showValidationError = false;
+            scope.kepsType.validators.msg = scope.kepsType.validators.msgPrefix || '';
+            switch(scope.kepsType.type){
+              case('string'):
+                stringValidation();
+                break;
+              case('number'):
+                numberValidation();
+                break;
+              case('file'):
+                fileValidation();
+                break;
+              case('date'):
+                dateValidation();
+                break;
+              case('image'):
+                imageValidation();
+                break;
+              case('geopoint'):
+                geoValidation();
+                break;
+              case('multi'):
+                multiValidation();
+                break;
+            }
+            //check arr special condition
+            if(scope.kepsType.constructor === Array){
+              arrayValidation();
+            }
+          }
+        }
+
+        var stringValidation = function(){
+          var validatorArr;
+          if(scope.kepsType.validators.hasOwnProperty('minLength')){
+            if(scope.kepsModel.length < scope.kepsType.validators.minLength){
+              scope.kepsType.validators.msg += ' needs to be at least ' + scope.kepsType.validators.minLength + ' characters.';
+              scope.showValidationError = true;
+            }
+          }
+          if(scope.kepsType.validators.hasOwnProperty('maxLength')){
+            if(scope.kepsModel.length > scope.kepsType.validators.maxLength){
+              scope.kepsType.validators.msg += ' exceeds max character length ' + scope.kepsType.validators.maxLength;
+              scope.showValidationError = true;
+            }
+          }
+          if(scope.kepsType.validators.hasOwnProperty('illegal')){
+            validatorArr = scope.kepsType.validators.illegal.split(',');
+            for(var i=0;i<validatorArr.length;i++){
+              console.log('testing ' + validatorArr[i]);
+              if(scope.kepsModel.indexOf(validatorArr[i]) > -1){
+                scope.kepsType.validators.msg += ' contains illegal character ' + validatorArr[i] + '.';
+                scope.showValidationError = true;
+              }
+            }
+          }
+          if(scope.kepsType.validators.hasOwnProperty('contains')){
+            validatorArr = scope.kepsType.validators.contains.split(',');
+            for(var i=0;i<validatorArr.length;i++){
+              console.log('testing ' + validatorArr[i]);
+              if(scope.kepsModel.indexOf(validatorArr[i]) === -1){
+                scope.kepsType.validators.msg += ' must contain character ' + validatorArr[i] + '.';
+                scope.showValidationError = true;
+              }
+            }
+          }
+        }
+
+
       }
     };
   }]);

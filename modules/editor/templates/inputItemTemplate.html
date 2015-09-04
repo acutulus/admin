@@ -4,6 +4,8 @@
 			<label >{{kepsType.display.label || kepsName}}:</label>
 		</div>
 		<span ng-show="typeError" style="color:red">Did not find a useable input type, defaulting to string</span>
+		<span class="errorMsg" style="color:red" ng-show="showValidationError">{{kepsType.validators.msg || 'error'}}</span>
+
 		<!-- Start listing input types -->
 		<div ng-if="kepsType.type" >
 			<div ng-if="kepsType.type.indexOf(':') > -1">
@@ -17,13 +19,13 @@
 				<div ng-if="kepsFramework === 'materialize'">
 					<div class="row" style="margin-right:0px;margin-left:0px;">
 						<div class="input-field">
-							<input type="text" ng-required="kepsType.required" ng-model="data.value" class="validate" placeholder="{{kepsType.display.placeholder}}"></input>
+							<input type="text" ng-required="kepsType.required" ng-model="data.value" class="validate" placeholder="{{kepsType.display.placeholder}}" ng-keyup="validation()"></input>
 							<label ng-class="{active: kepsModel}">{{kepsType.display.label || kepsName}}:</label>
 						</div>
 					</div>
 				</div>
 				<div ng-if="kepsFramework === 'bootstrap'">
-					<input type="text" ng-required="kepsType.required" ng-model="data.value" class="form-control" placeholder="{{kepsType.display.placeholder}}"></input>
+					<input type="text" ng-required="kepsType.required" ng-model="data.value" class="form-control" placeholder="{{kepsType.display.placeholder}}" ng-keydown="validation()"></input>
 				</div>
 			</div>
 			<div ng-if="kepsType.type === 'number'">
