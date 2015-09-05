@@ -32,13 +32,13 @@
 				<div ng-if="kepsFramework === 'materialize'">
 					<div class="row" style="margin-right:0px;margin-left:0px;">
 						<div class="input-field">
-							<input type="number" ng-required="kepsType.required" ng-model="data.value"></input>
+							<input type="number" ng-required="kepsType.required" ng-model="data.value" ng-keyup="validation()"></input>
 							<label ng-class="{active: kepsModel}">{{kepsType.display.label || kepsName}}:</label>
 						</div>						
 					</div>
 				</div>
 				<div ng-if="kepsFramework === 'bootstrap'">
-					<input type="number" ng-required="kepsType.required" ng-model="data.value" class="form-control"></input>
+					<input type="number" ng-required="kepsType.required" ng-model="data.value" class="form-control" ng-keyup="validation()"></input>
 				</div>
 			</div>
 			<div ng-if="kepsType.type === 'boolean'" >

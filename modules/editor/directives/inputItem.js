@@ -258,16 +258,19 @@ angular.module('editor')
         scope.fileChanged = function(evt){
           var formdata = new FormData();
           formdata.append('file', evt.target.files[0]);
-          var request = new XMLHttpRequest();
-          request.onreadystatechange = function(){
-            if(request.readyState === 4){
-              console.log(request.responseText);
-              scope.kepsModel = JSON.parse(request.responseText);
-              scope.$apply();
+          console.log('callin')
+          if(scope.validation(evt.target.files[0])){
+            var request = new XMLHttpRequest();
+            request.onreadystatechange = function(){
+              if(request.readyState === 4){
+                console.log(request.responseText);
+                scope.kepsModel = JSON.parse(request.responseText);
+                scope.$apply();
+              }
             }
+            request.open('POST', '/admin/upload/file', true);
+            request.send(formdata);
           }
-          request.open('POST', '/admin/upload/file', true);
-          request.send(formdata);
         };
 
 
@@ -407,7 +410,10 @@ angular.module('editor')
 
 
         /*### VALIDATION stuff ###*/
-        scope.validation = function(){
+        scope.validation = function(file){
+          //standard types
+          console.log('called')
+
           if(scope.kepsType.validators && scope.kepsModel){
             scope.showValidationError = false;
             scope.kepsType.validators.msg = scope.kepsType.validators.msgPrefix || '';
@@ -417,9 +423,6 @@ angular.module('editor')
                 break;
               case('number'):
                 numberValidation();
-                break;
-              case('file'):
-                fileValidation();
                 break;
               case('date'):
                 dateValidation();
@@ -438,6 +441,13 @@ angular.module('editor')
             if(scope.kepsType.constructor === Array){
               arrayValidation();
             }
+
+          }
+          //special consideration for file
+          if(file && scope.kepsType.validators){
+              scope.kepsType.validators.msg = scope.kepsType.validators.msgPrefix || '';
+              scope.showValidationError = false;
+              fileValidation(file);
           }
         }
 
@@ -477,6 +487,40 @@ angular.module('editor')
           }
         }
 
+        var numberValidation = function(){
+          if(scope.kepsType.validators.hasOwnProperty('max')){
+            if(scope.kepsModel > scope.kepsType.validators.max){
+              scope.kepsType.validators.msg += ' cannot be greater than ' + scope.kepsType.validators.max;
+              scope.showValidationError = true;
+            }
+          }
+          if(scope.kepsType.validators.hasOwnProperty('min')){
+            if(scope.kepsModel < scope.kepsType.validators.min){
+              scope.kepsType.validators.msg += ' cannot be less than ' + scope.kepsType.validators.min;
+              scope.showValidationError = true;
+            }
+          }
+        }
+
+        var fileValidation = function(file){
+          var err = false;
+          if(scope.kepsType.validators.hasOwnProperty('type')){
+            if(file.type !== scope.kepsType.validators.type){
+              scope.kepsType.validators.msg += ' Incorrect filetype:' + file.type + ' , must be of type ' + scope.kepsType.validators.type;
+              scope.showValidationError = true;
+              err = true;
+            }
+          }
+          if(scope.kepsType.validators.hasOwnProperty('size')){
+            if(file.size > scope.kepsType.validators.size){
+              scope.kepsType.validators.msg += ' File size too large, max size ' + scope.kepsType.validators.size;
+              scope.showValidationError = true;
+              err = true;
+            }
+          }
+          scope.$apply();
+          return err;
+        }
 
       }
     };
