@@ -147,6 +147,7 @@ angular.module('editor')
               if(scope.data.time && scope.data.date){
                 scope.kepsModel = 
                  new Date(scope.data.date.toString().slice(0,15) + scope.data.time.toString().slice(15)).getTime();
+                 scope.validation()
 
               }
             }
@@ -173,33 +174,32 @@ angular.module('editor')
             alert('image filetype not recognized')
           }
           
-          console.log(evt.target.files[0])
           //draw image preview
             var img = new Image;
             img.src = URL.createObjectURL(evt.target.files[0]);
             img.onload = function() {
-              
-
-              scope.drawToCanvas(img);
-            
-            formdata.append('file', evt.target.files[0]);
-            formdata.append('data', evt.target.files[0]);
-            //formdata.append('filename', evt.target.files[0].name);
-            //formdata.append('size', evt.target.files[0].size);
-            var request = new XMLHttpRequest();
-            request.onreadystatechange = function(){
-              if(request.readyState === 4){
-                scope.kepsModel = JSON.parse(request.responseText);
-                scope.$apply();
+              var valid = scope.validation(evt.target.files[0]);
+              if(valid){
+                scope.drawToCanvas(img);
+                
+                formdata.append('file', evt.target.files[0]);
+                formdata.append('data', evt.target.files[0]);
+                //formdata.append('filename', evt.target.files[0].name);
+                //formdata.append('size', evt.target.files[0].size);
+                var request = new XMLHttpRequest();
+                request.onreadystatechange = function(){
+                  if(request.readyState === 4){
+                    scope.kepsModel = JSON.parse(request.responseText);
+                    scope.$apply();
+                  }
+                }
+                request.open('POST', '/admin/upload/image', true);
+                request.send(formdata);
               }
-            }
-            request.open('POST', '/admin/upload/image', true);
-            request.send(formdata);
             }
 
         }
         scope.getImageUrl = function(){
-          console.log(scope.kepsModel)
           if(scope.data.imageUrl.match(/(\S+\.[^/\s]+(\/\S+|\/|))/g)){
             
             var width = document.createAttribute('width');
@@ -211,7 +211,6 @@ angular.module('editor')
             var img = new Image();
             img.src = scope.data.imageUrl;
             img.onload = function(){
-              
               //send url to backend, get image data
               var formdata = new FormData();
               formdata.append('url', scope.data.imageUrl);
@@ -219,7 +218,6 @@ angular.module('editor')
               request.onreadystatechange = function(){
                 if(request.readyState === 4){
                   scope.kepsModel = JSON.parse(request.responseText);
-                  console.log(scope.kepsModel)
                   scope.$apply();
                 }
               }
@@ -258,7 +256,6 @@ angular.module('editor')
         scope.fileChanged = function(evt){
           var formdata = new FormData();
           formdata.append('file', evt.target.files[0]);
-          console.log('callin')
           if(scope.validation(evt.target.files[0])){
             var request = new XMLHttpRequest();
             request.onreadystatechange = function(){
@@ -345,7 +342,6 @@ angular.module('editor')
 
           if(scope.data.address1 && scope.data.city && scope.data.state){
             if(scope.data.address1.length > 3 && scope.data.city.length > 2 && scope.data.state.length > 0){
-              console.log('test passt')
               if(timeoutPromise){
                 $timeout.cancel(timeoutPromise)
               }
@@ -366,7 +362,6 @@ angular.module('editor')
                         }
                       }
                       $window.initMapAddress = function(){
-                        console.log('mapinfo',mapInfo)
                         var latLng = new google.maps.LatLng( mapInfo.data.results[0].geometry.location.lat,
                                                              mapInfo.data.results[0].geometry.location.lng);
 
@@ -398,7 +393,6 @@ angular.module('editor')
 
         /*####TYPE: multi stuff####*/
         scope.checkMulti = function(option){
-          console.log('called')
           var index = scope.kepsModel.indexOf(option);
           if(index > -1){
             console.log('removin', option)
@@ -412,11 +406,9 @@ angular.module('editor')
         /*### VALIDATION stuff ###*/
         scope.validation = function(file){
           //standard types
-          console.log('called')
-
-          if(scope.kepsType.validators && scope.kepsModel){
+          if(scope.kepsModel){
             scope.showValidationError = false;
-            scope.kepsType.validators.msg = scope.kepsType.validators.msgPrefix || '';
+            scope.kepsType.errorMsg = scope.kepsType.msgPrefix || '';
             switch(scope.kepsType.type){
               case('string'):
                 stringValidation();
@@ -424,7 +416,7 @@ angular.module('editor')
               case('number'):
                 numberValidation();
                 break;
-              case('date'):
+              case('datetime'):
                 dateValidation();
                 break;
               case('image'):
@@ -441,85 +433,105 @@ angular.module('editor')
             if(scope.kepsType.constructor === Array){
               arrayValidation();
             }
-
           }
           //special consideration for file
-          if(file && scope.kepsType.validators){
-              scope.kepsType.validators.msg = scope.kepsType.validators.msgPrefix || '';
+          if(file){
+              scope.kepsType.errorMsg = scope.kepsType.msgPrefix || '';
               scope.showValidationError = false;
-              fileValidation(file);
+              return fileValidation(file);
           }
         }
 
         var stringValidation = function(){
           var validatorArr;
-          if(scope.kepsType.validators.hasOwnProperty('minLength')){
-            if(scope.kepsModel.length < scope.kepsType.validators.minLength){
-              scope.kepsType.validators.msg += ' needs to be at least ' + scope.kepsType.validators.minLength + ' characters.';
+          if(scope.kepsType.hasOwnProperty('minlength')){
+            if(scope.kepsModel.length < scope.kepsType.minLength){
+              scope.kepsType.errorMsg += ' needs to be at least ' + scope.kepsType.minlength + ' characters.';
               scope.showValidationError = true;
             }
           }
-          if(scope.kepsType.validators.hasOwnProperty('maxLength')){
-            if(scope.kepsModel.length > scope.kepsType.validators.maxLength){
-              scope.kepsType.validators.msg += ' exceeds max character length ' + scope.kepsType.validators.maxLength;
+          if(scope.kepsType.hasOwnProperty('maxlength')){
+            if(scope.kepsModel.length > scope.kepsType.maxlength){
+              scope.kepsType.errorMsg += ' exceeds max character length ' + scope.kepsType.maxlength;
               scope.showValidationError = true;
             }
           }
-          if(scope.kepsType.validators.hasOwnProperty('illegal')){
-            validatorArr = scope.kepsType.validators.illegal.split(',');
+          if(scope.kepsType.hasOwnProperty('illegal')){
+            validatorArr = scope.kepsType.illegal.split(',');
             for(var i=0;i<validatorArr.length;i++){
-              console.log('testing ' + validatorArr[i]);
               if(scope.kepsModel.indexOf(validatorArr[i]) > -1){
-                scope.kepsType.validators.msg += ' contains illegal character ' + validatorArr[i] + '.';
+                scope.kepsType.errorMsg += ' contains illegal character ' + validatorArr[i] + '.';
                 scope.showValidationError = true;
               }
             }
           }
-          if(scope.kepsType.validators.hasOwnProperty('contains')){
-            validatorArr = scope.kepsType.validators.contains.split(',');
+          if(scope.kepsType.hasOwnProperty('enum')){
+            validatorArr = scope.kepsType.enum.split(',');
             for(var i=0;i<validatorArr.length;i++){
-              console.log('testing ' + validatorArr[i]);
               if(scope.kepsModel.indexOf(validatorArr[i]) === -1){
-                scope.kepsType.validators.msg += ' must contain character ' + validatorArr[i] + '.';
+                scope.kepsType.errorMsg += ' must contain ' + validatorArr[i] + '.';
                 scope.showValidationError = true;
               }
+            }
+          }
+          if(scope.kepsType.hasOwnProperty('match')){
+            var regex = new RegExp(scope.kepsType.match);
+            if(new RegExp(scope.kepsType.match).test(scope.kepsModel)){
+            }else{
+              scope.kepsType.errorMsg += ' does not match pattern ' + scope.kepsType.match;
+              scope.showValidationError = true;
             }
           }
         }
 
         var numberValidation = function(){
-          if(scope.kepsType.validators.hasOwnProperty('max')){
-            if(scope.kepsModel > scope.kepsType.validators.max){
-              scope.kepsType.validators.msg += ' cannot be greater than ' + scope.kepsType.validators.max;
+          if(scope.kepsType.hasOwnProperty('max')){
+            if(scope.kepsModel > scope.kepsType.max){
+              scope.kepsType.errorMsg += ' cannot be greater than ' + scope.kepsType.max;
               scope.showValidationError = true;
             }
           }
-          if(scope.kepsType.validators.hasOwnProperty('min')){
-            if(scope.kepsModel < scope.kepsType.validators.min){
-              scope.kepsType.validators.msg += ' cannot be less than ' + scope.kepsType.validators.min;
+          if(scope.kepsType.hasOwnProperty('min')){
+            if(scope.kepsModel < scope.kepsType.min){
+              scope.kepsType.errorMsg += ' cannot be less than ' + scope.kepsType.min;
               scope.showValidationError = true;
             }
           }
         }
 
         var fileValidation = function(file){
-          var err = false;
-          if(scope.kepsType.validators.hasOwnProperty('type')){
-            if(file.type !== scope.kepsType.validators.type){
-              scope.kepsType.validators.msg += ' Incorrect filetype:' + file.type + ' , must be of type ' + scope.kepsType.validators.type;
+          var validated = true;
+          if(scope.kepsType.hasOwnProperty('filetype')){
+            if(file.type !== scope.kepsType.filetype){
+              scope.kepsType.errorMsg += ' Incorrect filetype:' + file.type + ' , must be of type ' + scope.kepsType.filetype ;
               scope.showValidationError = true;
-              err = true;
+              validated = false;
             }
           }
-          if(scope.kepsType.validators.hasOwnProperty('size')){
-            if(file.size > scope.kepsType.validators.size){
-              scope.kepsType.validators.msg += ' File size too large, max size ' + scope.kepsType.validators.size;
+          if(scope.kepsType.hasOwnProperty('maxsize')){
+            if(file.size > scope.kepsType.maxsize){
+              scope.kepsType.errorMsg += '. File size too large, max size ' + scope.kepsType.maxsize;
               scope.showValidationError = true;
-              err = true;
+              validated = false;
             }
           }
           scope.$apply();
-          return err;
+          return validated;
+        }
+
+        var dateValidation = function(){
+          if(scope.kepsType.hasOwnProperty('min')){
+            if(scope.kepsModel < new Date(scope.kepsType.min).getTime()){
+              scope.kepsType.errorMsg += '. Minimum date: ' + scope.kepsType.min;
+              scope.showValidationError = true;
+            }
+          }
+          if(scope.kepsType.hasOwnProperty('max')){
+            if(scope.kepsModel > new Date(scope.kepsType.max).getTime()){
+              scope.kepsType.errorMsg += '.  Max date: ' + scope.kepsType.max;
+              scope.showValidationError = true;
+            }
+          }
         }
 
       }

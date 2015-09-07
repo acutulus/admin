@@ -4,12 +4,12 @@
 			<label >{{kepsType.display.label || kepsName}}:</label>
 		</div>
 		<span ng-show="typeError" style="color:red">Did not find a useable input type, defaulting to string</span>
-		<span class="errorMsg" style="color:red" ng-show="showValidationError">{{kepsType.validators.msg || 'error'}}</span>
+		<span class="errorMsg" style="color:red" ng-show="showValidationError">{{kepsType.errorMsg  || 'error'}}</span>
 
 		<!-- Start listing input types -->
 		<div ng-if="kepsType.type" >
 			<div ng-if="kepsType.type.indexOf(':') > -1">
-			    <input type="text" list="{{kepsType.type + 'options'}}" class="{{}}" ng-model="data.value" ng-blur="setReferenceData()"></input>
+			    <input type="text" list="{{kepsType.type + 'options'}}" ng-model="data.value" ng-blur="setReferenceData()"></input>
 			    <datalist id="{{kepsType.type + 'options'}}">
 			    	<option ng-repeat="option in data.options" value="{{option.value}}" 
 			    	></option>
