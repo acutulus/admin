@@ -534,6 +534,45 @@ angular.module('editor')
           }
         }
 
+        var geoValidation = function(){
+          console.log(scope.kepsModel);
+          if(scope.kepsModel.lat && scope.kepsModel.lng){
+            if(scope.kepsType.hasOwnProperty('minlng')){
+              if(scope.kepsModel.lng < scope.kepsType.minlng){
+                scope.kepsType.errorMsg += '.  Minimum lng: ' + scope.kepsType.minlng;
+                scope.showValidationError = true;
+              }
+            }
+            if(scope.kepsType.hasOwnProperty('maxlng')){
+              if(scope.kepsModel.lng > scope.kepsType.maxlng){
+                scope.kepsType.errorMsg += '.  Max lng: ' + scope.kepsType.maxlng;
+                scope.showValidationError = true;
+              }
+            }
+            if(scope.kepsType.hasOwnProperty('minlat')){
+              if(scope.kepsModel.lat < scope.kepsType.minlat){
+                scope.kepsType.errorMsg += '.  Minimum lat: ' + scope.kepsType.minlat;
+                scope.showValidationError = true;
+              }
+            }
+            if(scope.kepsType.hasOwnProperty('maxlat')){
+              if(scope.kepsModel.lat > scope.kepsType.maxlat){
+                scope.kepsType.errorMsg += '.  Max lat: ' + scope.kepsType.maxlat;
+                scope.showValidationError = true;
+              }
+            }
+          }
+        }
+
+        var multiValidation = function(){
+          if(scope.kepsType.hasOwnProperty('maxselected')){
+            if(scope.kepsModel.length > scope.kepsType.maxselected){
+              scope.kepsType.errorMsg += ' Max Selections: ' + scope.kepsType.maxselected;
+              scope.showValidationError = true;
+            }
+          }
+        }
+
       }
     };
   }]);
