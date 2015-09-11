@@ -7,10 +7,14 @@ angular.module('dbtools').config(['$stateProvider', '$urlRouterProvider', '$loca
 		$urlRouterProvider.otherwise('/dbtools');
 		
 		// Home state routing
-		$stateProvider.
-		state('dbtools', {
+		$stateProvider
+		.state('dbtools', {
 			url: '/dbtools',
 			templateUrl: 'modules/dbTool/views/dbtools.client.view.html'
+		})
+		.state('dbtools.summary',{
+			url:'/summary/:summaryPage',
+			templateUrl:'modules/dbTool/views/summary.html'
 		})
 		.state('dbtools.newTable', {
 			url:'/:database/newTable',

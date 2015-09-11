@@ -43,20 +43,17 @@
         var userCallback = function(usr) {
             user = usr;
             if (!user) {
-            	if (location.href === '/admin/editor.html#!/signin') {
-            		location.href = '/admin/editor.html#!/signin';
-            	}
-            } else {
-	            if (!user.admin) {
-	            	alert('Not an Admin');
-	            	location.href = '/';
-	            }
-	          }
+            	location.href = '/admin/#!/signin';            	
+            }
+            if (!user.admin) {
+            	alert('Not an Admin');
+            	location.href = '/';
+            }
         };
     </script>
     <script type="text/javascript" src="/users/me?callback=userCallback"></script>	
 	<!--Application JavaScript Files-->
-	<script type="text/javascript" src="lib/jquery/dist/jquery.min.js"></script>
+	<script type="text/javascript" src="/lib/jquery/dist/jquery.min.js"></script>
 	<script type="text/javascript" src="lib/angular/angular.js"></script>
 	<script type="text/javascript" src="lib/angular-messages/angular-messages.min.js"></script>
 	<script type="text/javascript" src="lib/textAngular/dist/textAngular-rangy.min.js"></script>
@@ -88,6 +85,7 @@
 	<script type="text/javascript" src="modules/dbTool/controllers/queryModal.client.controller.js"></script>
 	<script type="text/javascript" src="modules/dbTool/controllers/show-table.client.controller.js"></script>
 	<script type="text/javascript" src="modules/dbTool/controllers/modal.client.controller.js"></script>
+	<script type="text/javascript" src="modules/dbTool/controllers/summary.client.controller.js"></script>
 	<script type="text/javascript" src="modules/dbTool/controllers/get-youtube-modal.js"></script>
 	<script type="text/javascript" src="modules/dbTool/services/authentication.client.service.js"></script>
 	<script type="text/javascript" src="modules/dbTool/services/dataService.client.service.js"></script>

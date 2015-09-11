@@ -1,51 +1,50 @@
 <section data-ng-controller="EditorController">
-	<header style="padding-left:220px;">
-		<nav class="top-nav" style="background-color:#00CCFF">
-			<div class="container">
-				<div class="nav-wrapper">
-					<a class="page-title">{{pageTitle || 'The Keps Platform'}}</a>
+	<nav class="keps-nav">
+		<a href="#" data-activates="slide-out" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
+	    <div class="nav-wrapper">
+	      	<a href="#" class="keps-title">The Keps Platform</a>
+	    </div>
+   	</nav>
+	<ul class="side-nav fixed">
+		<li class="logo" style="border:solid 1px rgb(221,221,221);">
+			<a id="logo-container" href="#!/editor" class="brand-logo" style="text-align:center">
+				<img style="height:90%;width:auto;margin-bottom:5%"src="http://foodnetwork.sndimg.com/content/dam/images/food/fullset/2009/3/20/0/bobby_bookcover_s4x3.jpg.rend.sni18col.jpeg">
+			</a>
+    	</li>	
+		<ul style="margin-top:10px;" class="collapsible collapsible-accordion"> 			
+			<li class="bold">
+				<a class="btn collapsible-header waves-effect waves-light" style="height:5%;width:100%;margin:0;background-color:#6a3e73"><span style="color:white">Editor</span></a>
+				<div class="collapsible-body">
+					<ul >
+						<li ng-repeat="table in sidebarTablesView" style="padding-top:10px;padding-bottom:10px;color:#444;font-weight:normal;">
+							<a class="sidebar-dropdown-links" href="#!/editor/tables/{{table}}">{{table}}</a>
+						</li>	
+					</ul>	
 				</div>
-			</div>
-		</nav>
-		<div class="container">
-			<a href="#" data-activates="nav-mobile" class="button-collapse top-nav full hide-on-large-only"><i class="mdi-navigation-menu"></i></a>
-		</div>
-		<ul id="nav-mobile" class="side-nav fixed" style="width:220px;">
-			<li class="logo">
-				<a id="logo-container" href="#!/editor/summary" class="brand-logo">
-					<img src="http://img3.wikia.nocookie.net/__cb20100305015943/lotr/images/c/c8/Rings-frodofarewell.jpg"
-					style="width:100%;height:80%;">
-				</a>
-	    	</li>
-	    	<ul class="collapsible collapsible-accordion" style="margin-top:-1px;padding-top:20px;border-top:solid 1px rgba(10,10,10,.5)">
-				<li class="bold">
-					<a class="btn collapsible-header waves-effect waves-light grey" style="height:5%;width:100%;margin:0;"><b>Summary</b></a> 
-					<div class="collapsible-body">
-						<ul class="collection" style="margin-top:0px;margin-bottom:0px;">
-							<li class="collection-item"><a class="sidebar-dropdown-links" href="#!/editor/summary/uptime">Uptime</a></li>
-							<li class="collection-item"><a class="sidebar-dropdown-links" href="#!/editor/summary/routes">Routes</a></li>
-							<li class="collection-item"><a class="sidebar-dropdown-links" href="#!/editor/summary/models">Models</a></li>
-							<li class="collection-item"><a class="sidebar-dropdown-links" href="#!/editor/summary/rebuild">Rebuild</a></li>
-							<li class="collection-item"><a class="sidebar-dropdown-links" href="#!/editor/summary/republish">Republish</a></li>
-						</ul>
-					</div>
-				</li>
-			</ul>  
-			<ul class="collapsible collapsible-accordion"> 			
-				<li class="bold">
-					<a class="btn collapsible-header waves-effect waves-light grey" style="height:5%;width:100%;margin:0;"><b>Editor</b></a>
-					<div class="collapsible-body">
-						<ul class="collection" style="margin-top:0px;margin-bottom:0px;">
-							<li ng-repeat="table in sidebarTablesView" class="collection-item">
-								<a class="sidebar-dropdown-links" href="#!/editor/tables/{{table}}">{{table}}</a>
-							</li>	
-						</ul>	
-					</div>
-				</li>
-			</ul>
+			</li>
+	 	</ul>	
+    </ul>
+	<ul id="slide-out" class="side-nav">
+		<li class="logo" style="border:solid 1px rgb(221,221,221);">
+			<a id="logo-container" href="#!/editor" class="brand-logo" style="text-align:center;">
+				<img style="height:90%;width:auto;margin-bottom:5%"src="http://foodnetwork.sndimg.com/content/dam/images/food/fullset/2009/3/20/0/bobby_bookcover_s4x3.jpg.rend.sni18col.jpeg">
+			</a>
+    	</li>	
+		<ul style="margin-top:10px;" class="collapsible collapsible-accordion"> 			
+			<li class="bold">
+				<a class="btn collapsible-header waves-effect waves-light" style="height:5%;width:100%;margin:0;background-color:#6a3e73"><span style="color:white">Editor</span></a>
+				<div class="collapsible-body">
+					<ul class="collection" style="margin-top:0px;margin-bottom:0px;">
+						<li ng-repeat="table in sidebarTablesView" class="collection-item">
+							<a class="sidebar-dropdown-links" href="#!/editor/tables/{{table}}">{{table}}</a>
+						</li>	
+					</ul>	
+				</div>
+			</li>
 	 	</ul>
-	 </header>
- 	<div style="padding-left:220px;">
+	 </ul>
+
+	<div class="page-body">
 		<section data-ui-view></section>
 	</div>
 </section>

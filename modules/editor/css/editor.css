@@ -18,3 +18,41 @@ ul .sidebar-dropdown-links{
 	height:auto;
 	line-height:inherit;
 }
+.keps-collapse-button{
+	line-height:122px;
+	position: absolute;
+    text-align: center;
+    height: 48px;
+    width: 48px;
+    left: 7.5%;
+    top: 0;
+    float: none;
+    margin-left: 1.5rem;
+    color: #fff;
+    font-size: 32px;
+    z-index: 2;
+}
+.keps-title{
+    position: absolute;
+    color: #fff;
+    display: inline-block;
+    font-size: 2.1rem;
+    padding: 0;
+    white-space: nowrap;
+    margin-left:5px;
+}
+@media (min-width: 994px) {
+    .keps-nav{
+        margin-left:240px;
+    }
+    .page-body{
+        margin-left:240px;
+    }
+}
+.keps-nav{
+    height: 64px;
+    line-height: 64px;
+    color: #fff;
+    width:100%;
+    background-color: #6a3e73;
+}

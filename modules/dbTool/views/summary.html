@@ -1,0 +1,65 @@
+<section ng-controller="SummaryController" style="margin-top:-20px;">	
+	<div class="col-xs-12">
+		<div>
+			<div ng-show="show.routes.show">
+				<h4>Routes:</h4>
+				<div class="list-group">
+					<div ng-repeat="model in restRoutes">
+						<button type="button" class="list-group-item" style="width:40%;text-align:left;" ng-click="show.routes[model.name] = !show.routes[model.name]">{{model.name}}</button>
+						<ul class="list-group" ng-show="show.routes[model.name]">
+							<li class="list-group-item" style="height:30px;font-size:12px;line-height:10px;"ng-repeat="route in model.data">
+								{{route}}
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div ng-show="show.models.show">
+				<div class="row">
+					<div  class="col-xs-2">
+						Models:
+						<div ng-repeat="(key,val) in schemas">
+							<a class="btn btn-default" style="width:100%;margin-bottom:5px;" ng-click="resetModelShow();show.models[key] = !show.models[key]">{{key}}</a>
+						</div>
+					</div>
+					<div class="col-xs-10">
+						<div ng-repeat="(key,val) in schemas">
+							<div ng-show="show.models[key]" >
+								<div class="row">
+									<h3>{{key}}</h3>
+									<div class="col-xs-12" ng-repeat="(property,value) in val" style="overflow:scroll;">
+										<h5>{{property}}</h5>
+										<table class="table" style="margin-left:20px;">
+											<tr ng-repeat="(prop,contents) in value">
+												<td>{{prop}}:</td>
+												<td>{{contents}}</td>
+											</tr>
+										</table>
+										<hr>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div ng-show="show.uptime.show">
+				<h3>Server uptime: <span style="color:green;">{{uptime.hours}} : {{uptime.mins}} : {{uptime.secs}}</span></h3>
+			</div>
+			<div ng-show="show.rebuild.show">
+				<div style="text-align:center;margin-top:30px;">
+					<a class="btn btn-success btn-lg" ng-click="rebuild()">Rebuild</a>
+					<h5>Status: {{rebuild.status}}<h5>
+					<h5>Server Response: {{rebuild.statusText}}</h5>
+				</div>
+			</div>
+			<div ng-show="show.republish.show">
+				<div style="text-align:center;margin-top:30px;">
+					<a class="btn btn-lg btn-success" ng-click="republish()">Republish</a>
+					<h5>Status: {{republish.status}}<h5>
+					<h5>Server Response: {{republish.statusText}}</h5>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

@@ -21,7 +21,7 @@ angular.module('editor').config(['$stateProvider', '$urlRouterProvider', '$locat
 			templateUrl:'modules/editor/views/editor-document.html'
 		})
 
-		$urlRouterProvider.otherwise('/editor/summary/uptime');
+		$urlRouterProvider.otherwise('/editor');
 
 	}
 ])

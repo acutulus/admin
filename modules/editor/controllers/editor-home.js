@@ -5,7 +5,8 @@ angular.module('editor')
 	['$scope', '$stateParams', '$location', '$http','$timeout','$modal','DataService', 'Authentication','$stateParams',
 	function($scope, $stateParams, $location, $http, $timeout, $modal, DataService, Authentication){
 
-	    $('.collapsible').collapsible(); //prep materialize collapsible
+		$(".button-collapse").sideNav();
+		$('.collapsible').collapsible();
 
 		$scope.authentication = Authentication;
 		if($scope.authentication.user){
