@@ -42,7 +42,8 @@
 				</div>
 			</div>
 			<div ng-if="kepsType.type === 'html'">
-				<text-angular ng-model="data.value" ng-required="kepsType.required" placeholder="{{kepsType.display.placeholder}}"></text-angular>
+				<text-angular ng-model="data.value" ng-required="kepsType.required" placeholder="{{kepsType.display.placeholder}}" ta-default-wrap="div"></text-angular>
+				{{data.value}}
 			</div>
 			<div ng-if="kepsType.type === 'datetime'">
 				<div class="row">

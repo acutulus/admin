@@ -31,25 +31,27 @@ angular.module('dbtools')
 				$scope.readOnlyData = data;
 				$scope.displayData = JSON.parse(JSON.stringify(data));
 
-				//for iterating over current schema
-				for(var x in $scope.schema){
-					if($scope.schema[x].type){
-						//check if field is a reference
-						if($scope.schema[x].type.indexOf(':') > -1){
-							var ref = $scope.schema[x].type.slice(1);
-							var properties = $scope.databaseSchemas[ref].properties;
-							$scope.tableHeaders.push({
-								name:x,
-							  displayAs:properties.displayAs,
-							  ref:ref
-							});
-							//populate currentData.query reference fields with displayAs values
-							populateDisplayAs(x, ref, properties.displayAs);
+				if ($scope.tableHeaders.length === 0) {
+					//for iterating over current schema
+					for(var x in $scope.schema){
+						if($scope.schema[x].type){
+							//check if field is a reference
+							if($scope.schema[x].type.indexOf(':') > -1){
+								var ref = $scope.schema[x].type.slice(1);
+								var properties = $scope.databaseSchemas[ref].properties;
+								$scope.tableHeaders.push({
+									name:x,
+								  displayAs:properties.displayAs,
+								  ref:ref
+								});
+								//populate currentData.query reference fields with displayAs values
+								populateDisplayAs(x, ref, properties.displayAs);
+							}else{
+								$scope.tableHeaders.push({name:x,ref:false})
+							}
 						}else{
 							$scope.tableHeaders.push({name:x,ref:false})
 						}
-					}else{
-						$scope.tableHeaders.push({name:x,ref:false})
 					}
 				}
 			});
@@ -145,10 +147,10 @@ angular.module('dbtools')
 			});
 
 			modal.result.then(function(updatedModal){
-				DataService.update('admin/rest/' + $scope.table + '/' + item._id.id, updatedModal)
+				DataService.update('admin/rest/' + $scope.table + '/' + item._id, updatedModal)
 				.then(function(data){
 					console.log(data);
-					loadTableData();
+					//loadTableData();
 				})
 
 			})
@@ -182,7 +184,7 @@ angular.module('dbtools')
 				DataService.add('admin/rest/' + $scope.table, newItem)
 				.then(function(data){
 					console.log(data)
-					loadTableData();
+					//loadTableData();
 				})
 
 			})

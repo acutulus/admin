@@ -43,11 +43,14 @@
         var userCallback = function(usr) {
             user = usr;
             if (!user) {
-            	location.href = '/admin/#!/signin';            	
-            }
-            if (!user.admin) {
-            	alert('Not an Admin');
-            	location.href = '/';
+            	if (location.href === '/admin/editor.html#!/signin') {
+            		location.href = '/admin/editor.html#!/signin';
+            	}
+            } else {
+	            if (!user.admin) {
+	            	alert('Not an Admin');
+	            	location.href = '/';
+	            }
             }
         };
     </script>
