@@ -9,6 +9,8 @@ angular.module('dbtools')
 				alert('You need to be a logged in admin');
 				$location.path('/admin/#!/signin')
 			}else{
+				$scope.projectTitle = $location.host().split('.')[0] || $location.host();
+
 				/*Grab All the Database information in the projects Database*/
 				$scope.currentDatabase = [];
 				DataService.getQuery('admin/models')

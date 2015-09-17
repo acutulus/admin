@@ -4,27 +4,32 @@
 angular.module('dbtools').config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
 	function($stateProvider, $urlRouterProvider, $locationProvider) {
 		// Redirect to home view when route not found
-		$urlRouterProvider.otherwise('/dbtools');
+		$urlRouterProvider.otherwise('/summary');
 		
 		// Home state routing
 		$stateProvider
-		.state('dbtools', {
-			url: '/dbtools',
-			templateUrl: 'modules/dbTool/views/dbtools.client.view.html'
-		})
-		.state('dbtools.summary',{
-			url:'/summary/:summaryPage',
+
+		.state('summary',{
+			url:'/summary',
 			templateUrl:'modules/dbTool/views/summary.html'
 		})
-		.state('dbtools.newTable', {
+		.state('routes',{
+			url:'/routes/:tablename',
+			templateUrl:'modules/dbTool/views/routes.client.view.html'
+		})
+		.state('models',{
+			url:'/models/:tablename',
+			templateUrl:'modules/dbTool/views/models.client.view.html'
+		})
+		.state('data',{
+			url:'/data/:tablename',
+			templateUrl:'modules/dbTool/views/show-table.client.view.html'
+		})
+		.state('newTable', {
 			url:'/:database/newTable',
 			templateUrl: 'modules/dbTool/views/new-table.client.view.html'
 		})
-		.state('dbtools.table', {
-			url:'/:table',
-			templateUrl: 'modules/dbTool/views/show-table.client.view.html'
-		})
-		.state('dbtools.new',{
+		.state('new',{
 			url:'/newDatabase',
 			templateUrl:'modules/dbTool/views/new-database.client.view.html'
 		})
