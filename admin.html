@@ -33,8 +33,51 @@
 
 
 <body>
+<section data-ng-controller="DBToolsController">
+	<header class="navbar navbar-fixed-top navbar-inverse">
+		<section class="container">
+			<a class="navbar-brand" href="#!/summary">Management</a>
+			<ul class="nav navbar-nav">
+				<li class="dropdown" ng-show="authentication.user.admin">
+					<a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+						Routes<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu" role="menu">
+						<li ng-repeat="table in currentDatabase"><a href="#!/routes/{{table}}">{{table}}</a></li>
+					</ul>
+				</li>
+				<li class="dropdown" ng-show="authentication.user.admin">
+					<a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+						Models<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu" role="menu">
+						<li ng-repeat="table in currentDatabase"><a href="#!/models/{{table}}">{{table}}</a></li>
+					</ul>
+				</li>
+				<li class="dropdown" ng-show="authentication.user.admin">
+					<a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+						Data<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu" role="menu">
+						<li ng-repeat="table in currentDatabase"><a href="#!/data/{{table}}">{{table}}</a></li>
+					</ul>
+				</li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right" >
 
+				<li data-ng-hide="authentication.user">
+					<a href="/admin/#!/signin">Sign In</a>
+				</li>
+				<li ng-show="authentication.user.admin">
+					<a href="/auth/signout">Sign Out</a>
+				</li>
+			</ul>
+		</section>
+	</header>	
+
+	<div class="buffer-header" style="margin-top:70px;"></div>
 	<section data-ui-view></section>
+</section>
 
 	<!--Embedding The User Object-->
 	<!--Embedding The User Object-->
@@ -86,6 +129,8 @@
 	<script type="text/javascript" src="modules/dbTool/controllers/show-table.client.controller.js"></script>
 	<script type="text/javascript" src="modules/dbTool/controllers/modal.client.controller.js"></script>
 	<script type="text/javascript" src="modules/dbTool/controllers/summary.client.controller.js"></script>
+	<script type="text/javascript" src="modules/dbTool/controllers/models.client.controller.js"></script>
+	<script type="text/javascript" src="modules/dbTool/controllers/routes.client.controller.js"></script>
 	<script type="text/javascript" src="modules/dbTool/controllers/get-youtube-modal.js"></script>
 	<script type="text/javascript" src="modules/dbTool/services/authentication.client.service.js"></script>
 	<script type="text/javascript" src="modules/dbTool/services/dataService.client.service.js"></script>

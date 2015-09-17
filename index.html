@@ -49,6 +49,9 @@
             	alert('Not an Admin');
             	location.href = '/';
             }
+            if(user.admin){
+            	location.href = '/admin/admin.html'
+            }
         };
     </script>
     <script type="text/javascript" src="/users/me?callback=userCallback"></script>	
