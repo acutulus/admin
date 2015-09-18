@@ -43,7 +43,7 @@
 						Routes<span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu" role="menu">
-						<li ng-repeat="table in currentDatabase"><a href="#!/routes/{{table}}">{{table}}</a></li>
+						<li ng-repeat="table in routes"><a href="#!/routes/{{table}}">{{table}}</a></li>
 					</ul>
 				</li>
 				<li class="dropdown" ng-show="authentication.user.admin">
@@ -51,7 +51,7 @@
 						Models<span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu" role="menu">
-						<li ng-repeat="table in currentDatabase"><a href="#!/models/{{table}}">{{table}}</a></li>
+						<li ng-repeat="table in models"><a href="#!/models/{{table}}">{{table}}</a></li>
 					</ul>
 				</li>
 				<li class="dropdown" ng-show="authentication.user.admin">
@@ -59,7 +59,7 @@
 						Data<span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu" role="menu">
-						<li ng-repeat="table in currentDatabase"><a href="#!/data/{{table}}">{{table}}</a></li>
+						<li ng-repeat="table in models"><a href="#!/data/{{table}}">{{table}}</a></li>
 					</ul>
 				</li>
 			</ul>

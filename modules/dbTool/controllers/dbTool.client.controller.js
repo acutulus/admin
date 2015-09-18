@@ -12,14 +12,21 @@ angular.module('dbtools')
 				$scope.projectTitle = $location.host().split('.')[0] || $location.host();
 
 				/*Grab All the Database information in the projects Database*/
-				$scope.currentDatabase = [];
+				$scope.models = [];
+				$scope.routes = [];
 				DataService.getQuery('admin/models')
 				.then(function(data){
 
 					for(var x in data){
-						$scope.currentDatabase.push(x + 's');
+						$scope.models.push(x + 's');
 					}
 				});	
+				DataService.getQuery('admin/restRoutes')
+				.then(function(data){
+					for(var x in data){
+						$scope.routes.push(x + 's');
+					}
+				})
 
 				if($stateParams.hasOwnProperty('table')){
 					$scope.currentTable = $stateParams.table

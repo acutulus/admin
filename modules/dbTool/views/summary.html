@@ -25,11 +25,12 @@
 			<div class="col-xs-10 col-xs-offset-1">
 				<h4>Project Models:</h4>
 				<table class="table-striped table" style="width:100%">
-					<tr ng-repeat="route in restRoutes" style="font-size:16px;">
-						<td>{{route.name}}<td>
-						<td><a href="#!/data/{{route.name}}" class="btn btn-primary" style="margin-right:10px;">&nbspData&nbsp</a></td>
-						<td><a href="#!/routes/{{route.name}}" class="btn btn-warning" style="margin-right:10px;">Routes</a></td>
-						<td><a href="#!/models/{{route.name}}" class="btn btn-info">Models</a></td>
+					<tr ng-repeat="(key, val) in models" style="font-size:16px;">
+						<td>{{key}}<td>
+						<td><a href="#!/data/{{key}}" class="btn btn-primary" style="margin-right:10px;">&nbspData&nbsp</a></td>
+						<td ng-show="routes.hasOwnProperty(key)"><a href="#!/routes/{{key}}" class="btn btn-warning" style="margin-right:10px;">Routes</a></td>
+						<td ng-show="!routes.hasOwnProperty(key)"></td>
+						<td><a href="#!/models/{{key}}" class="btn btn-info">Models</a></td>
 					</tr>
 				</table>
 			</div>
