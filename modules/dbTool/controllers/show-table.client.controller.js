@@ -20,6 +20,7 @@ angular.module('dbtools')
 		DataService.getQuery('admin/models')
 		.then(function(data){
 			$scope.databaseSchemas = data;
+			console.log(data, $scope.object)
 			$scope.schema = $scope.databaseSchemas[$scope.object].schema;
 
 			loadTableData();
@@ -74,9 +75,10 @@ angular.module('dbtools')
 
 		$scope.sortAsc = function(key){
 			$scope.displayData.sort(function(a,b){
-				if(!a[key.name])return -1;
-				if(a[key.name].value<b[key.name].value)return -1;
-				if(a[key.name].value>b[key.name].value)return 1;
+				if(!a[key.name])return 1;
+				if(!b[key.name])return -1;
+				if(a[key.name].toLowerCase()<b[key.name].toLowerCase())return 1;
+				if(a[key.name].toLowerCase()>b[key.name].toLowerCase())return -1;
 				return 0;
 			})
 
@@ -85,8 +87,9 @@ angular.module('dbtools')
 		$scope.sortDesc = function(key){
 			$scope.displayData.sort(function(a,b){
 				if(!a[key.name])return -1;
-				if(a[key.name].value<b[key.name].value) return 1;
-				if(a[key.name].value>b[key.name].value) return -1;
+				if(!b[key.name])return 1;
+				if(a[key.name].toLowerCase()<b[key.name].toLowerCase())return -1;
+				if(a[key.name].toLowerCase()>b[key.name].toLowerCase())return 1;
 				return 0;
 			})
 		}
