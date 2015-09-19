@@ -6,7 +6,7 @@ angular.module('dbtools')
 
 
 		//hold query arguments, newQuery.query holds all the current data
-		$scope.table = $stateParams.table;
+		$scope.table = $stateParams.tablename;
 		$scope.object = $scope.table.slice(0, $scope.table.length - 1);
 
 
@@ -20,6 +20,7 @@ angular.module('dbtools')
 		DataService.getQuery('admin/models')
 		.then(function(data){
 			$scope.databaseSchemas = data;
+			console.log(data, $scope.object)
 			$scope.schema = $scope.databaseSchemas[$scope.object].schema;
 
 			loadTableData();
@@ -74,9 +75,10 @@ angular.module('dbtools')
 
 		$scope.sortAsc = function(key){
 			$scope.displayData.sort(function(a,b){
-				if(!a[key.name])return -1;
-				if(a[key.name].value<b[key.name].value)return -1;
-				if(a[key.name].value>b[key.name].value)return 1;
+				if(!a[key.name])return 1;
+				if(!b[key.name])return -1;
+				if(a[key.name].toLowerCase()<b[key.name].toLowerCase())return 1;
+				if(a[key.name].toLowerCase()>b[key.name].toLowerCase())return -1;
 				return 0;
 			})
 
@@ -85,8 +87,9 @@ angular.module('dbtools')
 		$scope.sortDesc = function(key){
 			$scope.displayData.sort(function(a,b){
 				if(!a[key.name])return -1;
-				if(a[key.name].value<b[key.name].value) return 1;
-				if(a[key.name].value>b[key.name].value) return -1;
+				if(!b[key.name])return 1;
+				if(a[key.name].toLowerCase()<b[key.name].toLowerCase())return -1;
+				if(a[key.name].toLowerCase()>b[key.name].toLowerCase())return 1;
 				return 0;
 			})
 		}
@@ -124,7 +127,7 @@ angular.module('dbtools')
 
 		//edit with modal
 		$scope.editItem = function(item){
-			var tableName = $stateParams.table.slice(0,$stateParams.table.length -1);
+			var tableName = $stateParams.tablename.slice(0,$stateParams.tablename.length -1);
 			var tableSchema = JSON.parse(JSON.stringify($scope.databaseSchemas[tableName].schema));
 			var editData = item;
 
@@ -157,7 +160,7 @@ angular.module('dbtools')
 		}
 
 		$scope.addItem = function(){
-			var tableName = $stateParams.table.slice(0,$stateParams.table.length -1);
+			var tableName = $stateParams.tablename.slice(0,$stateParams.tablename.length -1);
 			var tableSchema = JSON.parse(JSON.stringify($scope.databaseSchemas[tableName].schema));
 
 			var modal = $modal.open({

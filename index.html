@@ -24,7 +24,6 @@
 	<link rel="stylesheet" href='lib/textAngular/dist/textAngular.css'>
 	<link rel="stylesheet" href="lib/font-awesome/css/font-awesome.css">
 	<link rel="stylesheet" href="modules/editor/css/editor.css">
-
 	<!-- HTML5 Shim -->
 	<!--[if lt IE 9]>
 		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -42,17 +41,18 @@
         var user = null;
         var userCallback = function(usr) {
             user = usr;
+            console.log(user);
             if (!user) {
             	location.href = '/admin/#!/signin';            	
-            }
-            if (!user.admin) {
+            }else if (!user.admin) {
             	alert('Not an Admin');
             	location.href = '/';
+            }else if(user.admin){
+            	location.href = '/admin/admin.html#!/summary'
             }
         };
     </script>
     <script type="text/javascript" src="/users/me?callback=userCallback"></script>	
-	<!--Application JavaScript Files
 	<script type="text/javascript" src="/lib/jquery/dist/jquery.min.js"></script>
 	<script type="text/javascript" src="lib/angular/angular.js"></script>
 	<script type="text/javascript" src="lib/angular-messages/angular-messages.min.js"></script>
@@ -73,33 +73,11 @@
 	<script type="text/javascript" src="config.js"></script>
 	<script type="text/javascript" src="application.js"></script>
 	
-	 DBTOOLS FILES 
-	<script type="text/javascript" src="modules/dbTool/dbtools.client.module.js"></script>
-	<script type="text/javascript" src="modules/dbTool/config/dbtools.client.routes.js"></script>
-	<script type="text/javascript" src="modules/dbTool/directives/inputItem.js"></script>
-	<script type="text/javascript" src="modules/dbTool/directives/form.js"></script>
-	<script type="text/javascript" src="modules/dbTool/controllers/dbTool.client.controller.js"></script>
-	<script type="text/javascript" src="modules/dbTool/controllers/admin-signin.client.controller.js"></script>
-	<script type="text/javascript" src="modules/dbTool/controllers/new-database.client.controller.js"></script>
-	<script type="text/javascript" src="modules/dbTool/controllers/new-table.client.controller.js"></script>
-	<script type="text/javascript" src="modules/dbTool/controllers/populate-modal.client.controller.js"></script>
-	<script type="text/javascript" src="modules/dbTool/controllers/queryModal.client.controller.js"></script>
-	<script type="text/javascript" src="modules/dbTool/controllers/show-table.client.controller.js"></script>
-	<script type="text/javascript" src="modules/dbTool/controllers/modal.client.controller.js"></script>
-	<script type="text/javascript" src="modules/dbTool/controllers/get-youtube-modal.js"></script>
-	<script type="text/javascript" src="modules/dbTool/services/authentication.client.service.js"></script>
-	<script type="text/javascript" src="modules/dbTool/services/dataService.client.service.js"></script>
-	<script type="text/javascript" src="modules/dbTool/config/textAngularCustomization.js"></script>
-	<script type="text/javascript" src="modules/dbTool/controllers/get-image-modal.js"></script>
-	<script type="text/javascript" src="modules/dbTool/controllers/get-link-modal.js"></script>
-	<script type="text/javascript" src="modules/dbTool/controllers/delete-item-modal.js"></script>
+	<script type="text/javascript" src="modules/authorize/authorize.client.module.js"></script>
+	<script type="text/javascript" src="modules/authorize/controllers/signin.client.controller.js"></script>
+	<script type="text/javascript" src="modules/authorize/services/authentication.client.service.js"></script>
+	<script type="text/javascript" src="modules/authorize/config/authorize.client.routes.js"></script>
 
-	EDITOR FILES
-	<script type="text/javascript" src="modules/editor/editor.js"></script>
-	<script type="text/javascript" src="modules/editor/config/editor-routes.js"></script>
-	<script type="text/javascript" src="modules/editor/controllers/editor-home.js"></script>
-	<script type="text/javascript" src="modules/editor/controllers/editor-sidebar.js"></script>
-	<script type="text/javascript" src="modules/editor/controllers/editor-field.js"></script>-->
 	 
 </body>
 

@@ -1,0 +1,11 @@
+<section data-ng-controller="RoutesCtrl">
+	<h2 class="col-xs-10 col-xs-offset-2">{{routeName}}</h2>
+	<div class="col-xs-8 col-xs-offset-2">
+		<table class="table table-striped">
+			<tr ng-repeat="(key,val) in routes">
+				<td>{{key}}</td>
+				<td>{{val.restRoute}}</td>
+			</tr>
+		</table>
+	</div>
+</section>

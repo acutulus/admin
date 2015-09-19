@@ -34,12 +34,14 @@ ul .sidebar-dropdown-links{
 }
 .keps-title{
     position: absolute;
+    top: 18px;
     color: #fff;
     display: inline-block;
-    font-size: 2.1rem;
+    font-size: 1.8rem;
+    font-weight: 700;
     padding: 0;
     white-space: nowrap;
-    margin-left:5px;
+    margin-left: 30px;
 }
 @media (min-width: 994px) {
     .keps-nav{
@@ -48,11 +50,75 @@ ul .sidebar-dropdown-links{
     .page-body{
         margin-left:240px;
     }
+
+    .collapsible {
+        height: 100%;
+    }
 }
+
+.keps-nav a {
+    color: #222;
+}
+
 .keps-nav{
-    height: 64px;
+    height: 100px;
     line-height: 64px;
-    color: #fff;
     width:100%;
-    background-color: #6a3e73;
+    background-color: transparent;
+    border-bottom: 5px solid #6a3e73;
 }
+
+.burger {
+    margin-left: 20px;
+    margin-top: 18px;
+}
+
+.nav-wrapper a {
+    color: #222;
+}
+
+/************************
+        Logo Styles 
+************************/
+
+.logo {
+    height: 100px;
+}
+
+/************************
+    Side-bar List Styles 
+************************/
+.logo img {
+    position: relative;
+    top: 20px;
+}
+
+.btn {
+    box-shadow: none;
+    border-radius: 0;
+}
+
+.bold a span {
+    position: absolute;
+    top: 6px;
+    left: 20px;
+}
+
+.side-nav li .arrow {
+    transition: .2s ease;
+}
+
+.side-nav li.active .arrow {
+    transform: rotateZ(90deg);
+    transition: .2s ease;
+}
+
+
+
+
+
+
+
+
+
+

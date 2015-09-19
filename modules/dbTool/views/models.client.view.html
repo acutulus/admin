@@ -1,0 +1,12 @@
+<section data-ng-controller="ModelsCtrl">
+	<h2 class="col-xs-10 col-xs-offset-2">{{modelName}}</h2>
+	<div ng-repeat="(objName, obj) in schema" class="col-xs-8 col-xs-offset-2">
+		<h3>{{objName}}</h3>
+		<table class="table table-striped"> 		
+			<tr ng-repeat="(key, val) in obj">
+				<td>{{key}}</td>
+				<td>{{val}}</td>
+			</tr>
+		</table>
+	</div>
+</section>

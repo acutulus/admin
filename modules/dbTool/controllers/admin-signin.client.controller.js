@@ -6,7 +6,7 @@ angular.module('dbtools').controller('AdminSigninController', ['$scope', '$http'
 
 		// If user is signed in then redirect back home
 		if($scope.authentication.user){
-			if ($scope.authentication.user.admin) $location.path('/admin');
+			if ($scope.authentication.user.admin) $location.path('/admin/admin.html#!/summary');
 		}
 
 		$scope.signin = function() {
@@ -15,7 +15,7 @@ angular.module('dbtools').controller('AdminSigninController', ['$scope', '$http'
 				$scope.authentication.user = response;
 
 				// And redirect to the index page
-				$location.path('/admin')
+				$location.path('/admin/admin.html#!/summary')
 			}).error(function(response) {
 				$scope.error = response.message;
 			});

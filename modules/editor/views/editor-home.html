@@ -1,19 +1,19 @@
 <section data-ng-controller="EditorController">
-	<nav class="keps-nav">
-		<a href="#" data-activates="slide-out" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
+	<nav class="keps-nav z-depth-0">
+		<a href="#" data-activates="slide-out" class="button-collapse burger"><i class="mdi-navigation-menu"></i></a>
 	    <div class="nav-wrapper">
 	      	<a href="#" class="keps-title">The Keps Platform</a>
 	    </div>
    	</nav>
-	<ul class="side-nav fixed">
-		<li class="logo" style="border:solid 1px rgb(221,221,221);">
+	<ul class="side-nav fixed z-depth-1">
+		<li class="logo" style="border-bottom: #6a3e73 5px solid;">
 			<a id="logo-container" href="#!/editor" class="brand-logo" style="text-align:center">
 				<img style="height:90%;width:auto;margin-bottom:5%"src="http://foodnetwork.sndimg.com/content/dam/images/food/fullset/2009/3/20/0/bobby_bookcover_s4x3.jpg.rend.sni18col.jpeg">
 			</a>
-    	</li>	
-		<ul style="margin-top:10px;" class="collapsible collapsible-accordion"> 			
+    	</li>
+		<ul class="collapsible collapsible-accordion"> 			
 			<li class="bold">
-				<a class="btn collapsible-header waves-effect waves-light" style="height:5%;width:100%;margin:0;background-color:#6a3e73"><span style="color:white">Editor</span></a>
+				<a class="btn collapsible-header waves-effect waves-light" style="height:5%;width:100%;margin:0;background-color:#6a3e73"><span style="color:white" class="center">Editor</span><i class="tiny material-icons right white-text arrow">keyboard_arrow_right</i></a>
 				<div class="collapsible-body">
 					<ul >
 						<li ng-repeat="table in sidebarTablesView" style="padding-top:10px;padding-bottom:10px;color:#444;font-weight:normal;">
@@ -25,14 +25,14 @@
 	 	</ul>	
     </ul>
 	<ul id="slide-out" class="side-nav">
-		<li class="logo" style="border:solid 1px rgb(221,221,221);">
+		<li class="logo" style="border-bottom: #6a3e73 5px solid;">
 			<a id="logo-container" href="#!/editor" class="brand-logo" style="text-align:center;">
 				<img style="height:90%;width:auto;margin-bottom:5%"src="http://foodnetwork.sndimg.com/content/dam/images/food/fullset/2009/3/20/0/bobby_bookcover_s4x3.jpg.rend.sni18col.jpeg">
 			</a>
     	</li>	
 		<ul style="margin-top:10px;" class="collapsible collapsible-accordion"> 			
 			<li class="bold">
-				<a class="btn collapsible-header waves-effect waves-light" style="height:5%;width:100%;margin:0;background-color:#6a3e73"><span style="color:white">Editor</span></a>
+				<a class="btn z-depth-0 collapsible-header waves-effect waves-light" style="height:5%;width:100%;margin:0;background-color:#6a3e73"><span style="color:white">Editor</span></a>
 				<div class="collapsible-body">
 					<ul class="collection" style="margin-top:0px;margin-bottom:0px;">
 						<li ng-repeat="table in sidebarTablesView" class="collection-item">
