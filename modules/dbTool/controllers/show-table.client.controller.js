@@ -127,8 +127,7 @@ angular.module('dbtools')
 
 		//edit with modal
 		$scope.editItem = function(item){
-			var tableName = $stateParams.tablename.slice(0,$stateParams.tablename.length -1);
-			var tableSchema = JSON.parse(JSON.stringify($scope.databaseSchemas[tableName].schema));
+			var tableSchema = JSON.parse(JSON.stringify($scope.databaseSchemas[$scope.table].schema));
 			var editData = item;
 
 			console.log('EDIT DATA', editData);
@@ -160,8 +159,7 @@ angular.module('dbtools')
 		}
 
 		$scope.addItem = function(){
-			var tableName = $stateParams.tablename.slice(0,$stateParams.tablename.length -1);
-			var tableSchema = JSON.parse(JSON.stringify($scope.databaseSchemas[tableName].schema));
+			var tableSchema = JSON.parse(JSON.stringify($scope.databaseSchemas[$scope.table].schema));
 
 			var modal = $modal.open({
 				templateUrl:'modules/dbTool/views/modal.html',
