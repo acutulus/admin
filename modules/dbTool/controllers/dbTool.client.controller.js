@@ -18,13 +18,13 @@ angular.module('dbtools')
 				.then(function(data){
 
 					for(var x in data){
-						$scope.models.push(x + 's');
+						$scope.models.push(x);
 					}
 				});	
 				DataService.getQuery('admin/restRoutes')
 				.then(function(data){
 					for(var x in data){
-						$scope.routes.push(x + 's');
+						$scope.routes.push(x);
 					}
 				})
 

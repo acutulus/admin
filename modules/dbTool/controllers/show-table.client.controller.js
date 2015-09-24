@@ -7,7 +7,7 @@ angular.module('dbtools')
 
 		//hold query arguments, newQuery.query holds all the current data
 		$scope.table = $stateParams.tablename;
-		$scope.object = $scope.table.slice(0, $scope.table.length - 1);
+	
 
 
 		//get first 200 entries for table
@@ -20,14 +20,14 @@ angular.module('dbtools')
 		DataService.getQuery('admin/models')
 		.then(function(data){
 			$scope.databaseSchemas = data;
-			console.log(data, $scope.object)
-			$scope.schema = $scope.databaseSchemas[$scope.object].schema;
+			console.log(data, $scope.table)
+			$scope.schema = $scope.databaseSchemas[$scope.table].schema;
 
 			loadTableData();
 		});
 		
 		var loadTableData = function(){
-			DataService.getQuery('admin/rest/' + $scope.table, {}, false)
+			DataService.getQuery('admin/rest/' + $scope.table + 's', {}, false)
 			.then(function(data){		
 				$scope.readOnlyData = data;
 				$scope.displayData = JSON.parse(JSON.stringify(data));
@@ -35,7 +35,7 @@ angular.module('dbtools')
 				if ($scope.tableHeaders.length === 0) {
 					//for iterating over current schema
 					for(var x in $scope.schema){
-						if($scope.schema[x].type){
+						if(typeof $scope.schema[x].type === 'string'){
 							//check if field is a reference
 							if($scope.schema[x].type.indexOf(':') > -1){
 								var ref = $scope.schema[x].type.slice(1);
@@ -127,8 +127,7 @@ angular.module('dbtools')
 
 		//edit with modal
 		$scope.editItem = function(item){
-			var tableName = $stateParams.tablename.slice(0,$stateParams.tablename.length -1);
-			var tableSchema = JSON.parse(JSON.stringify($scope.databaseSchemas[tableName].schema));
+			var tableSchema = JSON.parse(JSON.stringify($scope.databaseSchemas[$scope.table].schema));
 			var editData = item;
 
 			console.log('EDIT DATA', editData);
@@ -160,8 +159,7 @@ angular.module('dbtools')
 		}
 
 		$scope.addItem = function(){
-			var tableName = $stateParams.tablename.slice(0,$stateParams.tablename.length -1);
-			var tableSchema = JSON.parse(JSON.stringify($scope.databaseSchemas[tableName].schema));
+			var tableSchema = JSON.parse(JSON.stringify($scope.databaseSchemas[$scope.table].schema));
 
 			var modal = $modal.open({
 				templateUrl:'modules/dbTool/views/modal.html',
