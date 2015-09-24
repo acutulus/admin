@@ -3,15 +3,15 @@
 		<h5>{{currentTable}}'s</h5>
 		<ul class="collection">
 			<li class="collection-item">
-				<a class="btn waves-effect waves-light green" 
-				href="#!/editor/document/{{currentTable}}/new">New+</a>
+				<a class="btn waves-effect waves-light light-green z-depth-0" 
+				href="#!/editor/document/{{currentTable}}/new"><i class="material-icons right">add</i>New</a>
 			</li>
 			<li class="collection-item" ng-repeat="doc in documents">
 				<div style="width:70%;text-align:left;display:inline-block;">
 					<p>{{doc[schema.properties.displayAs] || schema.properties.displayAs + ' not found. Document ID: ' +  doc['_id'] }}</p>
 				</div>
 				<div style="width:25%;text-align:right;display:inline-block;">
-					<a class="btn waves-effect waves-light blue" style="text-align:center;" href="#!/editor/document/{{currentTable}}/{{doc._id}}">Edit&nbsp&nbsp</a>
+					<a class="btn waves-effect waves-light purple lighten-3" style="text-align:center;" href="#!/editor/document/{{currentTable}}/{{doc._id}}"><i class="material-icons right">create</i>Edit</a>
 				</div>
 			</li>
 		</ul>
