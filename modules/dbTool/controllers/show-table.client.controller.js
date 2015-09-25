@@ -149,7 +149,7 @@ angular.module('dbtools')
 			});
 
 			modal.result.then(function(updatedModal){
-				DataService.update('admin/rest/' + $scope.table + '/' + item._id, updatedModal)
+				DataService.update('admin/rest/' + $scope.table + 's/' + item._id, updatedModal)
 				.then(function(data){
 					console.log(data);
 					//loadTableData();
@@ -182,7 +182,7 @@ angular.module('dbtools')
 			modal.result.then(function(newItem){
 				console.log(newItem);
 
-				DataService.add('admin/rest/' + $scope.table, newItem)
+				DataService.add('admin/rest/' + $scope.table + 's', newItem)
 				.then(function(data){
 					console.log(data)
 					//loadTableData();
@@ -203,7 +203,7 @@ angular.module('dbtools')
 			deleteModal.result.then(function(choice){
 				console.log(choice)
 				if(choice === 'delete'){
-					DataService.delete('admin/rest/' + $scope.table, {_id:item._id});
+					DataService.delete('admin/rest/' + $scope.table + 's', {_id:item._id});
 					loadTableData();
 				}
 			})

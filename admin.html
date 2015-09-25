@@ -23,7 +23,6 @@
 	<link rel="stylesheet" href="modules/dbTool/css/dbtools.css">
 	<link rel="stylesheet" href='lib/textAngular/dist/textAngular.css'>
 	<link rel="stylesheet" href="lib/font-awesome/css/font-awesome.css">
-	<link rel="stylesheet" href="modules/editor/css/editor.css">
 
 	<!-- HTML5 Shim -->
 	<!--[if lt IE 9]>
@@ -80,13 +79,12 @@
 </section>
 
 	<!--Embedding The User Object-->
-	<!--Embedding The User Object-->
     <script type="text/javascript">
         var user = null;
         var userCallback = function(usr) {
             user = usr;
             if (!user) {
-            	location.href = '/admin/#!/signin';            	
+            	location.href = '/admin/admin.html#!/signin';            	
             }
             if (!user.admin) {
             	alert('Not an Admin');
@@ -114,12 +112,16 @@
 	<script type="text/javascript" src="lib/angular-dragndrop/lrDragNDrop.js"></script>
 	<script type="text/javascript" src="config.js"></script>
 	<script type="text/javascript" src="application.js"></script>
-	
+
+	<script type="text/javascript" src="lib/ngkeps/src/ngKeps.js"></script>	
+	<script type="text/javascript" src="lib/ngkeps/src/directives/input.js"></script>
+	<script type="text/javascript" src="lib/ngkeps/src/directives/form.js"></script>
+	<script type="text/javascript" src="lib/ngkeps/src/config/textAngularCustomization.js"></script>
+
+
 	<!-- DBTOOLS FILES -->
 	<script type="text/javascript" src="modules/dbTool/dbtools.client.module.js"></script>
 	<script type="text/javascript" src="modules/dbTool/config/dbtools.client.routes.js"></script>
-	<script type="text/javascript" src="modules/dbTool/directives/inputItem.js"></script>
-	<script type="text/javascript" src="modules/dbTool/directives/form.js"></script>
 	<script type="text/javascript" src="modules/dbTool/controllers/dbTool.client.controller.js"></script>
 	<script type="text/javascript" src="modules/dbTool/controllers/admin-signin.client.controller.js"></script>
 	<script type="text/javascript" src="modules/dbTool/controllers/new-database.client.controller.js"></script>
@@ -134,7 +136,6 @@
 	<script type="text/javascript" src="modules/dbTool/controllers/get-youtube-modal.js"></script>
 	<script type="text/javascript" src="modules/dbTool/services/authentication.client.service.js"></script>
 	<script type="text/javascript" src="modules/dbTool/services/dataService.client.service.js"></script>
-	<script type="text/javascript" src="modules/dbTool/config/textAngularCustomization.js"></script>
 	<script type="text/javascript" src="modules/dbTool/controllers/get-image-modal.js"></script>
 	<script type="text/javascript" src="modules/dbTool/controllers/get-link-modal.js"></script>
 	<script type="text/javascript" src="modules/dbTool/controllers/delete-item-modal.js"></script>
