@@ -1,0 +1,27 @@
+{
+  "name": "KepsAdmin",
+  "version": "0.0.1",
+  "homepage": "",
+  "authors": [
+    "Ed Parsons <ed@ekpsoftware.com>"
+  ],
+  "description": "Keps Admin",
+  "main": [
+  ],
+  "ignore": [
+    "**/.*",
+    "gulpfile.js",
+    "test",
+    "config",
+    "demo",
+    "CONTRIBUTING.md"
+  ],
+  "dependencies": {
+    "ngkeps": "https://bitbucket.org/ekpsoftware/ngkeps.git",
+  },
+  "keywords": [
+  ],
+  "private": true,
+  "devDependencies": {
+  }
+}
