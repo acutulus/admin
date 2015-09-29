@@ -43,9 +43,7 @@ footer.example {
   Index Page Styles
 ********************/
 ul.side-nav.fixed li.logo {
-  text-align: center;
-  margin-top: 32px;
-  border-bottom: 1px solid #ddd; }
+  text-align: center; }
   ul.side-nav.fixed li.logo:hover {
     background-color: transparent; }
 ul.side-nav.fixed {
@@ -370,7 +368,7 @@ ul .sidebar-dropdown-links{
 }
 .keps-title{
     position: absolute;
-    left: 100px;
+    left: 80px;
     color: #fff;
     display: inline-block;
     font-size: 1.8rem;
@@ -380,16 +378,21 @@ ul .sidebar-dropdown-links{
 }
 
 .keps-nav a {
-    color: #222;
-    margin-top: 32px;
+    margin-top: 28px;
 }
 
 .keps-nav{
-    height: 132px;
+    height: 122px;
     line-height: 64px;
     width:100%;
-    background-color: transparent;
-    border-bottom: 5px solid #6a3e73;
+}
+
+.nav-wrapper {
+    background-color: #6a3e73;
+}
+
+.header {
+    color: #6a3e73;
 }
 
 .burger {
@@ -397,16 +400,12 @@ ul .sidebar-dropdown-links{
     margin-top: 18px;
 }
 
-.nav-wrapper a {
-    color: #222;
-}
-
 /************************
         Logo Styles 
 ************************/
 
 .logo {
-    height: 100px;
+    height: 122px;
 }
 
 /************************
@@ -431,6 +430,9 @@ ul .sidebar-dropdown-links{
     transform: rotateZ(90deg);
     transition: .2s ease;
 }
+.logo img {
+    margin-top: 32px;
+}
 
 /************************
     Table Styles 
@@ -439,6 +441,7 @@ ul .sidebar-dropdown-links{
 .collection {
     border: none;
     background-color: transparent;
+    margin: 1rem 0 1rem 0;
 }
 
 .collection .collection-item {
@@ -458,6 +461,7 @@ ul .sidebar-dropdown-links{
     .keps-nav{
         margin-left:240px;
     }
+
     .page-body{
         margin-left:240px;
     }

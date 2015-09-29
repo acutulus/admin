@@ -36,6 +36,8 @@ angular.module('editor')
 					}
 				});
 			}
+		} else {
+			alert('you are not signed in');
 		}
 	}
 ]);
