@@ -18,7 +18,8 @@ angular.module('editor')
         kepsType:"=",
         kepsModel:"=",
         kepsName:"=",
-        kepsFramework:"="
+        kepsFramework:"=",
+      
       },
 
       link: function(scope,element,attrs){
