@@ -15,19 +15,26 @@ angular.module('dbtools')
 					$scope.uptime.secs++;
 				}
 				$timeout(moveClock,1000);	
-			}
+			};
 
 			$scope.windowHeight = $(window).height() - 40;
 			$http.get('/admin/restRoutes')
 				.then(function(response){
 					$scope.routes = response.data;
-				})
+				});
 
 			$http.get('/admin/models')
 				.then(function(response){
 					console.log(response);
 					$scope.models = response.data;
-				})
+					$scope.modelsCount = {};
+					angular.forEach($scope.models, function(value, ind) {
+						$http.get('/admin/rest/'+ind+'s/count')
+							.then(function(response){
+								$scope.modelsCount[ind] = response.data.count;
+							});
+					});
+				});
 
 			$http.get('/admin/uptime')
 				.then(function(response){
@@ -36,7 +43,7 @@ angular.module('dbtools')
 					$scope.uptime.mins = Math.floor((response.data.uptime % 3600)/60);
 					$scope.uptime.secs = Math.floor(response.data.uptime % 60);
 					moveClock();
-				})
+				});
 
 			$scope.republish = function(){
 				$http.get('/admin/republish')

@@ -7,7 +7,7 @@ angular.module('dbtools').controller('RoutesCtrl', ['$scope','$stateParams','$ht
 		$http.get('/admin/restRoutes')
 		.then(function(response){
 			console.log(response);
-			$scope.routes = response.data[$scope.routeName.slice(0, $scope.routeName.length -1 )].functions;
+			$scope.routes = response.data[$scope.routeName].functions;
 		})
 	}
 ]);
