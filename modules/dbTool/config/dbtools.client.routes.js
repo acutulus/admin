@@ -36,6 +36,7 @@ angular.module('dbtools').config(['$stateProvider', '$urlRouterProvider', '$loca
 		.state('signin',{
 			url:'/signin',
 			templateUrl:'modules/dbTool/views/signin.html'
-		})
+		});
+		$locationProvider.html5Mode(true);
 	}
 ]);
