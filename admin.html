@@ -27,6 +27,7 @@
 	<link rel="stylesheet" href='/admin/lib/textAngular/dist/textAngular.css'>
 	<link rel="stylesheet" href="/admin/lib/font-awesome/css/font-awesome.css">
 
+
 	<!-- HTML5 Shim -->
 	<!--[if lt IE 9]>
 		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -89,10 +90,14 @@
             if (!user) {
             	location.href = '/admin/admin.html#!/signin';            	
             }
+            if(user.editor){
+            	location.href ="/admin/editor.html";
+            }
             if (!user.admin) {
             	alert('Not an Admin');
             	location.href = '/';
             }
+
         };
     </script>
     <script type="text/javascript" src="/users/me?callback=userCallback"></script>	
@@ -122,6 +127,10 @@
 	<script type="text/javascript" src="/admin/lib/ngkeps/src/directives/input.js"></script>
 	<script type="text/javascript" src="/admin/lib/ngkeps/src/directives/form.js"></script>
 	<script type="text/javascript" src="/admin/lib/ngkeps/src/config/textAngularCustomization.js"></script>
+	<script type="text/javascript" src="/admin/lib/ngkeps/src/services/Cache.js"></script>
+	<script type="text/javascript" src="/admin/lib/ngkeps/src/services/Data.js"></script>
+	<script type="text/javascript" src="/admin/lib/ngkeps/src/services/Rest.js"></script>
+	<script type="text/javascript" src="/admin/lib/ngkeps/src/services/Socket.js"></script>
 
 
 	<!-- DBTOOLS FILES -->
