@@ -149,12 +149,8 @@ angular.module('dbtools')
 			});
 
 			modal.result.then(function(updatedModal){
-				DataService.update('admin/rest/' + $scope.table + 's/' + item._id, updatedModal)
-				.then(function(data){
-					console.log(data);
-					//loadTableData();
-				})
 
+				item = updatedModal;
 			})
 		}
 
@@ -177,17 +173,9 @@ angular.module('dbtools')
 					}
 				}
 			});
-
 			//NEED TO CLEAN UP INPUT ERROR CHECKING AND ADD IN POST
 			modal.result.then(function(newItem){
-				console.log(newItem);
-
-				DataService.add('admin/rest/' + $scope.table + 's', newItem)
-				.then(function(data){
-					console.log(data)
-					//loadTableData();
-				})
-
+				$scope.displayData.push(newItem);
 			})
 		}
 
@@ -244,8 +232,5 @@ angular.module('dbtools')
 			});
 			
 		}
-
-
-
 	}//end controller
 ]);
