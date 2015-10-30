@@ -17,7 +17,7 @@
     "CONTRIBUTING.md"
   ],
   "dependencies": {
-    "ngkeps": "https://bitbucket.org/ekpsoftware/ngkeps.git",
+    "ngkeps": "https://bitbucket.org/ekpsoftware/ngkeps.git"
   },
   "keywords": [
   ],
