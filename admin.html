@@ -87,12 +87,15 @@
         var user = null;
         var userCallback = function(usr) {
             user = usr;
-            if (!user) {
-            	location.href = '/admin/admin.html#!/signin';            	
+            if (!user && location.pathname !== '/admin/signin') {
+            	location.href = '/admin/signin';
+            	return;
             }
+            /*
             if(user.editor){
             	location.href ="/admin/editor.html";
             }
+            */
             if (!user.admin) {
             	alert('Signed in but no admin permissions');
             	location.href = '/';
