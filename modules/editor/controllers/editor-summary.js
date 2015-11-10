@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('editor')
-	.controller('EditorSummaryController',['$scope', 'DataService', '$http', '$timeout', '$stateParams',
-		function($scope, DataService, $http, $timeout, $stateParams){
+	.controller('EditorSummaryController',['$scope', '$nkDataService', '$http', '$timeout', '$stateParams',
+		function($scope, $nkDataService, $http, $timeout, $stateParams){
 
 			$scope.show = {}; //control what can be seen currently
 			$scope.show.routes = {};

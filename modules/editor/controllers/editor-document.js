@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('editor')
-	.controller('EditorDocumentController', ['$scope','DataService','$stateParams','$location',
-		function($scope, DataService,$stateParams, $location){
+	.controller('EditorDocumentController', ['$scope','$nkDataService','$stateParams','$location',
+		function($scope, $nkDataService,$stateParams, $location){
 
 			$scope.tablename = $stateParams.tablename + 's';
 			$scope.documentId = $stateParams.documentId;
@@ -13,16 +13,16 @@ angular.module('editor')
 			if($scope.documentId === 'new'){
 				$scope.documentData = {};
 			}else{
-				DataService.get('admin/rest/' + $scope.tablename, $scope.documentId)
+				$nkDataService.get('admin/rest/' + $scope.tablename, $scope.documentId)
 					.then(function(data){
-						$scope.documentData = data;
+						$scope.documentData = data.data;
 						console.log($scope.documentData);
 					})
 			}
 
-			DataService.getQuery('admin/models')
+			$nkDataService.getQuery('admin/models')
 				.then(function(data){
-					$scope.schema = data[$stateParams.tablename];
+					$scope.schema = data.data[$stateParams.tablename];
 					//resolve displayAs field
 					if($scope.schema.hasOwnProperty('properties')){
 						if($scope.schema.properties.hasOwnProperty('displayAs')){

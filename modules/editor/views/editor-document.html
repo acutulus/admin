@@ -9,7 +9,7 @@
 		  	</div>
 		</div>
 		<div style="" ng-if="schema.schema && documentData">
-			<keps-form keps-data="schema.schema" keps-model="documentData" keps-framework="'materialize'"></keps-form>
+			<keps-form keps-data="schema.schema" keps-model="documentData" keps-framework="materialize" keps-errors="errors" ng-blur="resolveErrors()"></keps-form>
 		</div>
 	</div>
 </section>
