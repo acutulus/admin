@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dbtools')
-.controller('ShowTableCtrl', ['$scope', 'DataService', '$stateParams', '$modal','$window', '$http',
-	function($scope, DataService, $stateParams, $modal, $window, $http){
+.controller('ShowTableCtrl', ['$scope', '$nkDataService', '$stateParams', '$modal','$window', '$http',
+	function($scope, $nkDataService, $stateParams, $modal, $window, $http){
 
 
 		//hold query arguments, newQuery.query holds all the current data
@@ -17,17 +17,17 @@ angular.module('dbtools')
 		$scope.displayData = [];
 		
 		//get list of schemas for project
-		DataService.getQuery('admin/models')
-		.then(function(data){
-			$scope.databaseSchemas = data;
-			console.log(data, $scope.table)
+		$http.get('/admin/models')
+		.then(function(response){
+			$scope.databaseSchemas = response.data;
+			console.log(response.data, $scope.table)
 			$scope.schema = $scope.databaseSchemas[$scope.table].schema;
 
 			loadTableData();
 		});
 		
 		var loadTableData = function(){
-			DataService.getQuery('admin/rest/' + $scope.table + 's', {}, false)
+			$nkDataService.query($scope.table + 's', {}, false)
 			.then(function(data){		
 				$scope.readOnlyData = data;
 				$scope.displayData = JSON.parse(JSON.stringify(data));
@@ -48,15 +48,15 @@ angular.module('dbtools')
 								//populate currentData.query reference fields with displayAs values
 								populateDisplayAs(x, ref, properties.displayAs);
 							}else{
-								$scope.tableHeaders.push({name:x,ref:false})
+								$scope.tableHeaders.push({name:x,ref:false});
 							}
 						}else{
-							$scope.tableHeaders.push({name:x,ref:false})
+							$scope.tableHeaders.push({name:x,ref:false});
 						}
 					}
 				}
 			});
-		}
+		};
 
 		//remove item from query list
 		$scope.removeItem = function(row) {
@@ -64,14 +64,14 @@ angular.module('dbtools')
         if (index !== -1) {
             $scope.displayData.splice(index, 1);
         }
-	   }
+	   };
 
 		$scope.removeColumn = function(column){
 			var index = $scope.tableHeaders.indexOf(column);
       if (index !== -1) {
 				$scope.tableHeaders.splice(index,1);
 			}
-		}
+		};
 
 		$scope.sortAsc = function(key){
 			$scope.displayData.sort(function(a,b){
@@ -80,9 +80,9 @@ angular.module('dbtools')
 				if(a[key.name].toLowerCase()<b[key.name].toLowerCase())return 1;
 				if(a[key.name].toLowerCase()>b[key.name].toLowerCase())return -1;
 				return 0;
-			})
+			});
 
-		}
+		};
 
 		$scope.sortDesc = function(key){
 			$scope.displayData.sort(function(a,b){
@@ -91,8 +91,8 @@ angular.module('dbtools')
 				if(a[key.name].toLowerCase()<b[key.name].toLowerCase())return -1;
 				if(a[key.name].toLowerCase()>b[key.name].toLowerCase())return 1;
 				return 0;
-			})
-		}
+			});
+		};
 
 		/** query DB functions */
 		$scope.showQueryModal = function(key){
@@ -118,12 +118,12 @@ angular.module('dbtools')
 							return table;
 						}
 					}
-				})
+				});
 
 			populateModal.result.then(function(selectedField){
 				populateDisplayAs(field, model, selectedField);
 			});
-		}
+		};
 
 		//edit with modal
 		$scope.editItem = function(item){
@@ -149,10 +149,9 @@ angular.module('dbtools')
 			});
 
 			modal.result.then(function(updatedModal){
-
 				item = updatedModal;
-			})
-		}
+			});
+		};
 
 		$scope.addItem = function(){
 			var tableSchema = JSON.parse(JSON.stringify($scope.databaseSchemas[$scope.table].schema));
@@ -176,8 +175,8 @@ angular.module('dbtools')
 			//NEED TO CLEAN UP INPUT ERROR CHECKING AND ADD IN POST
 			modal.result.then(function(newItem){
 				$scope.displayData.push(newItem);
-			})
-		}
+			});
+		};
 
 		$scope.deleteItem = function(item){
 			console.log(item);
@@ -185,25 +184,25 @@ angular.module('dbtools')
 				templateUrl:'modules/dbTool/views/delete-item-modal.html',
 				controller:'DeleteModalCtrl',
 				size:"med"
-			})
+			});
 
 
 			deleteModal.result.then(function(choice){
 				console.log(choice)
 				if(choice === 'delete'){
-					DataService.delete('admin/rest/' + $scope.table + 's', {_id:item._id});
+					$nkDataService.delete('admin/rest/' + $scope.table + 's', {_id:item._id});
 					loadTableData();
 				}
-			})
-		}
+			});
+		};
 
 		//devices table specific function
 		$scope.pushNotification = function(device){
 			$http.get('admin/devices/push/' + device._id) //made up fake route for now
 				.then(function(response){
 					console.log(response);
-				})
-		}
+				});
+		};
 
 		//utility function to populate IDs on initial load
 		var populateDisplayAs = function(field, model, displayAs){
@@ -219,7 +218,7 @@ angular.module('dbtools')
 				}
 			}
 			console.log('populating display with ', idArray);
-			DataService.get('admin/rest/'+model+'s', idArray).then(function(data){
+			$nkDataService.get(model+'s', idArray).then(function(data){
 				var refTable = {};
 				for(var y in data){
 					if(idArray.indexOf(data[y]._id) > -1){

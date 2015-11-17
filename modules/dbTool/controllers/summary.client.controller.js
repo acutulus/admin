@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dbtools')
-	.controller('SummaryController',['$scope', 'DataService', '$http', '$timeout', '$stateParams',
-		function($scope, DataService, $http, $timeout, $stateParams){
+	.controller('SummaryController',['$scope', '$http', '$timeout', '$stateParams',
+		function($scope, $http, $timeout, $stateParams){
 
 			$scope.restRoutes = [];
 			$scope.models = [];
