@@ -16,7 +16,7 @@ angular.module('dbtools').controller('AdminSigninController', ['$scope', '$http'
 			$scope.error = '';
 			$nkAuthService.loginWithProvider('local', $scope.credentials).then(function(response) {
 				// And redirect to the index page
-				if (!$scope.user.admin) {
+				if ($scope.user.admin) {
 					location.href = '/admin/summary';
 				} else {
 					location.href = '/';
