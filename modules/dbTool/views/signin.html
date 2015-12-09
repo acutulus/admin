@@ -22,5 +22,8 @@
 			<div data-ng-show="error" class="text-center text-danger">
 				<strong data-ng-bind="error"></strong>
 			</div>
+			<div ng-show="user">
+				<a ng-click="signout()">Sign out {{user.displayName}}</a>
+			</div>
 	</div>
 </section>

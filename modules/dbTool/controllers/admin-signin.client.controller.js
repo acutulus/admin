@@ -5,11 +5,6 @@ angular.module('dbtools').controller('AdminSigninController', ['$scope', '$http'
 
 		// If user is signed in then redirect back home
 		if($scope.user){
-			if ($scope.user.admin) {
-				location.href = '/admin/summary';
-			} else {
-				location.href = '/';
-			}
 		}
 		
 		$scope.signin = function() {
@@ -30,6 +25,11 @@ angular.module('dbtools').controller('AdminSigninController', ['$scope', '$http'
 					}, 2000);
 				}, 500);
 			});
+		};
+
+		$scope.signout = function() {
+			$nkAuthService.logout();
+			window.location.reload();
 		};
 	}
 ]);
