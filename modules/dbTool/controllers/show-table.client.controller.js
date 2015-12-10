@@ -218,7 +218,7 @@ angular.module('dbtools')
 				}
 			}
 			console.log('populating display with ', idArray);
-			$nkDataService.get(model+'s', idArray).then(function(data){
+			$nkDataService.read(model+'s', idArray).then(function(data){
 				var refTable = {};
 				for(var y in data){
 					if(idArray.indexOf(data[y]._id) > -1){
