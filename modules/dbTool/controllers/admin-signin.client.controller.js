@@ -1,24 +1,35 @@
 'use strict';
 
-angular.module('dbtools').controller('AdminSigninController', ['$scope', '$http', '$location', 'Authentication',
-	function($scope, $http, $location, Authentication) {
-		$scope.authentication = Authentication;
+angular.module('dbtools').controller('AdminSigninController', ['$scope', '$http', '$location', '$nkAuthService', '$timeout',
+	function($scope, $http, $location, $nkAuthService, $timeout){
 
 		// If user is signed in then redirect back home
-		if($scope.authentication.user){
-			if ($scope.authentication.user.admin) $location.path('/admin/admin.html#!/summary');
+		if($scope.user){
 		}
-
+		
 		$scope.signin = function() {
-			$http.post('/auth/signin', $scope.credentials).success(function(response) {
-				// If successful we assign the response to the global user model
-				$scope.authentication.user = response;
-
+			$scope.error = '';
+			$nkAuthService.loginWithProvider('local', $scope.credentials).then(function(response) {
 				// And redirect to the index page
-				$location.path('/admin/admin.html#!/summary')
-			}).error(function(response) {
-				$scope.error = response.message;
+				if ($scope.user.admin) {
+					location.href = '/admin/summary';
+				} else {
+					location.href = '/';
+				}
+			}, function(response) {
+				$timeout(function() {
+					$scope.error = response.message;
+					$scope.shakeForm = true;
+					$timeout(function() {
+						$scope.shakeForm = false;
+					}, 2000);
+				}, 500);
 			});
+		};
+
+		$scope.signout = function() {
+			$nkAuthService.logout();
+			window.location.reload();
 		};
 	}
 ]);

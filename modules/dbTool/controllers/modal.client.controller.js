@@ -24,25 +24,25 @@ angular.module('dbtools').controller('ModalCtrl',
 			}
 			if(!$scope.msgs.errorMessage){
 				if(updating){
-					$nkDataService.update('admin/rest/' + $scope.table + 's/' + item._id, $scope.item)
+					$nkDataService.update($scope.table + 's', $scope.item)
 					.then(function(data){
 						$scope.msgs = {};
 						$scope.msgs.successMessage = $stateParams.tablename + " Entry Updated Successfully";
 						$timeout(function(){
-							$modalInstance.close($scope.item);
+							$modalInstance.close(data);
 						},1500);
 					}, function(err){
 						$scope.msgs = {};
 						$scope.msgs.serverError = true;
 						$scope.serverErrors = err.data;
-					})
+					});
 				}else{
-					$nkDataService.add('admin/rest/' + $scope.table + 's', $scope.item)
+					$nkDataService.create($scope.table + 's', $scope.item)
 					.then(function(data){
 						$scope.msgs = {};
 						$scope.msgs.successMessage = $stateParams.tablename + " Entry Created Successfully";
 						$timeout(function(){
-							$modalInstance.close($scope.item);
+							$modalInstance.close(data);
 						},1500);
 					}, function(err){
 						$scope.msgs = {};
@@ -57,16 +57,16 @@ angular.module('dbtools').controller('ModalCtrl',
 				return true;
 			}
 			return false;
-		}
+		};
 		$scope.resolveErrors = function(){
 			if($scope.msgs.errorMessage.length > 0){
 				for(var i=0,len=$scope.msgs.errorMessage.length; i < len; i++){
 					$scope.msgs.errorMessage[i] = $scope.errors[$scope.msgs.errorMessage[i]] 
 				}
 			}
-		}
+		};
 
-  	    $scope.cancel = function () {
+  	$scope.cancel = function () {
 			$modalInstance.dismiss('cancel');
 		};
 

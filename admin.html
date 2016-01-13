@@ -22,10 +22,13 @@
 	<link rel="stylesheet" href="/admin/lib/bootstrap/dist/css/bootstrap-theme.css">
 	<link rel="stylesheet" href="/admin/lib/dangle/css/dangle.css">
 	<link rel="stylesheet" href="/admin/modules/dbTool/css/dbtools.css">
+
 	<link rel="stylesheet" href="/admin/lib/intl-tel-input/build/css/intlTelInput.css">
-	<link rel="stylesheet" href="/admin/lib/ngkeps/dist/ngkeps.css">
 	<link rel="stylesheet" href='/admin/lib/textAngular/dist/textAngular.css'>
+
 	<link rel="stylesheet" href="/admin/lib/font-awesome/css/font-awesome.css">
+	<link rel="stylesheet" href="/admin/lib/animate.css">
+	<link rel="stylesheet" href="/admin/lib/ngkeps/dist/ngkeps.css">
 
 
 	<!-- HTML5 Shim -->
@@ -41,7 +44,7 @@
 		<section class="container">
 			<a class="navbar-brand" href="/admin/summary">Management</a>
 			<ul class="nav navbar-nav">
-				<li class="dropdown" ng-show="authentication.user.admin">
+				<li class="dropdown" ng-show="user.admin">
 					<a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
 						Routes<span class="caret"></span>
 					</a>
@@ -49,7 +52,7 @@
 						<li ng-repeat="table in routes"><a href="/admin/routes/{{table}}">{{table}}</a></li>
 					</ul>
 				</li>
-				<li class="dropdown" ng-show="authentication.user.admin">
+				<li class="dropdown" ng-show="user.admin">
 					<a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
 						Models<span class="caret"></span>
 					</a>
@@ -57,7 +60,7 @@
 						<li ng-repeat="table in models"><a href="/admin/models/{{table}}">{{table}}</a></li>
 					</ul>
 				</li>
-				<li class="dropdown" ng-show="authentication.user.admin">
+				<li class="dropdown" ng-show="user.admin">
 					<a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
 						Data<span class="caret"></span>
 					</a>
@@ -67,11 +70,13 @@
 				</li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right" >
-				<li data-ng-hide="authentication.user">
+				<li data-ng-hide="user">
 					<a href="/admin/#!/signin">Sign In</a>
+				<li data-ng-hide="user">
+					<a href="/admin/signin">Sign In</a>
 				</li>
-				<li ng-show="authentication.user.admin">
-					<a href="/auth/signout">Sign Out</a>
+				<li ng-show="user.admin">
+					<a ng-click="signout()">Sign Out <span ng-bind="user.firstName"></span></a>
 				</li>
 			</ul>
 		</section>
@@ -85,10 +90,6 @@
 	<script type="text/javascript" src="/admin/lib/jquery/dist/jquery.min.js"></script>
 	<script type="text/javascript" src="/admin/lib/angular/angular.js"></script>
 	<script type="text/javascript" src="/admin/lib/angular-messages/angular-messages.min.js"></script>
-	<script type="text/javascript" src="/admin/lib/textAngular/dist/textAngular-rangy.min.js"></script>
-	<script type="text/javascript" src="/admin/lib/textAngular/dist/textAngular-sanitize.js"></script>
-	<script type="text/javascript" src="/admin/lib/textAngular/dist/textAngularSetup.js"></script>
-	<script type="text/javascript" src="/admin/lib/textAngular/dist/textAngular.js"></script>
 	<script type="text/javascript" src="/admin/lib/angular-resource/angular-resource.js"></script>
 	<script type="text/javascript" src="/admin/lib/angular-animate/angular-animate.js"></script>
 	<script type="text/javascript" src="/admin/lib/angular-ui-router/release/angular-ui-router.js"></script>
