@@ -1,9 +1,5 @@
-<section class="row" data-ng-controller="AdminSigninController">
-
-	<div style="text-align:center; margin:40px;">
-		<img src="/img/logo.png" style="width:100px;" />
-	</div>
-	<div class="col-xs-offset-2 col-xs-8 col-md-offset-5 col-md-2">
+<section class="row" data-ng-controller="SignInController">
+	<div class="col-xs-offset-2 col-xs-8 col-md-offset-5 col-md-2" ng-show="!user">
 		<form class="signin form-horizontal" autocomplete="off">
 			<fieldset>
 				<div class="form-group">
@@ -16,11 +12,15 @@
 				</div>
 			</fieldset>
 		</form>
-			<div class="text-center form-group">
-				<button class="btn btn-primary" ng-click="signin()">Sign in</button>
-			</div>
-			<div data-ng-show="error" class="text-center text-danger">
-				<strong data-ng-bind="error"></strong>
-			</div>
+		<div class="text-center form-group">
+			<button class="btn btn-primary" ng-click="signin()">Sign in</button>
+		</div>
+		<div data-ng-show="error" class="text-center text-danger">
+			<strong data-ng-bind="error"></strong>
+		</div>
+	</div>
+	<div class="col-xs-offset-4 col-xs-4" ng-show="user">
+		{{msgs.msg}}
+		<a href="" ng-click="signout()">signout</a>
 	</div>
 </section>
