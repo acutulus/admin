@@ -1,10 +1,14 @@
 'use strict';
 
 angular.module('dbtools')
-.controller('ShowTableCtrl', ['$scope', '$nkDataService', '$stateParams', '$modal','$window', '$http',
-	function($scope, $nkDataService, $stateParams, $modal, $window, $http){
+.controller('ShowTableCtrl', ['$scope', '$nkDataService', '$stateParams', '$modal','$window', '$http', '$nkAuthService',
+	function($scope, $nkDataService, $stateParams, $modal, $window, $http, $nkAuthService){
 
-
+		$scope.user = $nkAuthService.getUser();
+		if(!$scope.user || !$scope.user.admin){
+			alert("No permissions");
+			location.href = "/admin/signin";
+		}
 		//hold query arguments, newQuery.query holds all the current data
 		$scope.table = $stateParams.tablename;
 	

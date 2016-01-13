@@ -1,9 +1,14 @@
 'use strict';
 
 angular.module('dbtools')
-	.controller('SummaryController',['$scope', '$http', '$timeout', '$stateParams',
-		function($scope, $http, $timeout, $stateParams){
+	.controller('SummaryController',['$scope', '$http', '$timeout', '$stateParams','$nkAuthService', 
+		function($scope, $http, $timeout, $stateParams,$nkAuthService){
 
+			$scope.user = $nkAuthService.getUser();
+			if(!$scope.user || !$scope.user.admin){
+				alert("No permissions");
+				location.href = "/admin/signin";
+			}
 			$scope.restRoutes = [];
 			$scope.models = [];
 		

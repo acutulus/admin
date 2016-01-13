@@ -1,7 +1,14 @@
 'use strict';
 
-angular.module('dbtools').controller('ModelsCtrl', ['$scope','$http','$stateParams','$state',
-	function($scope, $http, $stateParams, $state){
+angular.module('dbtools').controller('ModelsCtrl', ['$scope','$http','$stateParams','$state', '$nkAuthService',
+	function($scope, $http, $stateParams, $state, $nkAuthService){
+
+		$scope.user = $nkAuthService.getUser();
+		if(!$scope.user || !$scope.user.admin){
+			alert("No permissions");
+			location.href = "/admin/signin";
+		}
+
 		$scope.modelName = $stateParams.tablename;
 		$scope.showJSON = {};
 		$scope.displayTable = true;

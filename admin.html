@@ -42,7 +42,8 @@
 <section data-ng-controller="DBToolsController">
 	<header class="navbar navbar-fixed-top navbar-inverse">
 		<section class="container">
-			<a class="navbar-brand" href="/admin/summary">Management</a>
+			<a ng-show="user.admin" class="navbar-brand" href="/admin/summary">Management</a>
+			<a ng-show="!user.admin" class="navbar-brand" href="">Management</a> 
 			<ul class="nav navbar-nav">
 				<li class="dropdown" ng-show="user.admin">
 					<a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -70,8 +71,6 @@
 				</li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right" >
-				<li data-ng-hide="user">
-					<a href="/admin/#!/signin">Sign In</a>
 				<li data-ng-hide="user">
 					<a href="/admin/signin">Sign In</a>
 				</li>
@@ -119,7 +118,6 @@
 	<script type="text/javascript" src="/admin/modules/dbTool/dbtools.client.module.js"></script>
 	<script type="text/javascript" src="/admin/modules/dbTool/config/dbtools.client.routes.js"></script>
 	<script type="text/javascript" src="/admin/modules/dbTool/controllers/dbTool.client.controller.js"></script>
-	<script type="text/javascript" src="/admin/modules/dbTool/controllers/admin-signin.client.controller.js"></script>
 	<script type="text/javascript" src="/admin/modules/dbTool/controllers/new-database.client.controller.js"></script>
 	<script type="text/javascript" src="/admin/modules/dbTool/controllers/new-table.client.controller.js"></script>
 	<script type="text/javascript" src="/admin/modules/dbTool/controllers/populate-modal.client.controller.js"></script>

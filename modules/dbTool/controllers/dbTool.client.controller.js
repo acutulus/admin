@@ -3,12 +3,12 @@
 angular.module('dbtools')
 .controller('DBToolsController', ['$scope', '$stateParams', '$location', '$http','$timeout','$modal', '$nkAuthService',
 	function($scope, $stateParams, $location, $http, $timeout, $modal, $nkAuthService){
+		$scope.user = $nkAuthService.getUser();
 		if((typeof $scope.user === 'undefined' || !$scope.user.admin) && $location.$$path !== '/signin'){
 			alert('You need to be a logged in admin');
 			location.href = '/admin/signin';
 		}else{
 			$scope.projectTitle = $location.host().split('.')[0] || $location.host();
-
 			/*Grab All the Database information in the projects Database*/
 			$scope.models = [];
 			$scope.routes = [];
@@ -38,7 +38,7 @@ angular.module('dbtools')
 			};
 			$scope.signout = function() {
 				$nkAuthService.logout();
-				location.href = '/admin/signin';
+				location.href = '/';
 			};
 		}
 	}
