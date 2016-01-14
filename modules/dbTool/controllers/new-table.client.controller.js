@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dbtools')
-.controller('NewTableCtrl', ['$scope', 'DataService', '$stateParams', '$timeout',
-	function($scope, DataService, $stateParams, $timeout){
+.controller('NewTableCtrl', ['$scope', '$nkDataService', '$stateParams', '$timeout',
+	function($scope, $nkDataService, $stateParams, $timeout){
 
 		//get currentDB from URL
 		$scope.currentDatabase = {};
@@ -81,7 +81,7 @@ angular.module('dbtools')
 					newSchema.data[$scope.newTable.schema[x].name] = {type:$scope.newTable.schema[x].type};
 				}
 			}
-			DataService.add('projects/addSchema/' + $scope.currentDatabase._id, newSchema)
+			$nkDataService.add('projects/addSchema/' + $scope.currentDatabase._id, newSchema)
 			.then(function(data){
 				if(data){
 					$scope.newTable = {};

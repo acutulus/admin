@@ -12,13 +12,20 @@
 		<div class="row" style="text-align:center;margin-top:15px;">
 			<div style="display:inline-block;margin-right:30px;">
 				<a class="btn btn-success btn-lg" ng-click="rebuild()">Rebuild</a>
-				<h4>Status: {{rebuild.status}}<h4>
-				<h4>Server Response: {{rebuild.statusText}}</h4>
+				<div class="alert alert-info" ng-show="msgs.loading">{{msgs.loading}} <span class="glyphicon glyphicon-refresh glyphicon-spin"></span></div>
+				<div class="alert alert-success" ng-show="msgs.success">{{msgs.success}}</div>
+				<div class="alert alert-danger" ng-show="msgs.error">{{msgs.error}}</div>
+				<div ng-show="rebuilt">
+					<h4>Status: {{rebuilt.status}}<h4>
+					<h4>Server Response: {{rebuilt.statusText}}</h4>
+				</div>
 			</div>
 			<div style="display:inline-block;margin-left:30px;">
 				<a class="btn btn-lg btn-success" ng-click="republish()">Republish</a>
-				<h4>Status: {{republish.status}}<h4>
-				<h4>Server Response: {{republish.statusText}}</h4>
+				<div ng-show="republished">
+					<h4>Status: {{republish.status}}<h4>
+					<h4>Server Response: {{republish.statusText}}</h4>
+				</div>
 			</div>
 		</div>
 

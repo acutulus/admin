@@ -14,7 +14,7 @@
 		</form>
 		<div class="text-center form-group">
 			<button class="btn btn-primary" ng-click="signin()">Sign in</button>
-			<div class="alert alert-info" ng-show="msgs.loading">{{msgs.loading}}</div>
+			<div class="alert alert-info" ng-show="msgs.loading"><span class="glyphicon glyphicon-refresh glyphicon-spin"></span>{{msgs.loading}}</div>
 			<div class="alert alert-success" ng-show="msgs.success">{{msgs.success}}</div>
 			<div class="alert alert-danger" ng-show="msgs.error">{{msgs.error}}</div>
 		</div>

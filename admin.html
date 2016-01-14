@@ -30,7 +30,32 @@
 	<link rel="stylesheet" href="/admin/lib/animate.css">
 	<link rel="stylesheet" href="/admin/lib/ngkeps/dist/ngkeps.css">
 
-
+	<style>
+		.glyphicon-spin {
+		  -webkit-animation: spin 1000ms infinite linear;
+		  animation: spin 1000ms infinite linear;
+		}
+		@-webkit-keyframes spin {
+		  0% {
+		    -webkit-transform: rotate(0deg);
+		    transform: rotate(0deg);
+		  }
+		  100% {
+		    -webkit-transform: rotate(359deg);
+		    transform: rotate(359deg);
+		  }
+		}
+		@keyframes spin {
+		  0% {
+		    -webkit-transform: rotate(0deg);
+		    transform: rotate(0deg);
+		  }
+		  100% {
+		    -webkit-transform: rotate(359deg);
+		    transform: rotate(359deg);
+		  }
+		}
+	</style>
 	<!-- HTML5 Shim -->
 	<!--[if lt IE 9]>
 		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -130,7 +155,6 @@
 	<script type="text/javascript" src="/admin/modules/dbTool/controllers/signin.client.controller.js"></script>
 	
 	<script type="text/javascript" src="/admin/modules/dbTool/services/authentication.client.service.js"></script>
-	<script type="text/javascript" src="/admin/modules/dbTool/services/dataService.client.service.js"></script>
 
 
 	<script type="text/javascript" src="/admin/modules/dbTool/controllers/get-youtube-modal.js"></script>

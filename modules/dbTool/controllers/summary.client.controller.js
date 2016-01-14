@@ -51,16 +51,39 @@ angular.module('dbtools')
 				});
 
 			$scope.republish = function(){
+				$scope.republished = false;
+				$scope.msgs = {};
+				$scope.msgs.loading = "Republishing application.";
 				$http.get('/admin/republish')
 				.then(function(response){
-					$scope.republish = response;
-				})
+					$scope.republished = response;
+					$scope.msgs = {};
+					$scope.msgs.success = "Application republished."
+					$timeout(function(){
+						$scope.msgs = {};
+					}, 1200);
+				}, function(err){
+					$scope.msgs = {};
+					$scope.msgs.error = err;
+				});
 			}
+
 			$scope.rebuild = function(){
+				$scope.rebuilt = false;
+				$scope.msgs = {};
+				$scope.msgs.loading = "Rebuilding application pages.";
 				$http.get('/admin/rebuild')
 				.then(function(response){
-					$scope.rebuild = response;
-				})
+					$scope.rebuilt = response;
+					$scope.msgs = {};
+					$scope.msgs.success = "Pages Rebuilt."
+					$timeout(function(){
+						$scope.msgs = {};
+					}, 1200);
+				}, function(err){
+					$scope.msgs = {};
+					$scope.msgs.error = err;
+				});
 			}
 		}
 	]) 
