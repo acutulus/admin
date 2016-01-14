@@ -19,7 +19,7 @@ angular.module('dbtools')
 
 		$scope.readOnlyData = [];
 		$scope.displayData = [];
-		
+		$scope.loadingMessage = "Loading Table Data";
 		//get list of schemas for project
 		$http.get('/admin/models')
 		.then(function(response){
@@ -35,6 +35,7 @@ angular.module('dbtools')
 			.then(function(data){		
 				$scope.readOnlyData = data;
 				$scope.displayData = JSON.parse(JSON.stringify(data));
+				$scope.loadingMessage = false;
 
 				if ($scope.tableHeaders.length === 0) {
 					//for iterating over current schema
