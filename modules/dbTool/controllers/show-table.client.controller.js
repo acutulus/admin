@@ -198,8 +198,12 @@ angular.module('dbtools')
 			deleteModal.result.then(function(choice){
 				console.log(choice)
 				if(choice === 'delete'){
-					$nkDataService.delete('admin/rest/' + $scope.table + 's', {_id:item._id});
-					loadTableData();
+					$nkDataService.delete( $scope.table + 's', {_id:item._id});
+					for(var i=0;i<$scope.displayData.length;i++){
+						if($scope.displayData[i]._id === item._id){
+							return $scope.displayData.splice(i,1);
+						}
+					}
 				}
 			});
 		};

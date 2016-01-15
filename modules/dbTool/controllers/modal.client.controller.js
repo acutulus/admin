@@ -8,7 +8,12 @@ angular.module('dbtools').controller('ModalCtrl',
 		$scope.title = title;
 		$scope.errors = {};
 		$scope.table = $stateParams.tablename;
-		
+		//check if edit/new
+		var updating = false;
+		for(var x in item){
+			updating = true;
+			break;
+		}
 
 
 		$scope.submit = function(){
@@ -27,37 +32,36 @@ angular.module('dbtools').controller('ModalCtrl',
 					$nkDataService.update($scope.table + 's', $scope.item)
 					.then(function(data){
 						$scope.msgs = {};
-						$scope.msgs.successMessage = $stateParams.tablename + " Entry Updated Successfully";
+						$scope.msgs.success = $stateParams.tablename + " Entry Updated Successfully";
 						$timeout(function(){
 							$modalInstance.close(data);
 						},1500);
 					}, function(err){
 						$scope.msgs = {};
-						$scope.msgs.serverError = true;
-						$scope.serverErrors = err.data;
+						$scope.msgs.error = "Error editing item: "
+						for(var i=0;i<err.data.errors.length;i++){
+							$scope.msgs.error += err.data.errors[i].friendly ;
+						}
 					});
 				}else{
 					$nkDataService.create($scope.table + 's', $scope.item)
 					.then(function(data){
 						$scope.msgs = {};
-						$scope.msgs.successMessage = $stateParams.tablename + " Entry Created Successfully";
+						$scope.msgs.success = $stateParams.tablename + " Entry Created Successfully";
 						$timeout(function(){
 							$modalInstance.close(data);
 						},1500);
 					}, function(err){
 						$scope.msgs = {};
-						$scope.msgs.serverError = true;
-						$scope.serverErrors = err.data;
+						$scope.msgs.error = "Error creating item: "
+						for(var i=0;i<err.data.errors.length;i++){
+							$scope.msgs.error += err.data.errors[i].friendly ;
+						}
 					});
 				}
 			}
 		};
-		$scope.testEmpty = function(obj){
-			for(var x in obj){
-				return true;
-			}
-			return false;
-		};
+
 		$scope.resolveErrors = function(){
 			if($scope.msgs.errorMessage.length > 0){
 				for(var i=0,len=$scope.msgs.errorMessage.length; i < len; i++){
@@ -67,10 +71,6 @@ angular.module('dbtools').controller('ModalCtrl',
 		};
 
   	$scope.cancel = function () {
-			$modalInstance.dismiss('cancel');
-		};
-
-		if($scope.testEmpty(item)){
-			var updating = true;
-		}
+		$modalInstance.dismiss('cancel');
+	};
 	});

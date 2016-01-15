@@ -7,12 +7,8 @@
 	<keps-form keps-data="schema" keps-model="item" keps-framework="bootstrap" keps-errors="errors" ng-blur="resolveErrors()"></keps-form>
 </div>
 <div class="modal-footer">
-	<div class="alert alert-success" style="width:100%;text-align:center;" ng-show="msgs.successMessage">{{successMessage}}</div>
-	<div ng-show="msgs.errorMessage" ng-repeat="(key, val) in errors" style="width:100%;text-align:center;">
-		<div class="alert alert-warning" ng-show="testEmpty(val)">
-			<div ng-repeat="(type,err) in val">{{key + ': ' + type + ', ' + err}}</div>
-		</div>
-	</div>
-	<div ng-show="msgs.serverError" class="alert alert-danger" style="text-align:center;width:100%" ng-repeat="err in serverErrors">{{err.param + ': ' + err.friendly}}</div>
+	<div class="alert alert-success" style="width:100%;text-align:center;" ng-show="msgs.success">{{msgs.success}}</div>
+	<div class="alert alert-warning" style="width:100%;text-align:center;" ng-show="msgs.error">{{msgs.error}}</div>
+
   	<button class="btn btn-success" ng-click="submit()">Submit</button>
 </div>
