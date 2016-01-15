@@ -55,14 +55,16 @@ angular.module('dbtools')
 				}
 			});
 		};
-		if($scope.$parent.models){
+		if($scope.$parent.databaseSchemas){
 			$scope.databaseSchemas = $scope.$parent.databaseSchemas;
 			$scope.schema = $scope.databaseSchemas[$scope.table].schema;
+			delete $scope.schema._id;
 			loadTableData();
 		}else{
 			$scope.$on('models', function(){
 				$scope.databaseSchemas = $scope.$parent.databaseSchemas;
 				$scope.schema = $scope.databaseSchemas[$scope.table].schema;
+				delete $scope.schema._id;
 				loadTableData();
 			});
 		}
