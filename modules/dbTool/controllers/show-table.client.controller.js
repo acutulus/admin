@@ -20,15 +20,8 @@ angular.module('dbtools')
 		$scope.readOnlyData = [];
 		$scope.displayData = [];
 		$scope.loadingMessage = "Loading Table Data";
-		//get list of schemas for project
-		$http.get('/admin/models')
-		.then(function(response){
-			$scope.databaseSchemas = response.data;
-			console.log(response.data, $scope.table)
-			$scope.schema = $scope.databaseSchemas[$scope.table].schema;
+		
 
-			loadTableData();
-		});
 		
 		var loadTableData = function(){
 			$nkDataService.query($scope.table + 's', {}, false)
@@ -62,7 +55,17 @@ angular.module('dbtools')
 				}
 			});
 		};
-
+		if($scope.$parent.models){
+			$scope.databaseSchemas = $scope.$parent.databaseSchemas;
+			$scope.schema = $scope.databaseSchemas[$scope.table].schema;
+			loadTableData();
+		}else{
+			$scope.$on('models', function(){
+				$scope.databaseSchemas = $scope.$parent.databaseSchemas;
+				$scope.schema = $scope.databaseSchemas[$scope.table].schema;
+				loadTableData();
+			});
+		}
 		//remove item from query list
 		$scope.removeItem = function(row) {
         var index = $scope.displayData.indexOf(row);

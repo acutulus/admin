@@ -14,10 +14,11 @@ angular.module('dbtools')
 			$scope.routes = [];
 			$http.get('/admin/models')
 			.then(function(response){
-
+				$scope.databaseSchemas = response.data;
 				for(var x in response.data){
 					$scope.models.push(x);
 				}
+				$scope.$broadcast('models', true);
 			});	
 			$http.get('/admin/restRoutes')
 			.then(function(response){
