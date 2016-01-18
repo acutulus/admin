@@ -23,19 +23,19 @@ angular.module('dbtools')
 		
 		$http.get('/admin/rest/'+$scope.table+'s/count')
 			.then(function(data){
-				if(data.data.count > 300){	
-					$scope.largeDataSet = true;
+				if(data.data.count > 30){	
+					$scope.largeDataSet = data.data.count;
 				}
 				if($scope.$parent.databaseSchemas){
 					$scope.databaseSchemas = $scope.$parent.databaseSchemas;
 					$scope.schema = $scope.databaseSchemas[$scope.table].schema;
-					delete $scope.schema._id;
+					//delete $scope.schema._id;
 					loadTableData();
 				}else{
 					$scope.$on('models', function(){
 						$scope.databaseSchemas = $scope.$parent.databaseSchemas;
 						$scope.schema = $scope.databaseSchemas[$scope.table].schema;
-						delete $scope.schema._id;
+						//delete $scope.schema._id;
 						loadTableData();
 					});
 				}
@@ -240,6 +240,45 @@ angular.module('dbtools')
 				}
 			});
 			
+		}
+		$scope.getLastNData = function(){
+			if($scope.dataCount){
+				$http.get("/admin/rest/" + $scope.table + "s?limit=" + $scope.dataCount)
+				.then(function(data){
+					$scope.readOnlyData = data.data;
+					$scope.displayData = JSON.parse(JSON.stringify(data.data));
+					$scope.loadingMessage = false;				
+
+					if ($scope.tableHeaders.length === 0) {
+						//for iterating over current schema
+						for(var x in $scope.schema){
+							if(typeof $scope.schema[x].type === 'string'){
+								//check if field is a reference
+								if($scope.schema[x].type.indexOf(':') > -1){
+									var ref = $scope.schema[x].type.slice(1);
+									var properties = $scope.databaseSchemas[ref].properties;
+									$scope.tableHeaders.push({
+										name:x,
+									  displayAs:properties.displayAs,
+									  ref:ref
+									});
+									//populate currentData.query reference fields with displayAs values
+									populateDisplayAs(x, ref, properties.displayAs);
+								}else{
+									$scope.tableHeaders.push({name:x,ref:false});
+								}
+							}else{
+								$scope.tableHeaders.push({name:x,ref:false});
+							}
+						}
+					}				
+				}
+				,function(err){
+					alert('err getting data', err);
+					console.log(err);
+				});
+
+			}
 		}
 	}//end controller
 ]);
