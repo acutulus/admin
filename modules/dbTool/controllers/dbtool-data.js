@@ -86,7 +86,7 @@ angular.module('dbtools')
 
 		$scope.removeColumn = function(column){
 			var index = $scope.tableHeaders.indexOf(column);
-      if (index !== -1) {
+    	if (index !== -1) {
 				$scope.tableHeaders.splice(index,1);
 			}
 		};
@@ -112,18 +112,6 @@ angular.module('dbtools')
 			});
 		};
 
-		/** query DB functions */
-		$scope.showQueryModal = function(key){
-			var queryModal = $modal.open({
-				templateUrl: 'modules/dbTool/views/queryModal.html',
-				controller:'QueryModalCtrl',
-				resolve:{
-					field:function(){
-						return key.name;
-					}
-				}
-			});
-		};
 
 		$scope.populateIdField = function(selectedTable){
 			var table = $scope.databaseSchemas[selectedTable.model].schema;

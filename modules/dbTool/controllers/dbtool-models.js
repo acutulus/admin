@@ -20,7 +20,7 @@ angular.module('dbtools').controller('ModelsCtrl', ['$scope','$http','$statePara
 
     $scope.fieldBtn = function(field) {
       if ($scope.isRef(field)) {
-        $state.go('models', {tablename:field.type.substr(1)});
+      	location.href = "/admin/dbtools/models/" + field.type.slice(1);
       }
       if ($scope.isComplexType(field)) {
         field._showSubSchema = !field._showSubSchema;
