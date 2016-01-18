@@ -7,7 +7,7 @@ angular.module('dbtools')
 		$scope.user = $nkAuthService.getUser();
 		if(!$scope.user || !$scope.user.admin){
 			alert("No permissions");
-			location.href = "/admin/signin";
+			location.href = "/admin/dbtools/signin";
 		}
 		//hold query arguments, newQuery.query holds all the current data
 		$scope.table = $stateParams.tablename;
@@ -21,53 +21,61 @@ angular.module('dbtools')
 		$scope.displayData = [];
 		$scope.loadingMessage = "Loading Table Data";
 		
-
+		$http.get('/admin/rest/'+$scope.table+'s/count')
+			.then(function(data){
+				if(data.data.count > 300){	
+					$scope.largeDataSet = true;
+				}
+				if($scope.$parent.databaseSchemas){
+					$scope.databaseSchemas = $scope.$parent.databaseSchemas;
+					$scope.schema = $scope.databaseSchemas[$scope.table].schema;
+					delete $scope.schema._id;
+					loadTableData();
+				}else{
+					$scope.$on('models', function(){
+						$scope.databaseSchemas = $scope.$parent.databaseSchemas;
+						$scope.schema = $scope.databaseSchemas[$scope.table].schema;
+						delete $scope.schema._id;
+						loadTableData();
+					});
+				}
+			});
 		
 		var loadTableData = function(){
-			$nkDataService.query($scope.table + 's', {}, false)
-			.then(function(data){		
-				$scope.readOnlyData = data;
-				$scope.displayData = JSON.parse(JSON.stringify(data));
-				$scope.loadingMessage = false;
+			if(!$scope.largeDataSet){
+				$nkDataService.query($scope.table + 's', {}, false)
+				.then(function(data){	
+					$scope.readOnlyData = data;
+					$scope.displayData = JSON.parse(JSON.stringify(data));
+					$scope.loadingMessage = false;
 
-				if ($scope.tableHeaders.length === 0) {
-					//for iterating over current schema
-					for(var x in $scope.schema){
-						if(typeof $scope.schema[x].type === 'string'){
-							//check if field is a reference
-							if($scope.schema[x].type.indexOf(':') > -1){
-								var ref = $scope.schema[x].type.slice(1);
-								var properties = $scope.databaseSchemas[ref].properties;
-								$scope.tableHeaders.push({
-									name:x,
-								  displayAs:properties.displayAs,
-								  ref:ref
-								});
-								//populate currentData.query reference fields with displayAs values
-								populateDisplayAs(x, ref, properties.displayAs);
+					if ($scope.tableHeaders.length === 0) {
+						//for iterating over current schema
+						for(var x in $scope.schema){
+							if(typeof $scope.schema[x].type === 'string'){
+								//check if field is a reference
+								if($scope.schema[x].type.indexOf(':') > -1){
+									var ref = $scope.schema[x].type.slice(1);
+									var properties = $scope.databaseSchemas[ref].properties;
+									$scope.tableHeaders.push({
+										name:x,
+									  displayAs:properties.displayAs,
+									  ref:ref
+									});
+									//populate currentData.query reference fields with displayAs values
+									populateDisplayAs(x, ref, properties.displayAs);
+								}else{
+									$scope.tableHeaders.push({name:x,ref:false});
+								}
 							}else{
 								$scope.tableHeaders.push({name:x,ref:false});
 							}
-						}else{
-							$scope.tableHeaders.push({name:x,ref:false});
 						}
 					}
-				}
-			});
+				});
+			}
 		};
-		if($scope.$parent.databaseSchemas){
-			$scope.databaseSchemas = $scope.$parent.databaseSchemas;
-			$scope.schema = $scope.databaseSchemas[$scope.table].schema;
-			delete $scope.schema._id;
-			loadTableData();
-		}else{
-			$scope.$on('models', function(){
-				$scope.databaseSchemas = $scope.$parent.databaseSchemas;
-				$scope.schema = $scope.databaseSchemas[$scope.table].schema;
-				delete $scope.schema._id;
-				loadTableData();
-			});
-		}
+
 		//remove item from query list
 		$scope.removeItem = function(row) {
         var index = $scope.displayData.indexOf(row);

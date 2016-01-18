@@ -35,10 +35,10 @@
 				<table class="table-striped table" style="width:100%">
 					<tr ng-repeat="(key, val) in models" style="font-size:16px;">
 						<td style="text-transform: capitalize">{{key}}s<td>
-						<td><a href="/admin/data/{{key}}" class="btn btn-primary" style="margin-right:10px;">&nbspData&nbsp</a> {{modelsCount[key]}}</td>
-						<td ng-show="routes.hasOwnProperty(key)"><a href="/admin/routes/{{key}}" class="btn btn-warning" style="margin-right:10px;">Routes</a></td>
+						<td><a href="/admin/dbtools/data/{{key}}" class="btn btn-primary" style="margin-right:10px;">&nbspData&nbsp</a> {{modelsCount[key]}}</td>
+						<td ng-show="routes.hasOwnProperty(key)"><a href="/admin/dbtools/routes/{{key}}" class="btn btn-warning" style="margin-right:10px;">Routes</a></td>
 						<td ng-show="!routes.hasOwnProperty(key)"></td>
-						<td><a href="/admin/models/{{key}}" class="btn btn-info">Models</a></td>
+						<td><a href="/admin/dbtools/models/{{key}}" class="btn btn-info">Models</a></td>
 					</tr>
 				</table>
 			</div>

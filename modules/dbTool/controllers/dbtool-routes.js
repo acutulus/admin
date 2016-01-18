@@ -5,7 +5,7 @@ angular.module('dbtools').controller('RoutesCtrl', ['$scope','$stateParams','$ht
 		$scope.user = $nkAuthService.getUser();
 		if(!$scope.user || !$scope.user.admin){
 			alert("No permissions");
-			location.href = "/admin/signin";
+			location.href = "/admin/dbtools/signin";
 		}
 		$scope.routeName = $stateParams.tablename;
 		$scope.routes;

@@ -6,7 +6,7 @@ angular.module('dbtools').controller('ModelsCtrl', ['$scope','$http','$statePara
 		$scope.user = $nkAuthService.getUser();
 		if(!$scope.user || !$scope.user.admin){
 			alert("No permissions");
-			location.href = "/admin/signin";
+			location.href = "/admin/dbtools/signin";
 		}
 
 		$scope.modelName = $stateParams.tablename;
