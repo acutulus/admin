@@ -5,6 +5,15 @@
 			<tr ng-repeat="(key,val) in routes">
 				<td>{{key}}</td>
 				<td>{{val.restRoute}}</td>
+				<td><button class="btn btn-default" ng-show="routeTestable(key)" ng-click="testRoute(key,val)">Test Route</button>
+					<div ng-show="routeTesting[key].testing = true;">
+						<div class="alert alert-info" ng-show="routeTesting[key].loading">Testing Route <span class="glyphicon glyphicon-refresh glyphicon-spin"></span></div>
+						<div ng-show="!routeTesting[key].loading">
+							{{routeTesting[key].data}}
+						</div>
+					</div>
+				</td>
+
 			</tr>
 		</table>
 	</div>
