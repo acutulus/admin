@@ -20,6 +20,7 @@ angular.module('dbtools')
 		$scope.readOnlyData = [];
 		$scope.displayData = [];
 		$scope.loadingMessage = "Loading Table Data";
+		$scope.queryBuilder = {};
 		
 		$http.get('/admin/rest/'+$scope.table+'s/count')
 			.then(function(data){
@@ -30,23 +31,23 @@ angular.module('dbtools')
 					$scope.databaseSchemas = $scope.$parent.databaseSchemas;
 					$scope.schema = $scope.databaseSchemas[$scope.table].schema;
 					//delete $scope.schema._id;
-					loadTableData();
+					$scope.loadTableData();
 				}else{
 					$scope.$on('models', function(){
 						$scope.databaseSchemas = $scope.$parent.databaseSchemas;
 						$scope.schema = $scope.databaseSchemas[$scope.table].schema;
 						//delete $scope.schema._id;
-						loadTableData();
+						$scope.loadTableData();
 					});
 				}
 			});
 		
-		var loadTableData = function(){
+		$scope.loadTableData = function(){
 			if(!$scope.largeDataSet){
-				$nkDataService.query($scope.table + 's', {}, false)
+				$http.get("/admin/rest/" +$scope.table + 's')
 				.then(function(data){	
-					$scope.readOnlyData = data;
-					$scope.displayData = JSON.parse(JSON.stringify(data));
+					$scope.readOnlyData = data.data;
+					$scope.displayData = JSON.parse(JSON.stringify(data.data));
 					$scope.loadingMessage = false;
 
 					if ($scope.tableHeaders.length === 0) {
@@ -279,6 +280,24 @@ angular.module('dbtools')
 				});
 
 			}
+		}
+
+		$scope.makeQuery = function(){
+			var query = "{";
+			for(var x in $scope.queryBuilder){
+				if($scope.queryBuilder[x].condition){
+					if($scope.queryBuilder[x].condition === "$exists"){
+						query += x + ":{" + $scope.queryBuilder[x].condition + ":true},"
+
+					}else{
+						query += x + ":{" + $scope.queryBuilder[x].condition + ":" + $scope.queryBuilder[x].query + "},"
+					}
+				}else if(!$scope.queryBuilder[x].condition){
+					query += x + ":" + $scope.queryBuilder[x].query + ",";
+				}
+			}
+			query = query.slice(0, query.length - 1) +  "}";
+			alert(query);
 		}
 	}//end controller
 ]);

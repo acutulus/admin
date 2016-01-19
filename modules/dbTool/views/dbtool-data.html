@@ -8,16 +8,8 @@
 			<div class="alert alert-warning" style="text-align:center;">Data set is very large: {{largeDataSet}} entries. Want to query it to reduce size?</div>
 			<div style="text-align:center;">
 				<button class="btn btn-default" ng-click="largeDataSet=false;loadTableData()">No get me all the data</button>
-				<button class="btn btn-default" ng-click="query = !query;getLast=false;">Make a query</button>
+				<button class="btn btn-default" ng-click="query = !query;">Make a query</button>
 				<button class="btn btn-default" ng-click="getLast = !getLast;query=false;">Get Last <i>N</i> entries</button>
-			</div>
-			<div style="text-align:center;margin-top:5px;" ng-show="query">
-				<div ng-repeat="(key,val) in schema" >
-					<div ng-show="val.type === 'string' || val.type ==='number' || val.type === 'String' || val.type === 'Number'">
-						<label>{{key}}
-						<input class="form-control" placeholder="{{val.type}}" type="{{val.type}}"></input>
-					</div>
-				</div>
 			</div>
 			<div style="text-align:center;margin-top:5px;" ng-show="getLast">
 				<label>Number of entries</label>
@@ -26,7 +18,33 @@
 			</div>
 		</div>
 	</div>
+	<div style="text-align:center;" ng-show="query">
+		<div class="row" style="margin-top:30px;">
+			<div ng-repeat="(key,val) in schema" >
+				<div class="col-xs-4" ng-show="val.type === 'string' || val.type === 'String'">
+					<label>{{key}}</label>
+					<select ng-model="queryBuilder[key].condition">
+						<option value="">Equals</option>
+						<option value="$exists">Has Property</option>
+					</select>
+					<input class="form-control" ng-model="queryBuilder[key].query" type="{{val.type}}"></input>
+				</div>
+				<div class="col-xs-4" ng-show="val.type ===  'number' || val.type === 'Number'">
+					<label>{{key}}</label>
+					<select ng-model="queryBuilder[key].condition">
+						<option value="">Equals</option>
+						<option value="$gt">Greater Than</option>
+						<option value="$lt">Less Than</option>
+						<option value="$exists">Has Property</option>
+					</select>	
+					<input class="form-control" ng-model="queryBuilder[key].query" type="{{val.type}}"></input>
+				</div>
+			</div>
+		</div>
+		<button class="btn btn-default" ng-click="makeQuery()">Query Table</button>
+	</div>
 	<div class="col-sm-12" ng-show="!loadingMessage">
+		<button class="btn btn-default" ng-click="query=!query">Query Table</button>
 		<table st-table="displayData" class="table table-bordered table-hover">
 			<thead>
 				<tr>
