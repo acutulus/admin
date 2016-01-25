@@ -24,7 +24,7 @@ angular.module('dbtools')
 		
 		$http.get('/admin/rest/'+$scope.table+'s/count')
 			.then(function(data){
-				if(data.data.count > 30){	
+				if(data.data.count > 300){	
 					$scope.largeDataSet = data.data.count;
 				}
 				if($scope.$parent.databaseSchemas){
@@ -66,10 +66,10 @@ angular.module('dbtools')
 									//populate currentData.query reference fields with displayAs values
 									populateDisplayAs(x, ref, properties.displayAs);
 								}else{
-									$scope.tableHeaders.push({name:x,ref:false});
+									$scope.tableHeaders.push({name:x,ref:false, type:$scope.schema[x].type});
 								}
 							}else{
-								$scope.tableHeaders.push({name:x,ref:false});
+								$scope.tableHeaders.push({name:x,ref:false, type:$scope.schema[x].type});
 							}
 						}
 					}
@@ -244,7 +244,9 @@ angular.module('dbtools')
 		}
 		$scope.getLastNData = function(){
 			if($scope.dataCount){
-				$http.get("/admin/rest/" + $scope.table + "s?limit=" + $scope.dataCount)
+				$http.get("/admin/rest/" + $scope.table + "s",{
+					params:{limit:$scope.dataCount}
+				}) //?limit=" + $scope.dataCount)
 				.then(function(data){
 					$scope.readOnlyData = data.data;
 					$scope.displayData = JSON.parse(JSON.stringify(data.data));
@@ -287,17 +289,27 @@ angular.module('dbtools')
 			for(var x in $scope.queryBuilder){
 				if($scope.queryBuilder[x].condition){
 					if($scope.queryBuilder[x].condition === "$exists"){
-						query += x + ":{" + $scope.queryBuilder[x].condition + ":true},"
+						query += '"' + x + '":{"' + $scope.queryBuilder[x].condition + '":true},'
 
 					}else{
-						query += x + ":{" + $scope.queryBuilder[x].condition + ":" + $scope.queryBuilder[x].query + "},"
+						query += '"' + x + '":{"' + $scope.queryBuilder[x].condition + '":"' + $scope.queryBuilder[x].query + '"},'
 					}
 				}else if(!$scope.queryBuilder[x].condition){
-					query += x + ":" + $scope.queryBuilder[x].query + ",";
+					query += '"' +  x + '":"' + $scope.queryBuilder[x].query + '",';
 				}
 			}
 			query = query.slice(0, query.length - 1) +  "}";
-			alert(query);
+					alert(query);
+
+			var queryObject = {query: JSON.parse(query), limit:100, returns:{name:1}};
+			$http.get('/admin/rest/' + $scope.table + "s", {params:queryObject})
+			.then(function(data){
+				console.log(data);
+			})
+		}
+
+		$scope.searchBy = function(search){
+			$scope.showSearch = search;
 		}
 	}//end controller
 ]);
