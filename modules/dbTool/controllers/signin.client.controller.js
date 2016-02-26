@@ -20,7 +20,7 @@ angular.module('dbtools').controller('SignInController', ['$scope', '$http', '$l
 				$scope.msgs.success = 'Signed In!';
 				if(data.admin){
 					$timeout(function(){
-						location.href ="/admin/summary"//route to app
+						location.href ="/admin/dbtools/summary"//route to app
 					},900)
 				}else{
 					$scope.msgs = {};
