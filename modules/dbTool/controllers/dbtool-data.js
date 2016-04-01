@@ -23,24 +23,24 @@ angular.module('dbtools')
 		$scope.queryBuilder = {};
 		
 		$http.get('/admin/rest/'+$scope.table+'s/count')
-			.then(function(data){
-				if(data.data.count > 300){	
-					$scope.largeDataSet = data.data.count;
-				}
-				if($scope.$parent.databaseSchemas){
+		.then(function(data){
+			if(data.data.count > 300){	
+				$scope.largeDataSet = data.data.count;
+			}
+			if($scope.$parent.databaseSchemas){
+				$scope.databaseSchemas = $scope.$parent.databaseSchemas;
+				$scope.schema = $scope.databaseSchemas[$scope.table].schema;
+				//delete $scope.schema._id;
+				$scope.loadTableData();
+			}else{
+				$scope.$on('models', function(){
 					$scope.databaseSchemas = $scope.$parent.databaseSchemas;
 					$scope.schema = $scope.databaseSchemas[$scope.table].schema;
 					//delete $scope.schema._id;
 					$scope.loadTableData();
-				}else{
-					$scope.$on('models', function(){
-						$scope.databaseSchemas = $scope.$parent.databaseSchemas;
-						$scope.schema = $scope.databaseSchemas[$scope.table].schema;
-						//delete $scope.schema._id;
-						$scope.loadTableData();
-					});
-				}
-			});
+				});
+			}
+		});
 		
 		$scope.loadTableData = function(){
 			if(!$scope.largeDataSet){
