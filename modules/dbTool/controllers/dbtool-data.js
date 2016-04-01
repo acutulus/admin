@@ -133,7 +133,7 @@ angular.module('dbtools')
 		};
 
 		//edit with modal
-		$scope.editItem = function(item){
+		$scope.editItem = function(item, index){
 			var tableSchema = JSON.parse(JSON.stringify($scope.databaseSchemas[$scope.table].schema));
 			var editData = item;
 
@@ -157,6 +157,7 @@ angular.module('dbtools')
 
 			modal.result.then(function(updatedModal){
 				item = updatedModal;
+				displayData[index] = updatedModal;
 			});
 		};
 
