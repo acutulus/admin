@@ -1,11 +1,23 @@
 'use strict';
 
 // Setting up route
-angular.module('dbtools').config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
-	function($stateProvider, $urlRouterProvider, $locationProvider) {
+angular.module('dbtools').config(['$stateProvider', '$urlRouterProvider', '$locationProvider','$nkRestServiceProvider','$nkAuthServiceProvider',
+	function($stateProvider, $urlRouterProvider, $locationProvider, $nkRestServiceProvider, $nkAuthServiceProvider) {
 		// Redirect to home view when route not found
 		$urlRouterProvider.otherwise('dbtools/summary');
 		
+		//set restService route
+		if (localStorage.kepsRestApiPrefix) {
+			$nkRestServiceProvider.setApiPrefix(localStorage.kepsApiPrefix);
+		} else {
+			$nkRestServiceProvider.setApiPrefix('/api/v1/');
+		}
+		//set authService route
+		if (localStorage.kepsAuthApiPrefix) {
+			$nkAuthServiceProvider.setApiPrefix(localStorage.kepsApiPrefix);
+		} else {
+			$nkAuthServiceProvider.setApiPrefix('/api/v1/');
+		}
 		// Home state routing
 		$stateProvider
 		.state('dbtools',{
