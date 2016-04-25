@@ -30,7 +30,7 @@ angular.module('dbtools').controller('SignInController', ['$scope', '$http', '$l
 			},function(err){	
 				console.log(err);
 				$scope.msgs = {};
-				$scope.msgs.error = err.message;
+				$scope.msgs.error = err.errors[0].friendly;
 			});
 		};
 
