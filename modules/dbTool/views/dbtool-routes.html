@@ -1,0 +1,32 @@
+<section data-ng-controller="RoutesCtrl">
+	<h2 class="col-xs-10 col-xs-offset-2">{{routeName}}</h2>
+	<div class="col-xs-8 col-xs-offset-2">
+		<table class="table table-striped">
+			<tr>
+				<th>Method</th>
+				<th>Key</th>
+				<th>Route</th>
+				<th>Test</th>
+			</tr>
+			<tr ng-repeat="(key,val) in routes">
+				<td>{{val.method}}</td>
+				<td>{{key}}</td>
+				<td>{{val.restRoute}}</td>
+				<td><button class="btn btn-default" ng-click="showTestRoute[key] = !showTestRoute[key]">Test Route</button>
+					<div ng-show="showTestRoute[key]">
+						<h4>Test Route</h4>
+						<div ng-show="val.method === 'post' || val.method === 'put'">
+							<label>JSON post data</label><br>
+							<textarea ng-model="routeTesting[key].postData" rows="5" cols="30"></textarea>
+						</div>
+						{{routeTesting[key].postData}}
+						<button class="btn btn-default" ng-click="testRoute(key,val)">Test Route</button>
+						<div class="alert alert-info" ng-show="routeTesting[key].loading">Testing <span class="glyphicon glyphicon-refresh glyphicon-spin"></span></div>
+						<div>{{routeTesting[key].data}}</div>
+					</div>
+				</td>
+
+			</tr>
+		</table>
+	</div>
+</section>

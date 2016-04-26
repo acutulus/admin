@@ -1,0 +1,14 @@
+<section data-ng-controller="NewTableCtrl">
+	<div class="container">
+		<h3 style="display:inline-block;">Add a table to the Database</h4>
+		<div class="col-sm-12 bottom-space" >
+			<p>Table Name:</p>
+			<input type="text" ng-model="newTable.name"></input>
+			<p>input JSON:</p>
+			<textarea style="height:200px;width:300px;" ng-model="newTable.addJSON"></textarea>
+		</div>
+		<div class="col-sm-6 col-sm-offset-3 alert alert-success" role="alert" ng-show="newTable.success">Table Created</div>
+		<div class="col-sm-6 col-sm-offset-3 alert alert-warning" role="alert" ng-show="newTable.failure">Table Failed to be created</div>
+		<button class="btn btn-default col-sm-2 col-sm-offset-4" style="margin-top:30px;margin-bottom:40px;" ng-click="addTable()">Add Table</button> 
+	</div>
+</section>

@@ -1,0 +1,15 @@
+<section data-ng-controller="EditorDocumentController">
+	<div class="container">
+		<div style="display:inline-block;margin-top:10px;text-align:center;width:100%;">
+			<span style="font-size:26px;float:left;"><b>{{documentData[schema.properties.displayAs] || 'New'}}</b></span>
+			<div style="display:inline-block;">
+				<button style="display:inline-block;" class="btn waves-effect waves-light" type="submit" name="action">Submit
+				</button>	
+		  		<a style="display:inline-block;" class="waves-effect waves-teal btn-flat" ng-click="back()">Cancel</a>
+		  	</div>
+		</div>
+		<div style="" ng-if="schema.schema && documentData">
+			<keps-form keps-data="schema.schema" keps-model="documentData" keps-framework="materialize" keps-errors="errors" ng-blur="resolveErrors()"></keps-form>
+		</div>
+	</div>
+</section>

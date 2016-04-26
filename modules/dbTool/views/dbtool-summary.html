@@ -1,0 +1,47 @@
+<!-- BUTTONS NG-SHOW/HIDE RESPONSE FROM SERVER
+	 LEFT ALIGN TITLE AND BUTTONS AND EVERYTHIN
+	 MAKE MODELS INTO TABLE INSTEAD OF LIST GROUP
+	 MAKE TABLE sTRIPED
+	 MAKE BUTTONS INTO BUTTON GROUP INSTEAD OF 3 BUTTS
+-->	
+<section ng-controller="SummaryController">
+	<div class="container" style="background-color:#EEE;">
+		<div class="row" style="text-align:center">
+			<h3>Server uptime: <span style="color:green;">{{uptime.hours}} : {{uptime.mins}} : {{uptime.secs}}</span></h3>
+		</div>
+		<div class="row" style="text-align:center;margin-top:15px;">
+			<div style="display:inline-block;margin-right:30px;">
+				<a class="btn btn-success btn-lg" ng-click="rebuild()">Rebuild</a>
+				<div class="alert alert-info" ng-show="msgs.loading">{{msgs.loading}} <span class="glyphicon glyphicon-refresh glyphicon-spin"></span></div>
+				<div class="alert alert-success" ng-show="msgs.success">{{msgs.success}}</div>
+				<div class="alert alert-danger" ng-show="msgs.error">{{msgs.error}}</div>
+				<div ng-show="rebuilt">
+					<h4>Status: {{rebuilt.status}}<h4>
+					<h4>Server Response: {{rebuilt.statusText}}</h4>
+				</div>
+			</div>
+			<div style="display:inline-block;margin-left:30px;">
+				<a class="btn btn-lg btn-success" ng-click="republish()">Republish</a>
+				<div ng-show="republished">
+					<h4>Status: {{republish.status}}<h4>
+					<h4>Server Response: {{republish.statusText}}</h4>
+				</div>
+			</div>
+		</div>
+
+		<div class="row" style="margin-top:30px;">
+			<div class="col-xs-10 col-xs-offset-1">
+				<h4>Project Models:</h4>
+				<table class="table-striped table" style="width:100%">
+					<tr ng-repeat="(key, val) in models" style="font-size:16px;">
+						<td style="text-transform: capitalize">{{key}}s<td>
+						<td><a href="/admin/dbtools/data/{{key}}" class="btn btn-primary" style="margin-right:10px;">&nbspData&nbsp</a> {{modelsCount[key]}}</td>
+						<td ng-show="routes.hasOwnProperty(key)"><a href="/admin/dbtools/routes/{{key}}" class="btn btn-warning" style="margin-right:10px;">Routes</a></td>
+						<td ng-show="!routes.hasOwnProperty(key)"></td>
+						<td><a href="/admin/dbtools/models/{{key}}" class="btn btn-info">Models</a></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</section>

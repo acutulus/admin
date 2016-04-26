@@ -1,0 +1,20 @@
+<section data-ng-controller="EditorTableContentsController">
+	<div class="container">
+		<h2 class="header">{{currentTable}}'s</h2>
+			<a class="btn waves-effect waves-light light-green z-depth-0" 
+				href="#!/editor/document/{{currentTable}}/new"><i class="material-icons right">add</i>New</a>
+				
+				<table class="striped collection">
+					<tr class="collection-item" ng-repeat="doc in documents">
+						<td>
+							<div style="width:70%;text-align:left;">
+							<p>{{doc[schema.properties.displayAs] || schema.properties.displayAs + ' not found. Document ID: ' +  doc['_id'] }}</p>
+							</div>
+						</td>
+					</tr>
+				</table>
+
+			<a class="btn waves-effect waves-light purple lighten-3 right" style="text-align:center;" href="#!/editor/document/{{currentTable}}/{{doc._id}}"><i class="material-icons right">create</i>Edit</a>
+
+	</div>
+</section>

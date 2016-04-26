@@ -1,0 +1,40 @@
+<section data-ng-controller="NewDatabaseCtrl">
+<div class="container-fluid">
+		<h3>Create a New Project Database</h3>
+		<div class="col-sm-8 col-sm-offset-2">
+			<form class="form-inline" role=form>
+				<div class="form-group">
+					<label>Project Name: </label><input type="text" ng-model="newDb.name"></input>
+				</div>
+				<div class="form-group">
+					<label>Project owner: </label><input type="text" ng-model="newDb.owner"></input>
+				</div>
+				<div class="form-group">
+					<label>Host Site: </label><input type="text" ng-model="newDb.siteHost"></input>
+				</div>
+				<div class="form-group">
+					<label>Database Host: </label><input type="text" ng-model="newDb.dbHost"></input>
+				</div>
+				<div class="form-group">
+					<label>DB name: </label><input type="text" ng-model="newDb.dbName"></input>
+				</div>
+				<div class="form-group">
+					<label>Dev DB name: </label><input type="text" ng-model="newDb.devDbName"></input>
+				</div>
+				<div class="form-group">
+					<label>Port: </label><input type="text" ng-model="newDb.port"></input>
+				</div>
+				<div class="form-group">
+					<label>API Prefix: </label>
+					<select class="form-control" ng-model="newDb.APIPrefix">
+						<option>true</option>
+						<option>false</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<input class="btn btn-default" type="submit" ng-click="submit(newDb)"></input>
+				</div>				
+			</form>
+		</div>
+	</div>
+</section>

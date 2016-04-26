@@ -1,0 +1,14 @@
+<div class="modal-header" style="text-transform:capitalize;">
+  <button type="button" class="close" ng-click="cancel()" aria-label="Cancel"><span aria-hidden="true">&times;</span></button>
+  <h4 class="modal-title">{{title}}</h4>
+</div>
+
+<div class="modal-body" style="text-transform:capitalize;">
+	<keps-form keps-data="schema" keps-model="item" keps-framework="bootstrap" keps-errors="errors" ng-blur="resolveErrors()"></keps-form>
+</div>
+<div class="modal-footer">
+	<div class="alert alert-success" style="width:100%;text-align:center;text-transform:capitalize;" ng-show="msgs.success">{{msgs.success}}</div>
+	<div class="alert alert-warning" style="width:100%;text-align:center;text-transform:capitalize;" ng-show="msgs.error">{{msgs.error}}</div>
+
+  	<button class="btn btn-success" ng-click="submit()">Submit</button>
+</div>

@@ -1,0 +1,105 @@
+<section data-ng-controller="ShowTableCtrl">
+	<div style="text-align:center;text-transform:capitalize;">
+		<h3>{{table}}</h3>
+	</div>
+	<div class="col-sm-6 col-sm-offset-3" ng-show="loadingMessage">
+		<div class="alert alert-info" style="text-align:center;" ng-show="!largeDataSet">{{loadingMessage}} <span class="glyphicon glyphicon-refresh glyphicon-spin"></span></div>
+		<div ng-show="largeDataSet">
+			<div class="alert alert-warning" style="text-align:center;">Data set is very large: {{largeDataSet}} entries. Want to query it to reduce size?</div>
+			<div style="text-align:center;">
+				<button class="btn btn-default" ng-click="largeDataSet=false;loadTableData()">No get me all the data</button>
+				<button class="btn btn-default" ng-click="query = !query;">Make a query</button> 
+				<button class="btn btn-default" ng-click="getLast = !getLast;query=false;">Get Last <i>N</i> entries</button>
+			</div>
+			<div style="text-align:center;margin-top:5px;" ng-show="getLast">
+				<label>Number of entries</label>
+				<input class="form-control" ng-model="dataCount" type="number"></input>
+				<button style="margin-top:5px;" class="btn btn-default" ng-click="getLastNData();">Get Data</button>
+			</div>
+		</div>
+	</div>
+	<div style="text-align:center;" ng-show="query">
+		<div class="row" style="margin-top:30px;">
+			<div ng-repeat="(key,val) in schema" >
+				<div class="col-xs-4" ng-show="val.type === 'string' || val.type === 'String'">
+					<label>{{key}}</label>
+					<select ng-model="queryBuilder[key].condition">
+						<option value="">Equals</option>
+						<option value="$exists">Has Property</option>
+					</select>
+					<input class="form-control" ng-readonly="queryBuilder[key].condition === '$exists'" ng-model="queryBuilder[key].query" type="{{val.type}}"></input>
+				</div>
+				<div class="col-xs-4" ng-show="val.type ===  'number' || val.type === 'Number'">
+					<label>{{key}}</label>
+					<select ng-model="queryBuilder[key].condition">
+						<option value="">Equals</option>
+						<option value="$gt">Greater Than</option>
+						<option value="$lt">Less Than</option>
+						<option value="$exists">Has Property</option>
+					</select>	
+					<input class="form-control" ng-readonly="queryBuilder[key].condition === '$exists'" ng-model="queryBuilder[key].query" type="{{val.type}}"></input>
+				</div>
+			</div>
+		</div>
+		<button class="btn btn-default" ng-click="makeQuery()">Query Table</button>
+	</div>
+	<div class="col-sm-12" ng-show="!loadingMessage">
+		<button class="btn btn-default" ng-click="query=true" ng-show="!query">Query Table</button>
+		<button class="btn btn-default" ng-click="query=false" ng-show="query">Close Query</button>
+		<div class="row" ng-show="showSearch">
+			<div class="col-xs-4 col-xs-offset-4">
+				<label>Search {{showSearch}}s:</label><a href="" style="float:right;color:red;" ng-click="showSearch=false;">X</a>
+				<input class="form-control" type="text" ng-keyup="search"></input>
+			</div>
+		</div>
+		<table st-table="displayData" class="table table-bordered table-hover">
+			<thead>
+				<tr>
+					<th style="width:93px;"> 	
+						<button style="margin:0 auto;padding:0" type="button" ng-click="addItem()" class="btn btn-sm btn-success"><span class="glyphicon glyphicon-plus"></span>
+						</button>
+					</th>
+					<th lr-drag-src="headers" lr-drop-target="headers" ng-repeat="header in tableHeaders" style="font-size:14px;text-transform:capitalize;" class="manage-width ellipses" >
+						{{header.name}}
+						<span class="dropdown">
+							<a href="" class="dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
+								<ul class="dropdown-menu" role="menu">
+									<li>
+										<a href="" ng-click="removeColumn(header)">Remove Column</a>
+									</li>
+									<li>
+										<a href="" ng-click="sortAsc(header)">Sort Ascending</a>
+									</li>
+									<li>
+										<a href="" ng-click="sortDesc(header)">Sort Descending</a>
+									</li>
+									<li>
+										<a href="" ng-show="header.type === 'string'" ng-click="searchBy(header.name)">Search</a>
+									</li>
+								</ul>							
+						</span>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="row in displayData">
+					<td style="display:inline-block;width:93px;" >
+						<div class="btn-group">
+							<button style="margin:0 auto;padding:0" type="button" title="hide" ng-click="removeItem(row)" class="btn btn-sm btn-warning"><span class="glyphicon glyphicon-minus"></span>
+							</button>
+							<button style="margin:0 auto;padding:0" type="button" title="edit" ng-click="editItem(row, $index)" class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-pencil"></span>
+							</button>
+							<button style="margin:0 auto; padding:0" type="button" title="delete" ng-click="deleteItem(row)" class="btn btn-sm btn-danger"><span class="glyphicon glyphicon-remove"></span>
+							</button>
+							<button ng-show="table === 'devices'" style="margin:0 auto;padding:0" type="button" title="send notification" ng-click="pushNotification(row)" class="btn btn-sm btn-info"><span class="glyphicon glyphicon-phone"></span>
+							</button>
+						</div>
+					</td>		
+					<td class="manage-width ellipsis"  ng-repeat="key in tableHeaders" style="min-width:150px;">
+						{{row[key.name]}}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</section>
