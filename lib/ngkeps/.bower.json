@@ -1,6 +1,5 @@
 {
   "name": "ngKeps",
-  "version": "0.0.1",
   "homepage": "",
   "authors": [
     "Ed Parsons <ed@ekpsoftware.com>"
@@ -26,6 +25,15 @@
     "intl-tel-input": "~6.4.2",
     "lodash": "3.9.3",
     "textAngular": "1.4.2",
-    "jquery": ">=1.7"    
-  }
+    "jquery": ">=1.7"
+  },
+  "_release": "b14a379fc7",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "b14a379fc79f8e623563bc13193d7b1e4d3a8363"
+  },
+  "_source": "https://bitbucket.org/ekpsoftware/ngkeps.git",
+  "_target": "master",
+  "_originalSource": "https://bitbucket.org/ekpsoftware/ngkeps.git"
 }
