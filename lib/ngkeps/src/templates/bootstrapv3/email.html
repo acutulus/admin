@@ -1,0 +1,18 @@
+<div class="form-group {{kepsGroupClass}}">
+	<span ng-show="kepsType.required" style="color:red;">*</span>
+	<label class="{{kepsLabelClass}}">{{kepsType.label}}</label>
+	<input type="email" 
+			ng-model="data.value"
+			class="form-control {{kepsInputClass}}" 
+			ng-required="kepsType.required" 
+			placeholder="{{kepsType.placeholder}}"
+			ng-keyup="errorChecking()"
+			ng-readonly="kepsReadonly"/>
+
+	<span class="help-block"  ng-if="kepsType.instructions">
+		{{kepsType.instructions}}
+	</span>
+	<span style="color:red;margin-left:20px;" ng-show="errorMsg">
+		{{errorMsg}}
+	</span>
+</div>

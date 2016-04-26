@@ -1,0 +1,14 @@
+<span ng-show="kepsType.required" style="color:red;">*</span>
+<label class="{{kepsLabelClass}}">{{kepsType.label}}</label>
+<div class="row">
+	<div class="col-xs-10 col-xs-offset-1">
+		<input-item
+		ng-repeat="(name,field) in kepsType.subSchema"
+		keps-name="name"
+		keps-label="{{name}}"
+		keps-type="field"
+		keps-model="data.value[name]"
+		keps-framework="kepsFramework"
+		keps-errors="data.error[name]"/>
+	</div>
+</div>

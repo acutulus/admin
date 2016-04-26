@@ -1,0 +1,17 @@
+<div class="form-group {{kepsGroupClass}}">
+	<span ng-show="kepsType.required" style="color:red;">*</span>
+	<label class="{{kepsLabelClass}}">{{kepsType.label}}</label>
+	<input ng-readonly="kepsReadonly" type="text" list="{{kepsType.label || kepsName}}" class="form-control {{kepsInputClass}}" ng-model="data.reference"
+	ng-blur="setReferenceData()"></input>
+    <datalist id="{{kepsType.label || kepsName}}">
+    	{{referenceOptions}}
+    	<option ng-repeat="option in referenceOptions" value="{{option[data.displayReferenceAs]}}" 
+    	>{{option[data.displayReferenceAs]}}</option>
+    </datalist>
+	<span class="help-block"  ng-if="kepsType.instructions">
+		{{kepsType.instructions}}
+	</span>
+	<span style="color:red;margin-left:20px;" ng-show="errorMsg">
+		{{errorMsg}}
+	</span>
+</div>

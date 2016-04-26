@@ -1,0 +1,19 @@
+<ul class='list-group'>
+  <li class='list-group-item' ng-repeat='obj in data.value track by $index'>
+    <a href='' style='color:inherit;' ng-click='data.showArray[$index] = !data.showArray[$index]'>
+      {{$index}} {{data.showArray[$index] ? 'Hide Contents' : 'Show Contents'}}
+    </a>
+    <a href='' ng-click='removeArrayItem($index)' class='badge'>
+      <span class='glyphicon glyphicon-remove'></span>
+    </a>
+    <a href='' ng-click='addArrayItem()' class='badge'>
+      <span class='glyphicon glyphicon-plus'></span>
+    </a>
+    <div ng-show='data.showArray[$index]'>
+      <form>
+        <keps-form keps-name="kepsName+'.'" keps-data="kepsType[0]" keps-model="data.value[$index]">
+        </keps-form>
+      </form>
+    </div>
+  </li>
+</ul>

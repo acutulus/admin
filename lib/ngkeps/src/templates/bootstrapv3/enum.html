@@ -1,0 +1,17 @@
+<div class="form-group {{kepsGroupClass}}">
+	<div class="row">
+		<div class="col-xs-12">
+			<span ng-show="kepsType.required" style="color:red;">*</span>
+			<label class="{{kepsLabelClass}}">{{kepsType.label}}</label>
+			<select ng-readonly="kepsReadonly" class="form-control {{kepsInputClass}}" ng-model="data.value">
+				<option ng-repeat="option in kepsType.options track by $index" value="{{kepsType.options[$index]}}">{{kepsType.labels[$index] || kepsType.options[$index] }}</option>
+			</select>
+			<span class="help-block"  ng-if="kepsType.instructions">
+				{{kepsType.instructions}}
+			</span>
+			<span style="color:red;margin-left:20px;" ng-show="errorMsg">
+				{{errorMsg}}
+			</span>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,61 @@
+<div class="row">		
+	<div class="col-xs-12">
+		<span ng-show="kepsType.required && !data.subrequired" style="color:red;">*</span>
+		<label class="{{kepsLabelClass}}">{{kepsType.label}}</label>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-4">
+		<div class="form-group {{kepsGroupClass}}">
+			<div class="form-group">
+				<span ng-show="data.subrequired && kepsType.required.address1" style="color:red;">*</span>
+				<label class="{{kepsSubLabelClass}}">Address Line 1</label>
+				<input class="form-control {{kepsInputClass}}"type="text" ng-model="data.value.address1" ng-readonly="kepsReadonly" ng-required="data.subrequired && kepsType.required.address1">
+			</div>
+			<div class="form-group">
+				<span ng-show="data.subrequired && kepsType.required.address2" style="color:red;">*</span>
+				<label class="{{kepsSubLabelClass}}">Address Line 2</label>
+				<input class="form-control {{kepsInputClass}}"type="text" ng-model="data.value.address2" ng-readonly="kepsReadonly" ng-required="data.subrequired && kepsType.required.address2">
+			</div>	
+			<div class="form-group">
+				<span ng-show="data.subrequired && kepsType.required.city" style="color:red;">*</span>
+				<label class="{{kepsSubLabelClass}}">City</label>
+				<input class="form-control {{kepsInputClass}}"type="text" ng-model="data.value.city" ng-keydown="checkAddress()" ng-required="data.subrequired && kepsType.required.city">
+			</div>
+		</div>
+	</div>
+	<div class="col-xs-4">
+		<div class="form-group {{kepsGroupClass}}">
+			<div class="form-group">
+				<span ng-show="data.subrequired && kepsType.required.region" style="color:red;">*</span>
+				<label class="{{kepsSubLabelClass}}">State/Province/Region</label>
+				<input class="form-control {{kepsInputClass}}"type="text" ng-model="data.value.region" ng-readonly="kepsReadonly" ng-required="data.subrequired && kepsType.required.region">
+			</div>	
+			<div class="form-group">
+				<span ng-show="data.subrequired && kepsType.required.postal" style="color:red;">*</span>
+				<label class="{{kepsSubLabelClass}}">Zip/Postal Code</label>
+				<input class="form-control {{kepsInputClass}}"type="text" ng-model="data.value.postal" ng-readonly="kepsReadonly" ng-required="data.subrequired && kepsType.required.postal">
+			</div>
+			<div class="form-group">
+				<span ng-show="data.subrequired && kepsType.required.country" style="color:red;">*</span>
+				<label class="{{kepsSubLabelClass}}">Country</label>
+				<input class="form-control {{kepsInputClass}}"type="text" ng-model="data.value.country" ng-readonly="kepsReadonly" ng-required="data.subrequired && kepsType.required.country">
+			</div>			
+		</div>
+	</div>
+	<div class="col-xs-4">
+		<p>Preview</p>
+		<br>
+		{{data.value.address1 + ' ' + data.value.address2}}
+		<br>
+		{{data.value.city + ', ' + data.value.region + ' ' + data.value.postal}}
+		<br>
+		{{data.value.country}}
+	</div>
+	<span class="help-block"  ng-if="kepsType.instructions">
+		{{kepsType.instructions}}
+	</span>
+	<span style="color:red;margin-left:20px;" ng-show="errorMsg">
+		{{errorMsg}}
+	</span>
+</div>

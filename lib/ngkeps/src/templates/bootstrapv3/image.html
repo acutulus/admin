@@ -1,0 +1,44 @@
+<div class="form-group">
+	<div class="row">
+		<div class="col-xs-6">
+			<span ng-show="kepsType.required" style="color:red;">*</span>
+			<label class="{{kepsLabelClass}}">{{kepsType.label}}</label>
+
+			<div class="form-group {{kepsGroupClass}}" ng-init="importImageComputer = true;" ng-show="importImageComputer">
+			  <div class="input-group">
+			    <span class="input-group-btn">
+			      <span class="btn btn-default {{kepsButtonClass}}" style="min-width: 0;padding-left:20px;padding-right:20px;display:inline-block;">
+			        Load Image <input type="file" ng-required ="kepsType.required" style="position:absolute;opacity:0;top: 0;right: 0;
+		    		min-width: 100%;min-height: 100%;" onchange="angular.element(this).scope().imageFileChanged(event)" accept="image/*">
+			      </span>
+			    </span>
+			    <input type="text" class="form-control" readonly="" value="{{imageStatus}}">
+			  </div>
+			  <a href="" ng-click="importImageComputer = false;importImageInternet = true;">Or... Upload an image from a url.</a>
+			</div>	
+
+			<div class="form-group {{kepsGroupClass}}" ng-show="importImageInternet">
+			  <div class="input-group">
+			    <span class="input-group-btn">
+			      <span class="btn btn-default {{kepsButtonClass}}" style="min-width: 0;padding-left:20px;padding-right:20px;display:inline-block;">
+			        Import from url <a href="" ng-click="getImageUrl()" style="position:absolute;opacity:0;top: 0;right: 0;
+		    		min-width: 100%;min-height: 100%;" onchange="angular.element(this).scope().imageFileChanged(event)"></a>
+			      </span>
+			    </span>
+			    <input type="text" class="form-control" ng-required="kepsType.required" placeholder="{{kepsType.placeholder || 'Enter Image url'}}" ng-model="kepsType.imageUrl">
+			  </div>
+			  <a href="" ng-click="importImageComputer = true;importImageInternet = false;">Or... Upload a file from your computer</a>
+			</div>
+			<span class="help-block"  ng-if="kepsType.instructions">
+				{{kepsType.instructions}}
+			</span>
+			<span style="color:red;margin-left:20px;" ng-show="errorMsg">
+				{{errorMsg}}
+			</span>
+		</div>
+		<div class="col-xs-6">
+			<canvas id="{{kepsType.randomCanvasId}}"></canvas>
+			<span ng-show="imageData.height && imageData.width">{{imageData.width + ' X ' + imageData.height}}</span>
+		</div>
+	</div>
+</div>

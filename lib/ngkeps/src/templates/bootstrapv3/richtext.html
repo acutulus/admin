@@ -1,0 +1,15 @@
+<div class="row">
+	<div class="col-xs-12">
+		<div class="form-group {{kepsGroupClass}}">
+			<span ng-show="kepsType.required" style="color:red;">*</span>
+			<label class="{{kepsLabelClass}}">{{kepsType.label}}</label>
+			<text-angular ng-model="data.value" ng-required="kepsType.required" ta-toolbar="richToolbar" ta-disabled="kepsReadonly"></text-angular>
+			<span class="help-block"  ng-if="kepsType.instructions">
+				{{kepsType.instructions}}
+			</span>
+			<span style="color:red;margin-left:20px;" ng-show="errorMsg">
+				{{errorMsg}}
+			</span>
+		</div>
+	</div>
+</div>

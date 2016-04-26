@@ -1,0 +1,25 @@
+<div class="form-group {{kepsGroupClass}}">
+	<span ng-show="kepsType.required" style="color:red;">*</span>	
+	<label class="{{kepsLabelClass}}">{{kepsType.label}}</label>
+	<div class="radio">
+		<label><input 
+				type="radio" 
+				ng-model="data.value" 
+				ng-value="{{true}}"
+				ng-required="kepsType.required"
+				ng-readonly="kepsReadonly">
+			{{kepsType.choices.split(',')[0] || 'true'}}
+		</label> 
+	</div>
+	<div class="radio">
+		<label><input type="radio" ng-model="data.value" ng-value="{{false}}">
+			{{kepsType.choices.split(',')[1] || 'false'}}
+		</label>
+	</div>
+	<span class="help-block"  ng-if="kepsType.instructions">
+		{{kepsType.instructions}}
+	</span>
+	<span style="color:red;" ng-show="errorMsg">
+		{{errorMsg}}
+	</span>
+</div>

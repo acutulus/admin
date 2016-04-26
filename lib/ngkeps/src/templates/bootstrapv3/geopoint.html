@@ -1,0 +1,26 @@
+<div class="row">
+	<div class="col-xs-5">
+		<span ng-show="kepsType.required" style="color:red;">*</span>	
+		<label class="{{kepsLabelClass}}">{{kepsType.label}}</label>
+		<div class="form-group {{kepsGroupClass}}">
+			<div class="form-group">
+			  <label class="control-label">Lat:</label>
+			   <input ng-readonly="kepsReadonly" type="number" class="form-control" step="any" ng-model="data.lat" ng-keyup="testLatLng();errorChecking();">
+			</div>
+			<div class="form-group">
+			  <label class="control-label">Lng:</label>
+			  <input ng-readonly="kepsReadonly" type="number" class="form-control" step="any"  ng-model="data.lng" ng-keyup="testLatLng();errorChecking();">
+			</div>
+		</div>
+		<span class="help-block"  ng-if="kepsType.instructions">
+			{{kepsType.instructions}}
+		</span>
+		<span style="color:red;margin-left:20px;" ng-show="errorMsg">
+			{{errorMsg}}
+		</span>
+	</div>
+	<div class="col-xs-7">
+		<p>Preview:</p>
+		<div id="map" style="width:100%;height:200px;margin-top:-5px;"></div>
+	</div>
+</div>

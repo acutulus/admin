@@ -1,0 +1,12 @@
+<section>
+		<div ng-repeat="key in kepsData | keys" ng-init="field = kepsData[key]">
+			<input-item
+				keps-name="key"
+				keps-type="field"
+				keps-model="data.value[key]"
+				keps-label="{{ field.label }}"
+				keps-framework="{{kepsFramework}}"
+				keps-errors="kepsErrors[key]"/>
+		</div>
+	</form>
+</section>

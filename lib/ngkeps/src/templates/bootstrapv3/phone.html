@@ -1,0 +1,18 @@
+<style> .iti-flag {background-image: url("/lib/intl-tel-input/build/img/flags.png");} </style>
+<div class="row">
+	<div class="col-xs-12">
+		<span ng-show="kepsType.required" style="color:red;">*</span>
+		<label class="{{kepsLabelClass}}">{{kepsType.label}}</label>
+		<div class="form-group {{kepsGroupClass}}">
+			<input type="tel" id="mobile-number" class="form-control {{kepsInputClass}}" ng-model="data.value">
+			<span class="help-block"  ng-if="kepsType.instructions">
+				{{kepsType.instructions}}
+			</span>
+			<span style="color:red;margin-left:20px;" ng-show="errorMsg">
+				{{errorMsg}}
+			</span>
+		</div>
+	</div>
+</div>
+
+<script>$("#mobile-number").intlTelInput();</script>

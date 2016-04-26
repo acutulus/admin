@@ -1,0 +1,46 @@
+<div class="row">
+	<div class="col-xs-12">
+		<p> </p>
+		<div class="form-group {{kepsGroupClass}}">
+			<div class="{{kepsArrayClass}}">
+			<span ng-show="kepsType.required" style="color:red;">*</span>
+			<label class="{{kepsLabelClass}}">{{kepsType.label}}</label>
+				<div class="">
+					<div class="list-group">
+						<div class="list-group-item" ng-repeat="item in data.value track by $index">
+							{{$index + 1}}
+							<a href="" style="float:right" ng-click="removeArrayItem($index)">
+								<span style="color:red;margin-left:15px;" class="glyphicon glyphicon-remove"></span>
+							</a>
+							<a href="" style="float:right;" ng-click="showArrayItem[$index] = !showArrayItem[$index]">
+								<span ng-show="showArrayItem[$index]" style="color:blue" class="glyphicon glyphicon-eye-close"></span>
+								<span ng-show="!showArrayItem[$index]" style="color:blue" class="glyphicon glyphicon-eye-open"></span>
+							</a>
+
+								<div ng-show="showArrayItem[$index]">
+									<input-item
+									ng-repeat="(name,field) in kepsType.subSchema"
+									keps-name="name"
+									keps-label="{{name}}"
+									keps-label-class="kepsSubLabelClass"
+									keps-type="field"
+									keps-model="item[name]"
+									keps-framework="kepsFramework"
+									keps-errors="data.error[$index]"/>
+								</div>
+						</div>	
+						<div class="list-group-item">
+							<a href="" style="" title="add item">
+								<span style="color:green;" class="glyphicon glyphicon-plus-sign" ng-click="addArrayItem()"></span> 
+						</div>
+				</div>
+			</div>
+			<span class="help-block"  ng-if="kepsType.instructions">
+				{{kepsType.instructions}}
+			</span>
+			<span style="color:red;margin-left:20px;" ng-show="errorMsg">
+				{{errorMsg}}
+			</span>
+		</div>
+	</div>
+</div>

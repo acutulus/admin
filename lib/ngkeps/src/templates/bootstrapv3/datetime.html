@@ -1,0 +1,16 @@
+<span ng-show="kepsType.required" style="color:red;">*</span>
+<label class="{{kepsLabelClass}}">{{kepsType.label}}</label>
+<div class="form-group {{kepsGroupClass}}">
+	<div class="form-group" style="width:200px;">
+		<input type="date" ng-required="kepsType.required" class="form-control"  ng-model="data.date" ng-blur="makeTime()" placeholder="yyyy-MM-dd" ng-readonly="kepsReadonly"></input>
+	</div>
+	<div class="form-group"  style="width:200px;">
+		<input type="time" ng-required="kepsType.required" class="form-control"  ng-model="data.time" ng-blur="makeTime()" ng-readonly="kepsReadonly"></input>
+	</div>
+	<span class="help-block"  ng-if="kepsType.instructions">
+		{{kepsType.instructions}}
+	</span>
+	<span style="color:red;margin-left:20px;" ng-show="errorMsg">
+		{{errorMsg}}
+	</span>
+</div>
