@@ -7,16 +7,12 @@ angular.module('dbtools').config(['$stateProvider', '$urlRouterProvider', '$loca
 		$urlRouterProvider.otherwise('dbtools/summary');
 		
 		//set restService route
-		if (localStorage.kepsRestApiPrefix) {
-			$nkRestServiceProvider.setApiPrefix(localStorage.kepsApiPrefix);
+		if (localStorage.kepsApiPrefix) {
+			$nkRestServiceProvider.setApiPrefix(localStorage.kepsApiPrefix+'/api/v1/');
+			$nkAuthServiceProvider.setApiPrefix(localStorage.kepsApiPrefix+'/admin/rest/');
 		} else {
 			$nkRestServiceProvider.setApiPrefix('/api/v1/');
-		}
-		//set authService route
-		if (localStorage.kepsAuthApiPrefix) {
-			$nkAuthServiceProvider.setApiPrefix(localStorage.kepsApiPrefix);
-		} else {
-			$nkAuthServiceProvider.setApiPrefix('/api/v1/');
+			$nkAuthServiceProvider.setApiPrefix('/admin/rest/');
 		}
 		// Home state routing
 		$stateProvider

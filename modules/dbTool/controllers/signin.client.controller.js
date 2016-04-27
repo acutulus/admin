@@ -4,6 +4,7 @@ angular.module('dbtools').controller('SignInController', ['$scope', '$http', '$l
 	function($scope, $http, $location, $nkAuthService, $timeout){
 		
 		$scope.user = $nkAuthService.getUser();
+		$scope.host = localStorage.kepsApiPrefix;
 		if($scope.user && !$scope.user.admin){
 			$scope.msgs = {};
 			$scope.msgs.msg = "You are signed in as a non-admin user, contact Acutulus to have your account permissions elevated.";
@@ -12,16 +13,16 @@ angular.module('dbtools').controller('SignInController', ['$scope', '$http', '$l
 			$scope.msgs.msg = "You are signed in with admin permissions";
 		}
 		$scope.signin = function() {
-			$scope.msgs = {}
-			$scope.msgs.loading = "Logging In..."
+			$scope.msgs = {};
+			$scope.msgs.loading = "Logging In...";
 			$nkAuthService.loginWithProvider("local", $scope.credentials)
 			.then(function(data){
 				$scope.msgs = {};
 				$scope.msgs.success = 'Signed In!';
 				if(data.admin){
 					$timeout(function(){
-						location.href ="/admin/dbtools/summary"//route to app
-					},900)
+						location.href ="#!/dbtools/summary";//route to app
+					},900);
 				}else{
 					$scope.msgs = {};
 					$scope.msgs.msg = "You are signed in as a non-admin user, contact Acutulus to have your account permissions elevated.";
@@ -34,9 +35,14 @@ angular.module('dbtools').controller('SignInController', ['$scope', '$http', '$l
 			});
 		};
 
+		$scope.setHost = function() {
+			localStorage.kepsApiPrefix = $scope.host;
+			location.reload();
+		};
+
 		$scope.signout = function(){
 			$nkAuthService.logout();
 			location.href = "/";
-		}
+		};
 	}
 ]);
