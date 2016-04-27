@@ -4,9 +4,9 @@ angular.module('dbtools')
 .controller('DBToolsController', ['$scope', '$stateParams', '$location', '$http','$timeout','$modal', '$nkAuthService',
 	function($scope, $stateParams, $location, $http, $timeout, $modal, $nkAuthService){
 		$scope.user = $nkAuthService.getUser();
-		if((typeof $scope.user === 'undefined' || !$scope.user.admin) && $location.$$path !== '/dbtools/signin'){
-			alert('You need to be a logged in admin');
-			location.href = '/admin/dbtools/signin';
+		if((typeof $scope.user === 'undefined' || !$scope.user.admin) && $location.$$path !== '#!/dbtools/signin'){
+			//alert('You need to be a logged in admin');
+			location.href = '#!/dbtools/signin';
 		}else{
 			$scope.projectTitle = $location.host().split('.')[0] || $location.host();
 			/*Grab All the Database information in the projects Database*/
