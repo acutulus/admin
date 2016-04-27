@@ -6,8 +6,8 @@ angular.module('dbtools')
 
 		$scope.user = $nkAuthService.getUser();
 		if(!$scope.user || !$scope.user.admin){
-			alert("No permissions");
-			location.href = "/admin/dbtools/signin";
+	//		alert("No permissions");
+//			location.href = "/admin/dbtools/signin";
 		}
 		//hold query arguments, newQuery.query holds all the current data
 		$scope.table = $stateParams.tablename;
