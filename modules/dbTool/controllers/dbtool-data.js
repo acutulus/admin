@@ -4,16 +4,9 @@ angular.module('dbtools')
 .controller('ShowTableCtrl', ['$scope', '$nkDataService', '$stateParams', '$modal','$window', '$http', '$nkAuthService',
 	function($scope, $nkDataService, $stateParams, $modal, $window, $http, $nkAuthService){
 
-		$scope.user = $nkAuthService.getUser();
-		if(!$scope.user || !$scope.user.admin){
-	//		alert("No permissions");
-//			location.href = "/admin/dbtools/signin";
-		}
 		//hold query arguments, newQuery.query holds all the current data
 		$scope.table = $stateParams.tablename;
 	
-
-
 		//get first 200 entries for table
 		$scope.tableHeaders = [];
 
@@ -22,7 +15,7 @@ angular.module('dbtools')
 		$scope.loadingMessage = "Loading Table Data";
 		$scope.queryBuilder = {};
 		
-		$http.get('/admin/rest/'+$scope.table+'s/count')
+		$http.get($scope.apiHost + '/admin/rest/'+$scope.table+'s/count')
 		.then(function(data){
 			if(data.data.count > 300){	
 				$scope.largeDataSet = data.data.count;
@@ -44,7 +37,7 @@ angular.module('dbtools')
 		
 		$scope.loadTableData = function(){
 			if(!$scope.largeDataSet){
-				$http.get("/admin/rest/" +$scope.table + 's')
+				$http.get($scope.apiHost + "/admin/rest/" +$scope.table + 's')
 				.then(function(data){	
 					$scope.readOnlyData = data.data;
 					$scope.displayData = JSON.parse(JSON.stringify(data.data));
@@ -210,7 +203,7 @@ angular.module('dbtools')
 
 		//devices table specific function
 		$scope.pushNotification = function(device){
-			$http.get('admin/devices/push/' + device._id) //made up fake route for now
+			$http.get($scope.apiHost + 'admin/devices/push/' + device._id) //made up fake route for now
 				.then(function(response){
 					console.log(response);
 				});
@@ -245,7 +238,7 @@ angular.module('dbtools')
 		}
 		$scope.getLastNData = function(){
 			if($scope.dataCount){
-				$http.get("/admin/rest/" + $scope.table + "s",{
+				$http.get($scope.apiHost + "/admin/rest/" + $scope.table + "s",{
 					params:{limit:$scope.dataCount}
 				}) //?limit=" + $scope.dataCount)
 				.then(function(data){
@@ -303,7 +296,7 @@ angular.module('dbtools')
 					alert(query);
 
 			var queryObject = {query: JSON.parse(query), limit:100, returns:{name:1}};
-			$http.get('/admin/rest/' + $scope.table + "s", {params:queryObject})
+			$http.get($scope.apiHost + '/admin/rest/' + $scope.table + "s", {params:queryObject})
 			.then(function(data){
 				console.log(data);
 			})

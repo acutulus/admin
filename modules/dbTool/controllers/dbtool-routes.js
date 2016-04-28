@@ -2,18 +2,13 @@
 
 angular.module('dbtools').controller('RoutesCtrl', ['$scope','$stateParams','$http', '$nkAuthService', 
 	function($scope, $stateParams, $http, $nkAuthService){
-		$scope.user = $nkAuthService.getUser();
-		if(!$scope.user || !$scope.user.admin){
-			alert("No permissions");
-			location.href = "/admin/dbtools/signin";
-		}
 
 		$scope.routeName = $stateParams.tablename;
 		$scope.routes;
 		$scope.showTestRoute = {};
 		$scope.routeTesting = {};
 
-		$http.get('/admin/restRoutes')
+		$http.get($scope.apiHost + '/admin/restRoutes')
 		.then(function(response){
 			console.log(response);
 			$scope.routes = response.data[$scope.routeName].functions;

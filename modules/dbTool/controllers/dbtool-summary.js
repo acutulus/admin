@@ -1,14 +1,9 @@
 'use strict';
 
 angular.module('dbtools')
-	.controller('SummaryController',['$scope', '$http', '$timeout', '$stateParams','$nkAuthService', 
-		function($scope, $http, $timeout, $stateParams,$nkAuthService){
+	.controller('SummaryController',['$scope', '$http', '$timeout', '$stateParams','$nkAuthService', '$nkDataService',
+		function($scope, $http, $timeout, $stateParams,$nkAuthService,$nkDataService){
 
-			$scope.user = $nkAuthService.getUser();
-			if(!$scope.user || !$scope.user.admin){
-				alert("No permissions");
-				location.href = "/admin/dbtools/signin";
-			}
 			$scope.restRoutes = [];
 			$scope.models = [];
 		
@@ -23,12 +18,12 @@ angular.module('dbtools')
 			};
 
 			$scope.windowHeight = $(window).height() - 40;
-			$http.get('/admin/restRoutes')
+			$http.get($scope.apiHost + '/admin/restRoutes')
 				.then(function(response){
 					$scope.routes = response.data;
 				});
 
-			$http.get('/admin/models')
+			$http.get($scope.apiHost + '/admin/models')
 				.then(function(response){
 					console.log(response);
 					$scope.models = response.data;
@@ -41,7 +36,7 @@ angular.module('dbtools')
 					});
 				});
 
-			$http.get('/admin/uptime')
+			$http.get($scope.apiHost + '/admin/uptime')
 				.then(function(response){
 					$scope.uptime = {}
 					$scope.uptime.hours = Math.floor(response.data.uptime/3600);
@@ -54,7 +49,7 @@ angular.module('dbtools')
 				$scope.republished = false;
 				$scope.msgs = {};
 				$scope.msgs.loading = "Republishing application.";
-				$http.get('/admin/republish')
+				$http.get($scope.apiHost + '/admin/republish')
 				.then(function(response){
 					$scope.republished = response;
 					$scope.msgs = {};
@@ -72,7 +67,7 @@ angular.module('dbtools')
 				$scope.rebuilt = false;
 				$scope.msgs = {};
 				$scope.msgs.loading = "Rebuilding application pages.";
-				$http.get('/admin/rebuild')
+				$http.get($scope.apiHost + '/admin/rebuild')
 				.then(function(response){
 					$scope.rebuilt = response;
 					$scope.msgs = {};

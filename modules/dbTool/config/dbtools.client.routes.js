@@ -8,11 +8,11 @@ angular.module('dbtools').config(['$stateProvider', '$urlRouterProvider', '$loca
 		
 		//set restService route
 		if (localStorage.kepsApiPrefix) {
-			$nkRestServiceProvider.setApiPrefix(localStorage.kepsApiPrefix+'/api/v1/');
-			$nkAuthServiceProvider.setApiPrefix(localStorage.kepsApiPrefix+'/admin/rest/');
+			$nkRestServiceProvider.setApiPrefix(localStorage.kepsApiPrefix+'/admin/rest/');
+			$nkAuthServiceProvider.setApiPrefix(localStorage.kepsApiPrefix+'/api/v1/');
 		} else {
-			$nkRestServiceProvider.setApiPrefix('/api/v1/');
-			$nkAuthServiceProvider.setApiPrefix('/admin/rest/');
+			$nkRestServiceProvider.setApiPrefix('/admin/rest/');
+			$nkAuthServiceProvider.setApiPrefix('/api/v1/');
 		}
 		// Home state routing
 		$stateProvider
@@ -35,14 +35,6 @@ angular.module('dbtools').config(['$stateProvider', '$urlRouterProvider', '$loca
 		.state('dbtools.data',{
 			url:'/data/:tablename',
 			templateUrl:'modules/dbTool/views/dbtool-data.html'
-		})
-		.state('newTable', {
-			url:'/:database/newTable',
-			templateUrl: 'modules/dbTool/views/new-table.client.view.html'
-		})
-		.state('new',{
-			url:'/newDatabase',
-			templateUrl:'modules/dbTool/views/new-database.client.view.html'
 		})
 		.state('dbtools.signin',{
 			url:'/signin',

@@ -3,16 +3,10 @@
 angular.module('dbtools').controller('ModelsCtrl', ['$scope','$http','$stateParams','$state', '$nkAuthService',
 	function($scope, $http, $stateParams, $state, $nkAuthService){
 
-		$scope.user = $nkAuthService.getUser();
-		if(!$scope.user || !$scope.user.admin){
-			alert("No permissions");
-			location.href = "/admin/dbtools/signin";
-		}
-
 		$scope.modelName = $stateParams.tablename;
 		$scope.showJSON = {};
 		$scope.displayTable = true;
-		$http.get('/admin/models')
+		$http.get($scope.apiHost + '/admin/models')
 			.then(function(response){
 				console.log(response);
 				$scope.model = response.data[$stateParams.tablename];
@@ -20,7 +14,7 @@ angular.module('dbtools').controller('ModelsCtrl', ['$scope','$http','$statePara
 
     $scope.fieldBtn = function(field) {
       if ($scope.isRef(field)) {
-      	location.href = "/admin/dbtools/models/" + field.type.slice(1);
+      	location.href = "#!/dbtools/models/" + field.type.slice(1);
       }
       if ($scope.isComplexType(field)) {
         field._showSubSchema = !field._showSubSchema;

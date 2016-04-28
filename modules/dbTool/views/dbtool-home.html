@@ -1,7 +1,7 @@
 <section data-ng-controller="DBToolsController">
 	<header class="navbar navbar-fixed-top navbar-inverse">
 		<section class="container">
-			<a ng-show="user.admin" class="navbar-brand" href="/admin/summary">Management</a>
+			<a ng-show="user.admin" class="navbar-brand" ui-sref="dbtools.summary">Management</a>
 			<a ng-show="!user.admin" class="navbar-brand" href="">Management</a> 
 			<ul class="nav navbar-nav">
 				<li class="dropdown" ng-show="user.admin">
@@ -9,7 +9,7 @@
 						Routes<span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu" role="menu">
-						<li ng-repeat="table in routes"><a href="/admin/dbtools/routes/{{table}}">{{table}}</a></li>
+						<li ng-repeat="table in routes"><a ui-sref="dbtools.routes({ tablename: table })">{{table}}</a></li>
 					</ul>
 				</li>
 				<li class="dropdown" ng-show="user.admin">
@@ -17,7 +17,7 @@
 						Models<span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu" role="menu">
-						<li ng-repeat="table in models"><a href="/admin/dbtools/models/{{table}}">{{table}}</a></li>
+						<li ng-repeat="table in models"><a ui-sref="dbtools.models({ tablename: table })">{{table}}</a></li>
 					</ul>
 				</li>
 				<li class="dropdown" ng-show="user.admin">
@@ -25,7 +25,7 @@
 						Data<span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu" role="menu">
-						<li ng-repeat="table in models"><a href="/admin/dbtools/data/{{table}}">{{table}}</a></li>
+						<li ng-repeat="table in models"><a ui-sref="dbtools.data({ tablename: key })">{{table}}</a></li>
 					</ul>
 				</li>
 			</ul>

@@ -8,11 +8,12 @@ angular.module('dbtools')
 			alert('You need to be a logged in admin');
 			location.href = '#!/dbtools/signin';
 		}else{
+			$scope.apiHost = localStorage.kepsApiPrefix ? localStorage.kepsApiPrefix : '';
 			$scope.projectTitle = $location.host().split('.')[0] || $location.host();
 			/*Grab All the Database information in the projects Database*/
 			$scope.models = [];
 			$scope.routes = [];
-			$http.get('/admin/models')
+			$http.get($scope.apiHost + '/admin/models')
 			.then(function(response){
 				$scope.databaseSchemas = response.data;
 				for(var x in response.data){
@@ -20,7 +21,7 @@ angular.module('dbtools')
 				}
 				$scope.$broadcast('models', true);
 			});	
-			$http.get('/admin/restRoutes')
+			$http.get($scope.apiHost + '/admin/restRoutes')
 			.then(function(response){
 				for(var x in response.data){
 					$scope.routes.push(x);

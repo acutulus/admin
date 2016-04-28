@@ -23,13 +23,17 @@
 		{{msgs.msg}}
 		<a href="" ng-click="signout()">Sign out {{user.displayName}}</a>
 	</div>
-	<form class="signin form-horizontal" autocomplete="off">
-		<fieldset>
-			<div class="form-group">
-				<label for="host">Host</label>
-				<input type="text" id="host" name="host" class="form-control" data-ng-model="host" placeholder="e.g. http://localhost:65137">
-			</div>
-		</fieldset>
-	</form>
-
+	<div class="col-xs-offset-2 col-xs-8 col-md-offset-5 col-md-2">
+		<form class="signin form-horizontal" autocomplete="off">
+			<fieldset>
+				<div class="form-group">
+					<label for="host">Host</label>
+					<input type="text" id="host" name="host" class="form-control" data-ng-model="host" placeholder="e.g. http://localhost:65137">
+				</div>
+			</fieldset>
+		</form>
+		<div class="text-center form-group">
+			<button class="btn btn-primary" ng-click="setHost()">Sign in</button>
+		</div>
+	</div>
 </section>
