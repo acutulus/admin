@@ -5,6 +5,12 @@ angular.module('dbtools').controller('SignInController', ['$scope', '$http', '$l
 		
 		$scope.user = $nkAuthService.getUser();
 		$scope.host = localStorage.kepsApiPrefix;
+
+		$scope.hosts = [];
+		if (localStorage.kepsApiPrefixHosts) {
+			$scope.hosts = JSON.parse(localStorage.kepsApiPrefixHosts);
+		}
+
 		if($scope.user && !$scope.user.admin){
 			$scope.msgs = {};
 			$scope.msgs.msg = "You are signed in as a non-admin user, contact Acutulus to have your account permissions elevated.";
@@ -19,6 +25,10 @@ angular.module('dbtools').controller('SignInController', ['$scope', '$http', '$l
 			.then(function(data){
 				$scope.msgs = {};
 				$scope.msgs.success = 'Signed In!';
+				if ($scope.hosts.indexOf($scope.host) === -1) {
+					$scope.hosts.push($scope.hosts);
+					localStorage.kepsApiPrefixHosts = JSON.stringify($scope.hosts);
+				}
 				if(data.admin){
 					$timeout(function(){
 						location.href ="#!/dbtools/summary";//route to app

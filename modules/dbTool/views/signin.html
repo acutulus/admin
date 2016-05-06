@@ -28,12 +28,16 @@
 			<fieldset>
 				<div class="form-group">
 					<label for="host">Host</label>
-					<input type="text" id="host" name="host" class="form-control" data-ng-model="host" placeholder="e.g. http://localhost:65137">
+					<input type="text" id="host" name="host" class="form-control" data-ng-model="host" placeholder="e.g. http://localhost:65137" list="hosts">
+
+					<datalist id="hosts">
+					  <option ng-repeat="host in hosts" value="{{host}}">
+					</datalist>					
 				</div>
 			</fieldset>
 		</form>
 		<div class="text-center form-group">
-			<button class="btn btn-primary" ng-click="setHost()">Sign in</button>
+			<button class="btn btn-primary" ng-click="setHost()">Change Host</button>
 		</div>
 	</div>
 </section>
