@@ -7,7 +7,6 @@ angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfig
 angular.module(ApplicationConfiguration.applicationModuleName).config(['$locationProvider', '$nkRestServiceProvider',
 	function($locationProvider, $nkRestServiceProvider) {
 		$locationProvider.hashPrefix('!');
-    $nkRestServiceProvider.setApiPrefix('/admin/rest/');
 	}
 ]);
 

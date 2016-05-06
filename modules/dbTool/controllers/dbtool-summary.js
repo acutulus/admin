@@ -34,7 +34,7 @@ angular.module('dbtools')
 					$scope.models = response.data;
 					$scope.modelsCount = {};
 					angular.forEach($scope.models, function(value, ind) {
-						$http.get('/admin/rest/'+ind+'s/count')
+						$http.get($scope.apiHost + '/admin/rest/'+ind+'s/count')
 							.then(function(response){
 								$scope.modelsCount[ind] = response.data.count;
 							});
