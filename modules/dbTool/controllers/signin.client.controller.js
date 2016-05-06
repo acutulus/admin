@@ -26,7 +26,7 @@ angular.module('dbtools').controller('SignInController', ['$scope', '$http', '$l
 				$scope.msgs = {};
 				$scope.msgs.success = 'Signed In!';
 				if ($scope.hosts.indexOf($scope.host) === -1) {
-					$scope.hosts.push($scope.hosts);
+					$scope.hosts.push($scope.host);
 					localStorage.kepsApiPrefixHosts = JSON.stringify($scope.hosts);
 				}
 				if(data.admin){
