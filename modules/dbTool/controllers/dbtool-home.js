@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dbtools')
-.controller('DBToolsController', ['$scope', '$stateParams', '$location', '$http','$timeout','$modal', '$nkAuthService',
-	function($scope, $stateParams, $location, $http, $timeout, $modal, $nkAuthService){
+.controller('DBToolsController', ['$scope', '$stateParams', '$location', '$http','$timeout','$modal', '$nkAuthService',"$state",
+	function($scope, $stateParams, $location, $http, $timeout, $modal, $nkAuthService, $state){
 		$scope.user = $nkAuthService.getUser();
 		if((typeof $scope.user === 'undefined' || !$scope.user.admin) && $location.$$path !== '/dbtools/signin'){
 			alert('You need to be a logged in admin');
@@ -41,6 +41,10 @@ angular.module('dbtools')
 				$nkAuthService.logout();
 				location.href = '/';
 			};
+
+			$scope.goVisualizations = function(){
+				$state.go("dbtools.visualizations");
+			}
 		}
 	}
 ]);
