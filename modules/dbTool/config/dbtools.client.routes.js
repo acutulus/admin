@@ -20,6 +20,10 @@ angular.module('dbtools').config(['$stateProvider', '$urlRouterProvider', '$loca
 			url:"/dbtools",
 			templateUrl:"modules/dbTool/views/dbtool-home.html"
 		})
+		.state('dbtools.graph',{
+			url:"/graph",
+			templateUrl:"modules/dbTool/views/dbtool-graph.html"
+		})
 		.state('dbtools.summary',{
 			url:'/summary',
 			templateUrl:'modules/dbTool/views/dbtool-summary.html'
@@ -44,5 +48,7 @@ angular.module('dbtools').config(['$stateProvider', '$urlRouterProvider', '$loca
 			url:'/signin',
 			templateUrl:'modules/dbTool/views/signin.html'
 		});
+
+		//$locationProvider.html5Mode(true);
 	}
 ]);

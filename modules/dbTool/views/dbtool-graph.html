@@ -1,0 +1,75 @@
+
+<section ng-controller="GraphController">
+	<div class="container">
+		<div class="panel panel-default">
+			<!--Header and time period selecter area -->
+			<div class="panel panel-heading">
+				<span style="font-size:24px;">Graph Tracked Events</span>
+				<div class="dropdown" style="float:right;">
+				  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+				  	Time Period {{timeStep.step ? ': previous ' + timeStep.step : ''}}
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+				    <li><a href="" ng-click="setTimeStep('hour')">Hour</a></li>
+				    <li><a href="" ng-click="setTimeStep('day')">Day</a></li>
+				    <li><a href="" ng-click="setTimeStep('week')">Week</a></li>
+				    <li><a href="" ng-click="setTimeStep('month')">Month</a></li>
+				    <li><a href="" ng-click="setTimeStep('year')">Year</a></li>
+				  </ul>
+				</div>
+				<button class="btn btn-default" type="button" style="float:right;margin-right:10px;" ng-click="timePeriodSelecter = !timePeriodSelecter">
+					{{'Period Ends: ' + timePeriod.endPretty}}
+				</button>
+				<div class="panel panel-default" style="position:absolute;margin-left:50%;z-index:10;" ng-show="timePeriodSelecter">
+					<div class="panel panel-body">
+						<input class="form-control" type="date" ng-model="periodEndingDate"></input>
+						<button class="btn btn-default" style="margin-top:10px;" ng-click="setTimePeriod(periodEndingDate)">Set Date</button>
+					</div>
+				</div>
+			</div>
+
+			<!-- Event list and toggle area -->
+			<div class="panel panel-body">
+				<div class="col-xs-6 col-xs-offset-3" ng-show="msgs.loading || msgs.error">
+					<div class="alert alert-info" style="text-align:center;" ng-show="msgs.loading">Loading...</div>
+					<div class="alert alert-info" ng-show="msgs.error">Loading...</div>
+				</div>
+				<div class="row" style="background-color:white;margin-right:15px;margin-left:15px;padding:15px;" ng-show="!msgs.loading">
+					<div class="col-xs-3" ng-show="graphDrawn">
+						<label style="float:right;">Add Events</label>
+					</div>
+					<div class="col-xs-6">
+						<select class="form-control" ng-options="event as event for event in eventTypes" 
+		   						ng-model="selectedEvent">
+						</select>
+					</div>
+					<div class="col-xs-3">
+						<button class="btn btn-success" ng-click="updateSelectedEvent()">Add Selected Event</button>
+					</div>
+				</div>
+				<div class="row" style="background-color:white;margin-right:15px;margin-left:15px;">
+					<div class="col-xs-10 col-xs-offset-1">
+						<div class="btn-group" role="group" aria-label="First group">
+							<button type="button" style="margin-right:5px;margin-bottom:5px;background-color:{{event.color}}" class="btn" ng-repeat="event in selectedEvents" ng-click="event.display=!event.display;toggleLine(event)">
+								<a href="" style="color:red;text-decoration:none;font-size:12px;border-right:solid 1px black;" ng-click="selectedEvents.splice($index,1);toggleLine(event);">
+									remove
+								</a>
+								&nbsp&nbsp{{event.name}}
+								<input type="checkbox" ng-checked="event.display" ng-click="toggleLine(event)" ></input>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Graph Display -->
+			<div class="panel panel-body">	
+				<div class="row" style="background-color:white;margin-right:15px;margin-left:15px;">
+					<div class="col-xs-12" id="graphArea" style="padding:20px;">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
