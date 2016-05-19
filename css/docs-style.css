@@ -1,0 +1,98 @@
+html, body {
+  height: 100%; }
+
+.controller-wrap,
+.container-fluid,
+.sidebar,
+.docs-content,
+.docs-right,
+.row {
+  min-height: 100%; }
+
+.docs-content,
+.sidebar {
+  background: #fff; }
+
+.height-fix {
+  position: relative;
+  display: flex;
+  min-width: 100%; }
+
+.docs-content,
+.docs-right {
+  padding: 40px 47px; }
+  .docs-content .nav-pills > li.active > a,
+  .docs-right .nav-pills > li.active > a {
+    background-color: transparent; }
+  .docs-content .nav > li > a:hover,
+  .docs-right .nav > li > a:hover {
+    background: transparent; }
+  .docs-content pre,
+  .docs-right pre {
+    background: transparent; }
+
+.docs-content {
+  margin-left: 16.66666667%; }
+  .docs-content p {
+    font-weight: 300; }
+  .docs-content h3 {
+    margin-top: 0; }
+  .docs-content .panel {
+    border: 3px solid transparent;
+    border-radius: 8px; }
+  .docs-content .panel-default {
+    border-color: #eee; }
+  .docs-content .panel-danger {
+    margin-top: 20px;
+    border: initial; }
+  .docs-content .nav-pills > li.active > a {
+    color: #75BF56; }
+  .docs-content .tab-content {
+    border: 3px solid #eee;
+    border-radius: 8px; }
+    .docs-content .tab-content pre {
+      margin: 0 0 0; }
+  .docs-content .label {
+    font-size: 40%; }
+  .docs-content .item-description {
+    margin: 0 0 5px; }
+  .docs-content .params {
+    text-align: right; }
+
+.docs-right {
+  background: #45474b;
+  color: #fff; }
+  .docs-right .nav-pills > li.active > a {
+    text-decoration: underline; }
+  .docs-right .nav-pills > li > a {
+    padding-left: 0; }
+  .docs-right .highlight {
+    color: #fff;
+    position: relative; }
+  .docs-right .example-url {
+    border-bottom: 1px solid #5c5e63;
+    padding-bottom: 20px;
+    font-weight: 300; }
+  .docs-right .results-heading {
+    padding-top: 10px;
+    margin-bottom: 0; }
+  .docs-right pre {
+    color: #fff;
+    border: none; }
+
+.sidebar {
+  border-right: 1px solid #ddd;
+  padding: 40px 20px;
+  position: fixed; }
+  .sidebar h4 {
+    color: #bbb;
+    font-weight: 300; }
+
+@media (max-width: 992px) {
+  .docs-right {
+    margin-left: 16.66666667%; }
+
+  .height-fix {
+    display: initial; } }
+
+/*# sourceMappingURL=docs-style.css.map */

@@ -1,0 +1,146 @@
+    
+    <div ng-controller="DocumentationCtrl" class="controller-wrap">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="sidebar col-sm-2">
+            <div ng-repeat="(name, controller) in controllers">
+              <h4>{{name}}</h4>
+              <div ng-repeat="item in controller.functions">
+                <span class="label" ng-class="{'label-success' : item.method === 'get', 'label-primary': item.method === 'post'}">{{item.method}}</span>
+                <a href="#">{{item.restRoute}}</a>
+              </div>
+            </div>
+          </div>
+
+          <div ng-repeat="controller in controllers">
+            <div ng-repeat="item in controller.functions" class="height-fix">
+              <div class="docs-content col-lg-6 col-md-12">
+                <h4 style="color:#bbb;font-weight:300;">{{item.name}}</h4>
+                <h3>
+                  <span class="label label-primary" ng-class="{'label-success' : item.method === 'get', 'label-primary': item.method === 'post'}">{{item.method}}</span>
+                  {{item.restRoute}}
+                </h3>
+                <p class="text-muted">{{item.label}}</p>
+
+                <hr>
+
+                <!-- Description Panel -->
+                <div class="panel panel-default">
+                  <div class="panel-body">
+                    <div class="table">
+                      <div ng-repeat="(name, param) in item.params" class="col-sm-12">
+                        <div class="params col-lg-2 col-md-3 col-sm-2">
+                          <span><strong>{{name}}</strong>:</span><br>
+                          <span class="text-danger" ng-if="param.required">Required</span>
+                        </div>
+                        <div class="col-lg-10 col-md-9 col-sm-10">
+                          <span><strong>{{param.type || param}}</strong></span>
+                          <p class="text-muted" ng-if="param.description">{{param.description}}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End Description Panel -->
+
+                <p class="item-description">{{item.description}}</p>
+
+                <!-- Nav Tabs -->
+                  <ul class="nav nav-pills">
+                      <li role="presentation" class="active"><a aria-controls="json" href="#jquery" role="tab" data-toggle="pill">json</a></li>
+                      <li role="presentation" color="text-muted"><a aria-controls="python" href="#python" role="tab" data-toggle="pill">Python</a></li>
+                      <li role="presentation" color="text-muted"><a aria-controls="node" href="#node" role="tab" data-toggle="pill">Node</a></li>
+                  </ul>
+
+                <!-- Tab Content -->
+                <div class="tab-content">
+                  <div role="tabpanel" class="tab-pane active" id="jquery">
+                    <pre>
+                      <code class="jquery">
+
+                        {{item.results.success}}
+
+                      </code>
+                    </pre>
+                  </div>
+                  <div role="tabpanel" class="tab-pane" id="python">
+                    <pre>
+                      <code class="python">
+                        
+                      </code>
+                    </pre>
+                  </div>
+                  <div role="tabpanel" class="tab-pane" id="node">
+                    <pre>
+                      <code class="node">
+                        
+                      </code>
+                    </pre>
+                  </div>
+                </div>
+                <!-- End Tabs -->
+
+               <div class="panel panel-danger">
+                  <div class="panel-heading">
+                    <h4>Unit Tests</h4>
+                  </div>
+                  <div class="panel-body">
+                    <div class="table">
+                      <div ng-repeat="(name, test) in item.unitTests" class="col-sm-12">
+                        <div class="params col-lg-2 col-md-3 col-sm-2">
+                          <span>{{controller}} {{item.name}} it {{test.itShould}}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Confirmation Panel -->
+
+               <!--  <div class="panel panel-danger">
+                  <div class="panel-heading">
+                    <h4>Panel Heading</h4>
+                  </div>
+                  <div class="panel-body">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde deserunt, a provident earum aut facilis voluptas voluptatem, soluta officiis nulla tempore ullam dolor incidunt vitae. Soluta et error, aut quia?</p>
+                  </div>
+                </div> -->
+
+              </div>
+              <!-- End Row -->
+
+              <!-- Code Example -->
+              <div class="docs-right col-lg-4 col-md-12">
+                <h5 class="text-muted">Definition</h5>
+                <p class="example-url text-muted">http://sampleapi.acutulus.co<span class="highlight">{{item.restRoute}}</span></p>
+                <h5 class="text-muted results-heading">Results Format</h5>
+                <!-- Results Nav Tabs -->
+                <ul class="nav nav-pills">
+                  <li role="presentation" class="active"><a aria-controls="success" href="#success" role="tab" data-toggle="pill">Success</a></li>
+                  <li role="presentation"><a aria-controls="failure" href="#failure" role="tab" data-toggle="pill">Failure</a></li>
+                </ul>
+                <!-- Results Nav Tab Content -->
+                <div class="tab-content">
+                  <div class="tab-pane active" role="tabpanel" id="success">
+                    <pre>
+                      <code class="json">
+                        {{item.results.success}}
+                      </code>
+                    </pre>
+                  </div>
+                  <div class="tab-pane" role="tabpanel" id="failure">
+                    <pre>
+                      <code class="json">
+                        {{item.results.failure}}
+                      </code>
+                    </pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- End Code Example -->
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

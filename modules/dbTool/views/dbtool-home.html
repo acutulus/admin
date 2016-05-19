@@ -28,6 +28,11 @@
 						<li ng-repeat="table in models"><a ui-sref="dbtools.data({ tablename: key })">{{table}}</a></li>
 					</ul>
 				</li>
+				<li ng-show="user.admin">
+					<a ui-sref="dbtools.documation">
+						Documentation
+					</a>
+				</li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right" >
 				<li data-ng-hide="user">
@@ -40,6 +45,6 @@
 		</section>
 	</header>	
 
-	<div class="buffer-header" style="margin-top:70px;"></div>
+	<div class="buffer-header" style="margin-top:51px;"></div>
 	<section data-ui-view></section>
 </section>
