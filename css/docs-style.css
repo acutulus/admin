@@ -32,11 +32,13 @@ html, body {
     background: transparent; }
 
 .docs-content {
-  margin-left: 16.66666667%; }
+  margin-left: 16.66666667%;
+  display: inline-block; }
   .docs-content p {
     font-weight: 300; }
   .docs-content h3 {
-    margin-top: 0; }
+    margin-top: 0;
+    white-space: nowrap; }
   .docs-content .panel {
     border: 3px solid transparent;
     border-radius: 8px; }
@@ -53,11 +55,14 @@ html, body {
     .docs-content .tab-content pre {
       margin: 0 0 0; }
   .docs-content .label {
-    font-size: 40%; }
+    font-size: 40%;
+    position: relative;
+    top: -5px; }
   .docs-content .item-description {
     margin: 0 0 5px; }
   .docs-content .params {
-    text-align: right; }
+    text-align: right;
+    padding-right: 0px; }
 
 .docs-right {
   background: #45474b;
@@ -68,7 +73,8 @@ html, body {
     padding-left: 0; }
   .docs-right .highlight {
     color: #fff;
-    position: relative; }
+    position: relative;
+    word-wrap: break-word; }
   .docs-right .example-url {
     border-bottom: 1px solid #5c5e63;
     padding-bottom: 20px;
@@ -80,10 +86,26 @@ html, body {
     color: #fff;
     border: none; }
 
+.sidebar::-webkit-scrollbar {
+  display: none; }
+
 .sidebar {
+  width: 200px;
   border-right: 1px solid #ddd;
   padding: 40px 20px;
-  position: fixed; }
+  position: fixed;
+  z-index: 1;
+  overflow-x: hidden; }
+  .sidebar .sidebar-inner {
+    width: 160px;
+    overflow-x: hidden;
+    white-space: nowrap;
+    position: absolute; }
+    .sidebar .sidebar-inner .item {
+      padding-bottom: 10px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block; }
   .sidebar h4 {
     color: #bbb;
     font-weight: 300; }

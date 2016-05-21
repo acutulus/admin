@@ -45,6 +45,7 @@ html, body {
 .docs-content {
 
 	margin-left: 16.66666667%;
+	display: inline-block;
 	
 	p {
 		font-weight: 300;
@@ -52,6 +53,7 @@ html, body {
 
 	h3 {
 		margin-top: 0;
+		white-space: nowrap;
 	}
 
 	.panel {
@@ -83,6 +85,8 @@ html, body {
 
 	.label {
 		font-size: 40%;
+		position: relative;
+		top: -5px;
 	}
 	
 	.item-description {
@@ -111,6 +115,7 @@ html, body {
 	.highlight {
 		color: #fff;
 		position: relative;
+		word-wrap: break-word;
 	}
 
 	.example-url {
@@ -130,10 +135,31 @@ html, body {
 	}
 }
 
+.sidebar::-webkit-scrollbar {
+	display: none;
+}
+
 .sidebar {
+	width: 200px;
 	border-right: 1px solid #ddd;
 	padding: 40px 20px;
 	position: fixed;
+	z-index: 1;
+	overflow-x: hidden;
+
+	.sidebar-inner {
+		width: 160px;
+		overflow-x: hidden;
+		white-space: nowrap;
+		position: absolute;
+
+		.item {
+			padding-bottom: 10px;
+			overflow: hidden;
+		    text-overflow: ellipsis;
+		    display: block;
+		}
+	}
 
 	h4 {
 		color: #bbb;

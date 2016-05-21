@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('dbtools').controller('DocumentationCtrl', ['$scope', '$http',
-  function($scope, $http){
+angular.module('dbtools').controller('DocumentationCtrl', ['$scope', '$http', '$anchorScroll',
+  function($scope, $http, $anchorScroll){
       $http.get($scope.apiHost + '/admin/restRoutes')
         .then(function(response){
           $scope.controllers = response.data;
@@ -14,8 +14,13 @@ angular.module('dbtools').controller('DocumentationCtrl', ['$scope', '$http',
         $http.get($scope.apiHost + '/api/v1/unitTests/testsForRoute?route='+item.route)
           .then(function(response){
             item.unitTests = response.data;
-          });        
+          }); 
       };
+
+      $scope.toScroll = function(route) {
+        $anchorScroll(route.restRoute);
+      };       
+      
 /*
             $scope.controllers = {
               'orders':{
