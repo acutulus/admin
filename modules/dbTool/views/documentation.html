@@ -1,13 +1,20 @@
     
     <div ng-controller="DocumentationCtrl" class="controller-wrap">
       <div class="container-fluid">
+
+        <div class="row" style="margin-top:40px;" ng-if="loadingRestRoutes">
+          <div class="col-sm-4 col-sm-offset-4" style="text-align:center" >
+            <div class="alert alert-info">Loading Documentation&nbsp&nbsp<i class="fa fa-spinner fa-spin"></i></div>
+          </div>
+        </div> 
+
         <div class="row">
         <!-- SIDEBAR -->
           <div class="sidebar col-sm-2">
             <div class="sidebar-inner">
               <div ng-repeat="(name, controller) in controllers">
                 <h4>{{name}}</h4>
-                <a ng-repeat="item in controller.functions" class="item" ng-click="toScroll(item)">
+                <a href="" ng-repeat="item in controller.functions" class="item" ng-click="toScroll(item)">
                   <span class="label" ng-class="{'label-success' : item.method === 'get', 'label-primary': item.method === 'post', 'label-danger': item.method === 'delete', 'label-info': item.method === 'put'}">{{item.method}}</span>
                   <span>{{item.restRoute}}</span>
                 </a>
@@ -84,6 +91,73 @@
                 </div>
                 <!-- End Tabs -->
 
+                <!-- Test Routes -->
+                <button class="btn btn-info" style="margin-top:10px;margin-bottom:10px;" ng-click="item.showTestRoute = !item.showTestRoute">
+                  <span class="glyphicon glyphicon-record" ></span>
+                  {{item.showTestRoute ? 'Hide Test Route' : 'Test Route'}}
+                </button>
+                <div class="panel panel-default" ng-if="item.showTestRoute">
+                  <div class="panel-heading">
+                    <h4>Try out route</h4>
+                  </div>
+                  <div class="panel-body">
+                      <keps-form ng-init="item.testRouteParams = {};item.testRouteErrors = {}" keps-data="item.testParams" keps-errors="item.testRouteErrors" keps-model="item.testRouteParams" ></keps-form>
+                      <div class="input-group">
+                        <span class="input-group-addon">
+                          <span class="label label-primary" ng-class="{'label-success' : item.method === 'get', 'label-primary': item.method === 'post', 'label-danger': item.method === 'delete', 'label-info': item.method === 'put'}">{{item.method}}</span>
+                        </span>
+                        <input type="text" class="form-control" placeholder="{{item.restRoute}}"disabled="true">
+                        <span class="input-group-btn">
+                          <button class="btn btn-success" type="button" ng-click="testRoute(item)">Go!</button>
+                        </span>
+                      </div>
+                    </div>
+                </div>
+                <div class="panel panel-default" ng-show="item.testResults">
+                  <div class="panel panel-heading">
+                  <a href="" style="float:right;color:red" ng-click="item.testResults = false">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                  </a>
+
+                    <div style="background-color:{{item.testResults.statusColor;}};height:10px;width:10px;border-radius:50%;display:inline-block;"></div>
+                    {{item.testResults.status}} - {{item.testResults.statusText}}
+                  </div>
+                  <div class="panel panel-body">
+                    <pre >{{ item.testResults.data | json }}</pre>
+
+                  </div>       
+
+                  <div class="panel panel-body">
+                    <table class="table " style="table-layout:fixed;">
+                      <tr ng-show="item.testResults.method">
+                        <th style="width:25%;background-color:#F1F1F1;">
+                          Method
+                        </th>
+                        <td style="overflow:scroll">
+                          {{item.testResults.method}}
+                        </td>
+                      </tr> 
+                      <tr ng-show="item.testResults.url">
+                        <th style="width:25%;background-color:#F1F1F1;">
+                          Url
+                        </th>
+                        <td style="overflow:scroll">
+                          {{item.testResults.url}}
+                        </td>
+                      </tr>                     
+                      <tr ng-show="item.testResults.headers">
+                        <th style="width:25%;background-color:#F1F1F1;">
+                          Headers
+                        </th>
+                        <td style="overflow:scroll">
+                          {{item.testResults.headers}}
+                        </td>
+                      </tr>  
+                    </table>
+                  </div>
+                </div>
+                <!-- End Test Routes -->
+
                <div class="panel panel-danger">
                   <div class="panel-heading">
                     <h4>Unit Tests</h4>
@@ -99,6 +173,7 @@
                   </div>
                 </div>
                 <!-- Confirmation Panel -->
+
 
                <!--  <div class="panel panel-danger">
                   <div class="panel-heading">

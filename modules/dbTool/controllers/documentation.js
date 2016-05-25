@@ -2,10 +2,44 @@
 
 angular.module('dbtools').controller('DocumentationCtrl', ['$scope', '$http', '$anchorScroll',
   function($scope, $http, $anchorScroll){
+      $scope.loadingRestRoutes = true;
       $http.get($scope.apiHost + '/admin/restRoutes')
         .then(function(response){
+          $scope.loadingRestRoutes = false;
           $scope.controllers = response.data;
+          addTestParams();
         });
+
+      //add TestParams property onto controllers.functions
+      //testParams turns object type params into strings, 
+      //but switch reference type to string and add _id onto their label
+      function addTestParams(){
+        var testParams = {};
+        var params;
+        for(var x in $scope.controllers){
+
+          for(var k in $scope.controllers[x].functions){
+            params = $scope.controllers[x].functions[k].params;
+            for(var y in params){
+              if(typeof params[y] === 'string'){
+                if(params[y].indexOf(":") > -1){
+                  testParams[y] = "string";
+                }else{
+                  testParams[y] = $scope.controllers[x].functions[k].params[y];
+                }
+              }else if (typeof params[y] === 'object'){
+                if(params[y].type.indexOf(":") > -1){
+                  testParams[y] = "string";
+                }else{
+                  testParams[y] = $scope.controllers[x].functions[k].params[y].type;
+                }
+              }
+            }
+            $scope.controllers[x].functions[k].testParams = testParams;
+            testParams = {};
+          }
+        }
+      }
 
       $scope.openAPIExplorer = function(route) {
 
@@ -19,8 +53,109 @@ angular.module('dbtools').controller('DocumentationCtrl', ['$scope', '$http', '$
 
       $scope.toScroll = function(route) {
         $anchorScroll(route.restRoute);
-      };       
-      
+      }; 
+
+      $scope.testRoute = function(route){
+        console.log(route);
+        switch(route.method){
+          case('get'): return runGetRequest(route);
+          case('post'): return runPostRequest(route);
+          case('put'): return runPutRequest(route);
+          case('delete'): return runDeleteRequest(route);
+        }
+      };     
+
+      function runGetRequest(route){
+        var url = replaceIdInRoute(route);
+        url += buildQuerystring(route);
+
+        $http.get($scope.apiHost + url)
+        .then(function(success){
+          displayRequestResults(route, success);
+        }, function(err){
+          displayRequestResults(route, err);
+        })
+      }
+      /*build request body
+      */
+      function runPostRequest(route){
+        var url = replaceIdInRoute(route);
+        var body = route.testRouteParams;
+       
+        $http.post($scope.apiHost + url, body)
+        .then(function(success){
+          displayRequestResults(route, success);
+        }, function(err){
+          displayRequestResults(route, err);
+        });
+      };
+
+      function runPutRequest(route){
+        var url = replaceIdInRoute(route);
+        var body = route.testRouteParams;
+
+        $http.put($scope.apiHost + url, body)
+        .then(function(success){
+          displayRequestResults(route,success);
+        }, function(err){
+          displayRequestResults(route, err);
+        });
+      };
+
+      function runDeleteRequest(route){
+        var url = replaceIdInRoute(route);
+        url += buildQuerystring(route);
+
+        $http.delete($scope.apiHost + url)
+        .then(function(success){
+          displayRequestResults(route, success);
+        }, function(err){
+          displayRequestResults(route, err);
+        });
+      };
+
+      function displayRequestResults(route, response){
+        route.testResults = {};
+        route.testResults.statusColor = response.status === 200 ? 'green' : 'red';
+        route.testResults.status = response.status;
+        route.testResults.statusText = response.statusText;
+        route.testResults.data = response.data;
+        route.testResults.method = response.config.method;
+        route.testResults.headers = response.config.headers;
+        route.testResults.url = response.config.url;
+      }
+
+      //replace /:model with id in route e.g. /api/v1/candidates/:candidate turned into /api/v1/candidates/123sadasdf23
+      function replaceIdInRoute(route){
+        if(route.restRoute.indexOf(":") > -1){
+          //split url string into array >> replace reference fields >> join array into url string
+          var url = route.restRoute.split('/');
+          for(var i = 0; i < url.length; i++){
+            if(url[i].indexOf(":") > -1){
+              var key = url[i].slice(1);
+              url[i] = route.testRouteParams[key];
+              delete route.testRouteParams[key]; //remove field so it doesnt get added to querystring or body
+            } 
+          }
+          url = url.join('/');
+          return url;
+        }else{
+          return route.restRoute;
+        }
+      }
+      //returns "?params=value" or ""
+      function buildQuerystring(route){
+        var querystring = "?";
+        for(var x in route.testRouteParams){
+          querystring += x + "=" + route.testRouteParams[x] + "&";
+        }
+        if(querystring.length > 1){
+          querystring = querystring.slice(0, querystring.length - 1);
+        }else{
+          querystring = "";
+        }
+        return querystring;
+      }
 /*
             $scope.controllers = {
               'orders':{
