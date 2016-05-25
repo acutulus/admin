@@ -201,6 +201,13 @@ angular.module('dbtools')
 			});
 		};
 
+		$scope.seedItem = function(item){
+			console.log(item);
+			$http.put($scope.apiHost + "/admin/rest/" + $scope.table + "s/"+item._id+"/seed").then(function(data){
+				item._seed = true;
+			});
+		};
+
 		//devices table specific function
 		$scope.pushNotification = function(device){
 			$http.get($scope.apiHost + 'admin/devices/push/' + device._id) //made up fake route for now

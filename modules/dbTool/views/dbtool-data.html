@@ -83,7 +83,7 @@
 			</thead>
 			<tbody>
 				<tr ng-repeat="row in displayData">
-					<td style="display:inline-block;width:93px;" >
+					<td style="display:inline-block;width:120px;" >
 						<div class="btn-group">
 							<button style="margin:0 auto;padding:0" type="button" title="hide" ng-click="removeItem(row)" class="btn btn-sm btn-warning"><span class="glyphicon glyphicon-minus"></span>
 							</button>
@@ -91,7 +91,9 @@
 							</button>
 							<button style="margin:0 auto; padding:0" type="button" title="delete" ng-click="deleteItem(row)" class="btn btn-sm btn-danger"><span class="glyphicon glyphicon-remove"></span>
 							</button>
-							<button ng-show="table === 'devices'" style="margin:0 auto;padding:0" type="button" title="send notification" ng-click="pushNotification(row)" class="btn btn-sm btn-info"><span class="glyphicon glyphicon-phone"></span>
+							<button style="margin:0 auto; padding:0" ng-disabled="row._seed" type="button" title="seed" ng-click="seedItem(row)" class="btn btn-sm btn-info"><span class="glyphicon glyphicon-floppy-save"></span>
+							</button>
+							<button ng-if="table === 'devices'" style="margin:0 auto;padding:0" type="button" title="send notification" ng-click="pushNotification(row)" class="btn btn-sm btn-info"><span class="glyphicon glyphicon-phone"></span>
 							</button>
 						</div>
 					</td>		
