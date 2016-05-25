@@ -10,37 +10,81 @@ angular.module('dbtools').controller('DocumentationCtrl', ['$scope', '$http', '$
           addTestParams();
         });
 
-      //add TestParams property onto controllers.functions
-      //testParams turns object type params into strings, 
-      //but switch reference type to string and add _id onto their label
-      function addTestParams(){
-        var testParams = {};
-        var params;
-        for(var x in $scope.controllers){
+      $http.get($scope.apiHost + '/admin/models')
+      .then(function(response){
+        $scope.models = response.data;
+        addTestParams();
+      }); 
 
-          for(var k in $scope.controllers[x].functions){
-            params = $scope.controllers[x].functions[k].params;
-            for(var y in params){
-              if(typeof params[y] === 'string'){
-                if(params[y].indexOf(":") > -1){
-                  testParams[y] = "string";
-                }else{
-                  testParams[y] = $scope.controllers[x].functions[k].params[y];
-                }
-              }else if (typeof params[y] === 'object'){
-                if(params[y].type.indexOf(":") > -1){
-                  testParams[y] = "string";
-                }else{
-                  testParams[y] = $scope.controllers[x].functions[k].params[y].type;
-                }
+      //add TestParams property onto controllers.functions
+      //testParams turns reference type params into strings, 
+      //but switch reference type to string, add subSchema onto Object type onto their label
+      function addTestParams(){
+        if($scope.models && $scope.controllers){
+          var testParams = {};
+          var params;
+          for(var x in $scope.controllers){
+            for(var k in $scope.controllers[x].functions){
+              params = $scope.controllers[x].functions[k].params;
+              for(var y in params){
+                testParams[y] = modifyObjectAndReferenceParams(params[y]);
               }
+              $scope.controllers[x].functions[k].testParams = testParams;
+              testParams = {};
             }
-            $scope.controllers[x].functions[k].testParams = testParams;
-            testParams = {};
           }
         }
       }
+      function modifyObjectAndReferenceParams(params){
+        if(typeof params === "string"){
+         
+          if(params.indexOf(":") === 0){
+            return "string";
+          }else if(params !== "_user" && params.indexOf("_") === 0){
+            var modelName = params.slice(1);
+            if($scope.models[modelName]){
+              var subSchema = {};
+              for(var x in $scope.models[modelName].schema){
+                if(x.indexOf("_") === 0){
 
+                }else{
+                  subSchema[x] = $scope.models[modelName].schema[x].type;
+                }
+              }
+              return {type:"object", subSchema:subSchema};
+            }else{
+              return "textarea";
+            }
+          }else{
+            return params;
+          }
+
+        }else if(typeof params === "object"){
+         
+          if(params.type.indexOf(":") === 0){
+            return "string";
+          }else if(params.type !== "_user" && params.type.indexOf("_") === 0){
+            var modelName = params.type.slice(1);
+            if($scope.models[modelName]){
+              var subSchema = {};
+              for(var x in $scope.models[modelName].schema){
+                if(x.indexOf("_") === 0){
+
+                }else{
+                  subSchema[x] = $scope.models[modelName].schema[x].type;
+                }
+              }
+            }
+            return {type:"object", subSchema:subSchema};
+          }else{
+            return params.type;
+          }
+
+        }else{
+          console.error("Weird Arg passed in Params", params);
+          return params;
+        }
+      }
       $scope.openAPIExplorer = function(route) {
 
       };

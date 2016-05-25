@@ -119,12 +119,11 @@
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                   </a>
 
-                    <div style="background-color:{{item.testResults.statusColor;}};height:10px;width:10px;border-radius:50%;display:inline-block;"></div>
+                  <div style="background-color:{{item.testResults.statusColor;}};height:10px;width:10px;border-radius:50%;display:inline-block;"></div>
                     {{item.testResults.status}} - {{item.testResults.statusText}}
                   </div>
                   <div class="panel panel-body">
                     <pre >{{ item.testResults.data | json }}</pre>
-
                   </div>       
 
                   <div class="panel panel-body">
