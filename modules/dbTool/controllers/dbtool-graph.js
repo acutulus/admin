@@ -10,81 +10,112 @@ angular.module('dbtools')
 				location.href = "/admin/dbtools/signin";
 			}
 
-			//Retrieve and process graph data into $scope.graphData = {eventName:trackedEventObject}
+			$scope.trackedEvents = [];  		//trackedEvent names for selecting trackedEvent to view
+			$scope.trackedEventsDisplay = []; 	//trackedEvent display properties - e.g. [{display:true, color:#34343D, name:"View", data:[]}]
+			
+			//get trackedEvent names
 			$scope.msgs = {loading:true};
-			$http.get('/api/v1/trackedEvents')
+			$http.get($scope.apiHost + '/admin/events/unique')
 			.then(function(success){
-				processData(success.data);
+				$scope.msgs = {};
+				$scope.trackedEvents = success.data;
+				drawGraph();
 			}, function(err){
-				console.error(err);
-				$scope.msgs = {error:err};
+				console.log(err);
+				$scope.msgs = {error:"Error occured " +  err};
 			});
-			var processData = function(data){
-				$scope.graphData = {};
-				$scope.eventTypes = [];
-				for(var i = 0; i < data.length; i++){
-					if($scope.graphData.hasOwnProperty(data[i].event)){
-						$scope.graphData[data[i].event].push(data[i]);
-					}else{
-						$scope.eventTypes.push(data[i].event);
-						$scope.graphData[data[i].event] = [];
-						$scope.graphData[data[i].event].push(data[i]);
-					}
-				}
-				$scope.msgs = false;
-			}
 
-			//list of colors, random generation too often results in black/white/brown/grey which sucks
-			$scope.lineColors = [{inUse:false, value:'#ff9933'},{inUse:false, value:'#33cc33'},{inUse:false, value:'#00cccc'},{inUse:false, value:'#0066ff'},
-								 {inUse:false, value:'#6600ff'}, {inUse:false, value:'#9900cc'}, {inUse:false, value:'#e6e600'}, {inUse:false, value:'#e60000'},
-								 ,{inUse:false, value:'#86592d'}, {inUse:false, value:'#6699ff'}, {inUse:false, value:'#ff3399'}, {inUse:false, value:'#33ff99'}]
-
-			function getRandomColor(){
-				for(var i = 0; i < $scope.lineColors.length; i++){
-					if(!$scope.lineColors[i].inUse){
-						$scope.lineColors[i].inUse = true;
-						return $scope.lineColors[i].value;
-					}
-				}
-			}
-			//holds selected events and their display/hide toggle
-			//selectedEvents = [{display:boolean, event:String, color:#fffff}]
-			$scope.selectedEvents = [];
-			$scope.updateSelectedEvent = function(ev){
-				if($scope.selectedEvent){
-					var found = $scope.selectedEvents.find(function(elem, index){
-						if(elem.name === $scope.selectedEvent){
-							return true;
+			/*### EVENT STUFF ###*/
+			//get data for a specific trackedEvent and add it to graph
+			$scope.getTrackedEventData = function(evt){
+				if(evt){
+					$http.get($scope.apiHost+'/api/v1/trackedEvents/byEventName?event=' + evt + "&start=" + $scope.timePeriod.start + "&end=" + $scope.timePeriod.end)
+					.then(function(data){
+						
+						$scope.trackedEvents.splice($scope.trackedEvents.indexOf(evt), 1);
+						$scope.trackedEventsDisplay.push({name:evt, display:true,
+														  color:getRandomColor(), data:data.data});
+						//call first draw of line
+						for(var i = 0; i < $scope.trackedEventsDisplay.length; i++){
+							if(evt === $scope.trackedEventsDisplay[i].name){
+								toggleLine($scope.trackedEventsDisplay[i]);
+							}
 						}
+					}, function(err){
+						console.error(err)
 					});
-					if(!found) {
-						var color = getRandomColor();
-						var newEvent = {display:true, name:$scope.selectedEvent, color:color};
-						$scope.selectedEvents.push(newEvent);
-						drawLine(newEvent);
-					}
-					$scope.selectedEvent = "";
+					$scope.trackedEventToAdd = null;
 				}
 			}
+			
+			function getRandomColor(){
+				for(var i = 0; i < lineColors.length; i++){
+					if(!lineColors[i].inUse){
+						lineColors[i].inUse = true;
+						return lineColors[i].value;
+					}
+				}
+				return "#000000"; //out of colors, default black
+			}
+			var lineColors = [	{inUse:false, value:'#ff9933'}, {inUse:false, value:'#33cc33'}, 
+								{inUse:false, value:'#00cccc'}, {inUse:false, value:'#0066ff'},
+								{inUse:false, value:'#6600ff'}, {inUse:false, value:'#9900cc'}, 
+								{inUse:false, value:'#e6e600'}, {inUse:false, value:'#e60000'},
+								{inUse:false, value:'#86592d'}, {inUse:false, value:'#6699ff'}, 
+								{inUse:false, value:'#ff3399'}, {inUse:false, value:'#33ff99'},
+								{inUse:false, value:'#ff66ff'}, {inUse:false, value:'#99d6ff'}, 
+								{inUse:false, value:'#996633'}, {inUse:false, value:'#666699'}
+							 ];
+
+			$scope.removeTrackedEvent = function(evt){
+				for(var i = 0; i < $scope.trackedEventsDisplay.length; i++){
+					if(evt.name === $scope.trackedEventsDisplay[i].name){
+						$scope.trackedEventsDisplay.splice(i,1);
+						$scope.trackedEvents.push(evt.name);
+					}
+				}
+				removeLine(evt);
+
+				if(!linesLeftOnGraph()){
+					yAxisMax = 1;
+					updateGraph();
+				}
+			}
+			
+			function linesLeftOnGraph(){
+				for(var x in $scope.trackedEventsDisplay){
+					if($scope.trackedEventsDisplay[x].display){
+						return true;
+					}
+				}
+				return false;
+			}
+
+			$scope.toggleEvent = function(evt){
+				evt.display = !evt.display;
+				toggleLine(evt);
+			}
+			/* #### END EVENT STUFF #####*/
+
 
 			/* ############## D3 GRAPH STUFF #################*/
 			
 			//GRAPH GLOBAL VARIABLES
-			var svg;
-			var yAxisMax = 1; 
+			var svg = false;
+			var yAxisMax = 1;
 			var xScale;
 			var yScale;
 			var xAxis;
 			var yAxis;
+
+			/*## Graph Time Stuff ##*/
 			$scope.timeStep;
 			$scope.timePeriod;
-
 			var prettyDate = function(time){
 				var date = new Date(time);
 				return (1+ date.getMonth() + "/" + date.getDate() + "/" + date.getFullYear());
 			}
-
-		    function timeStepToMs(time){
+		    function timePeriodToMs(time){
 		    	switch(time){
 		    		case("hour"):
 		    			return 3600000;
@@ -100,39 +131,33 @@ angular.module('dbtools')
 		    			return false;
 		    	}
 		    }
-
 		    //default initialize timeStep to weeks
-			$scope.timeStep = {step:'week'};
-			$scope.timeStep.stepMs = timeStepToMs('week');
-			$scope.setTimeStep = function(step){
-				$scope.timeStep = {step:step};
-				$scope.timeStep.stepMs = timeStepToMs(step);
-				$scope.setTimePeriod();
-			}
+			$scope.timePeriod = {period:'week'};
+			$scope.timePeriod.ms = timePeriodToMs('week');
+			$scope.timePeriod.end = new Date().getTime();
+			$scope.timePeriod.start = $scope.timePeriod.end - $scope.timePeriod.ms;
+			$scope.timePeriod.endPretty = prettyDate($scope.timePeriod.end);
+			$scope.timePeriod.startPretty = prettyDate($scope.timePeriod.start);
 
-			//$scope.timePeriod = x axis start/end of width, time defaults to lastweek - today
-			$scope.setTimePeriod = function(time){
-				if(time){
-					$scope.currentPeriodEndTime = new Date(time).getTime();
+			$scope.setTimePeriod = function(period, date){
+				if(date){
+					$scope.timePeriod.end = new Date(date).getTime();
+					$scope.timePeriod.endPretty = prettyDate($scope.timePeriod.end);
 				}
-				if(!$scope.currentPeriodEndTime){
-					$scope.currentPeriodEndTime = new Date().getTime();
+				if(period){
+					$scope.timePeriod.period = period;
+					$scope.timePeriod.ms = timePeriodToMs(period);
 				}
-					
-				$scope.timePeriod = {};
-				$scope.timePeriod.end = $scope.currentPeriodEndTime;
-				$scope.timePeriod.start = $scope.timePeriod.end - $scope.timeStep.stepMs;
-				$scope.timePeriod.endPretty = prettyDate($scope.timePeriod.end);
+				$scope.timePeriod.start = $scope.timePeriod.end - $scope.timePeriod.ms;
 				$scope.timePeriod.startPretty = prettyDate($scope.timePeriod.start);
 
-				$scope.timePeriodSelecter = false;
-				$scope.drawGraph();
-				removeAllLines();
-				drawAllLines();
-
+				if(date || period){
+					drawGraph();
+					redrawLines();
+				}
 			}
 
-			//build graph dimensions based on window width/height
+			/*## Graph Dimensions and X/Y axis stuff ##*/
 			function getGraphDimensions(){
 				var dimensions = {};
 				var width = document.getElementById('graphArea').offsetWidth * 0.9;
@@ -148,18 +173,21 @@ angular.module('dbtools')
 				return dimensions;
 			}
 
-			//TODO - Dynamic X-axis should resolve between width, start, end times
-			function getxAxisTicks(dimensions){
+			function drawGraph(){
+				if(svg){
+					updateGraph();
+					redrawLines();
+				}else{
+					createGraph();
+				}
 
 			}
-
-			$scope.createGraph = function(){
+			function createGraph(){
 				var dimensions = getGraphDimensions();
 
 				var ticksX = Math.floor(dimensions.width/80);
 				var ticksY = Math.floor(dimensions.height/50);
 				var pointSpacing = Math.floor(dimensions.width/15);
-
 
 				svg = d3.select("#graphArea")
 				    		.append("svg")
@@ -192,12 +220,10 @@ angular.module('dbtools')
 			    svg.append("g")
 			        .attr("class", "y axis")
 			        .call(yAxis);
-
-				$scope.graphDrawn = true;
 			}	
 
 
-			$scope.updateGraph = function(){
+			function updateGraph(){
 				var dimensions = getGraphDimensions();
 				var ticksX = Math.floor(dimensions.width/80);
 				var ticksY = Math.floor(dimensions.height/50);
@@ -212,7 +238,7 @@ angular.module('dbtools')
 
 				xScale = d3.time.scale().domain([$scope.timePeriod.start, $scope.timePeriod.end]).range([0, dimensions.width]);
 
-				yScale = d3.scale.linear().range([dimensions.height, 0]);
+				yScale = d3.scale.linear().domain([0,yAxisMax]).range([dimensions.height, 0]);
 
 				xAxis = d3.svg.axis().scale(xScale)
 				    		.orient("bottom").ticks(ticksX);
@@ -228,7 +254,7 @@ angular.module('dbtools')
 		       		.call(yAxis)
 		    }
 
-			/*timeout screen adjustment redraw graph stuff*/
+			/*timeout screen adjustment redraw graph stuff
 			var resizing = false;
 			var resizeGraph = function(){
 				if(resizing){
@@ -239,40 +265,41 @@ angular.module('dbtools')
 				}, 500);
 			}
 			window.addEventListener('resize', resizeGraph)
+			*/
 
-			$scope.drawGraph = function(){
-				yAxisMax = 1;
-				if($scope.graphDrawn){
-					$scope.updateGraph();
-				}else{
-					$scope.createGraph();
-				}
-			}
 
 		    /*### Line drawing/updating ####*/
-		    $scope.toggleLine = function(event){
-		    	var uniqueClassName = event.name.split('.').join('-');
-		    	var removes = d3.selectAll('.'+uniqueClassName);
-		    	if(removes[0].length > 0){
-		    		removes.remove();
-		    	}else{
-		    		drawLine(event);
-		    	}
-		    	//reset y-axis if no lines remain on graph
-		    	if($scope.selectedEvents.length === 0){
-		    		yAxisMax = 1;
-		    	}
+		   	function toggleLine(evt){
+		   		if(evt.display){
+		   			if(evt.name.indexOf('.') > -1){
+			    		evt.lineId = evt.name.split('.').join('-');
+			    	}else if(evt.name.indexOf(' ') > -1){
+			    		evt.lineId = evt.name.split(' ').join('-');
+			    	}else if(evt.name.indexOf('_') > -1){
+			    		evt.lineId = evt.name.split('_').join('-');
+			    	}else{
+			    		evt.lineId = evt.name;
+			    	}
+			    	drawLine(evt);
+			    }else if(!evt.display){
+			    	removeLine(evt);
+			    }
 		    }
 		    
+		    function removeLine(evt){
+		    	d3.selectAll('#'+evt.lineId).remove();
+		    }
+
 		    function removeAllLines(){
 		    	d3.selectAll('.k-line').remove();
 		    	d3.selectAll('circle').remove();
 		    }
 
-		    function drawAllLines(){
-		    	for(var i = 0; i < $scope.selectedEvents.length; i++){
-		    		if($scope.selectedEvents[i].display){
-		    			drawLine($scope.selectedEvents[i]);
+		    function redrawLines(){
+		    	removeAllLines();
+		    	for(var x in $scope.trackedEventsDisplay){
+		    		if($scope.trackedEventsDisplay[x].display){
+		    			drawLine($scope.trackedEventsDisplay[x]);
 		    		}
 		    	}
 		    }
@@ -284,16 +311,11 @@ angular.module('dbtools')
 		    	var pointStepWidth = Math.floor( ($scope.timePeriod.end - $scope.timePeriod.start)/pointCount);
 		    	var pointSize = 5;
 		    	
-		    	//create a classname using - instead of ., cannot use . for selectors
-		    	var uniqueClassName = evt.name.split('.').join('-');
-
+		    	var uniqueClassName = evt.name.split('.').join('-'); //unique name for d3 selectors to latch onto
 		    	var points = [];	//data to plug into graph
-		    	var dataInTimeRange = [];
-		    	//var timeScale = {};
-		    	//var timeStep = resolveTimeStep($scope.timeStep);
-		    	var data = $scope.graphData[evt.name];
 
-		    	if(data){
+
+		    	if(evt.data){
 		    		
 		    		//build points array, set x value of each point
 		    		var currentStartTime = $scope.timePeriod.start;
@@ -306,11 +328,11 @@ angular.module('dbtools')
 
 		    			currentStartTime = points[i].end + 1;
 		    		}
-
+		    		var dataInTimeRange = [];
 		    		//get sorted events in each time range
-		    		for(i = 0; i < data.length; i++){
-		    			if(data[i]._createdAt >= $scope.timePeriod.start && data[i]._createdAt <= $scope.timePeriod.end){
-		    				dataInTimeRange.push(data[i]);
+		    		for(i = 0; i < evt.data.length; i++){
+		    			if(evt.data[i]._createdAt >= $scope.timePeriod.start && evt.data[i]._createdAt <= $scope.timePeriod.end){
+		    				dataInTimeRange.push(evt.data[i]);
 		    			}
 		    		}
 		    		dataInTimeRange.sort(function(a,b){
@@ -335,10 +357,9 @@ angular.module('dbtools')
 		    			points[i].y = pointValueY;
 
 		    			pointValueY = 0;
-
 		    		}
 
-					//update yAxis
+					//update yAxis if new max
 					if(yAxisMax < highestValueY){
 						yAxisMax = highestValueY;
 						yScale.domain([0,yAxisMax])
@@ -349,13 +370,14 @@ angular.module('dbtools')
     					d3.selectAll('g .y.axis')
     						.attr("transform", "translate(0,0)")
 				       		.call(yAxis)
+				       	redrawLines();
 					}
 
 					//draw dots
 				    svg.selectAll("dot")
 				        .data(points)
 				      	.enter().append("circle")
-				      	.attr('class', uniqueClassName)
+				      	.attr('id', evt.lineId)
 				        .attr("r", pointSize)
 				        .attr("cx", function(d) { return xScale(d.x); })
 				        .attr("cy", function(d) { return yScale(d.y); })
@@ -367,7 +389,8 @@ angular.module('dbtools')
                         .interpolate("linear");
 		    		
 		    		svg.append("path")
-		    			.attr('class', 'k-line ' + uniqueClassName)
+		    			.attr('class', 'k-line ' + evt.lineId)
+		    			.attr('id', evt.lineId)
                         .attr("d", lineFunction(points))
                         .attr("stroke", evt.color)
                         .attr("stroke-width", 2)
@@ -376,12 +399,6 @@ angular.module('dbtools')
 
 
 		    }
-
-		    //launch graph by setting default time period and triggering a redraw
-			$scope.setTimePeriod(false);
-
 			/* ############## END D3 GRAPH STUFF #################*/
-
-
 		}
 	]); 
