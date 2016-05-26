@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('dbtools').controller('DocumentationCtrl', ['$scope', '$http', '$anchorScroll',
-  function($scope, $http, $anchorScroll){
+angular.module('dbtools').controller('DocumentationCtrl', ['$scope', '$http', '$anchorScroll', "$timeout",
+  function($scope, $http, $anchorScroll, $timeout){
       $scope.loadingRestRoutes = true;
       $http.get($scope.apiHost + '/admin/restRoutes')
         .then(function(response){
@@ -16,9 +16,68 @@ angular.module('dbtools').controller('DocumentationCtrl', ['$scope', '$http', '$
         addTestParams();
       }); 
 
-      //add TestParams property onto controllers.functions
-      //testParams turns reference type params into strings, 
-      //but switch reference type to string, add subSchema onto Object type onto their label
+      $scope.openAPIExplorer = function(route) {
+
+      };
+
+
+      $scope.toScroll = function(route) {
+        $anchorScroll(route.restRoute);
+      };
+
+      /*### UNIT TESTING STUFF ###*/ 
+      $scope.getUnittests = function(item) {
+        if(item.showUnittests){
+          item.showUnittests = false;
+        }else{
+          item.showUnittests = true;
+          if(!item.unitTests){
+            var socketRoute = convertToSocketRoute(item);
+            $http.get($scope.apiHost + '/api/v1/unitTests/testsForRoute?route='+ socketRoute)
+            .then(function(response){
+              item.unitTests = response.data;
+            }, function(err){
+              console.error(err);
+            });
+          }
+        }
+      };
+      function convertToSocketRoute(route){
+        var methodMap = {"get":"read", "put":"update", "post":"create", "delete":"delete"};
+        var sRoute = route.method;
+        var urlRoute = route.restRoute.split('/');
+        for(var i = 0; i < urlRoute.length; i++){
+          if(urlRoute[i] === 'v1'){
+            sRoute += "." + urlRoute[i+1].slice(0, urlRoute[i+1].length-1);
+          }
+        }
+        i--;
+        if(urlRoute[i].indexOf(':') === 0){
+          sRoute += "." + methodMap[route.method];
+        }else{
+          sRoute += "." + urlRoute[i];
+        }
+        return sRoute;
+      }
+
+      $scope.runUnittest = function(test){
+        $http.get($scope.apiHost + "/api/v1/unitTests/" + test._id + "/runTest")
+        .then(function(success){
+          console.log(success);
+          test.testResults = success.data;
+          test.displayResults = true;
+          $timeout(function(){
+            test.displayResults = false;
+          }, 1500);
+        }, function(err){
+          console.error(err);
+        });
+      }
+
+      /*### ROUTE TESTING STUFF ###*/
+      //add testParams property onto controllers.functions
+      //testParams hold an ngkeps friendly version of params -
+      //':referenceType' = 'string', _model = {type:"model",subSchema:modelSchema}
       function addTestParams(){
         if($scope.models && $scope.controllers){
           var testParams = {};
@@ -27,7 +86,9 @@ angular.module('dbtools').controller('DocumentationCtrl', ['$scope', '$http', '$
             for(var k in $scope.controllers[x].functions){
               params = $scope.controllers[x].functions[k].params;
               for(var y in params){
+
                 testParams[y] = modifyObjectAndReferenceParams(params[y]);
+
               }
               $scope.controllers[x].functions[k].testParams = testParams;
               testParams = {};
@@ -35,12 +96,17 @@ angular.module('dbtools').controller('DocumentationCtrl', ['$scope', '$http', '$
           }
         }
       }
+
+      /*Convert types like _user and reference to string, match _model to corresponding model schema*/
       function modifyObjectAndReferenceParams(params){
         if(typeof params === "string"){
          
           if(params.indexOf(":") === 0){
             return "string";
-          }else if(params !== "_user" && params.indexOf("_") === 0){
+          }else if(params.indexOf("_") === 0){
+            if(params === "_user"){
+              return "string";
+            }
             var modelName = params.slice(1);
             if($scope.models[modelName]){
               var subSchema = {};
@@ -63,7 +129,10 @@ angular.module('dbtools').controller('DocumentationCtrl', ['$scope', '$http', '$
          
           if(params.type.indexOf(":") === 0){
             return "string";
-          }else if(params.type !== "_user" && params.type.indexOf("_") === 0){
+          }else if( params.type.indexOf("_") === 0){
+            if(params.type === "_user"){
+              return "string";
+            }
             var modelName = params.type.slice(1);
             if($scope.models[modelName]){
               var subSchema = {};
@@ -85,19 +154,6 @@ angular.module('dbtools').controller('DocumentationCtrl', ['$scope', '$http', '$
           return params;
         }
       }
-      $scope.openAPIExplorer = function(route) {
-
-      };
-      $scope.openUnittests = function(item) {
-        $http.get($scope.apiHost + '/api/v1/unitTests/testsForRoute?route='+item.route)
-          .then(function(response){
-            item.unitTests = response.data;
-          }); 
-      };
-
-      $scope.toScroll = function(route) {
-        $anchorScroll(route.restRoute);
-      }; 
 
       $scope.testRoute = function(route){
         console.log(route);
@@ -169,7 +225,7 @@ angular.module('dbtools').controller('DocumentationCtrl', ['$scope', '$http', '$
         route.testResults.url = response.config.url;
       }
 
-      //replace /:model with id in route e.g. /api/v1/candidates/:candidate turned into /api/v1/candidates/123sadasdf23
+      //replace /:model with id in route e.g. /api/v1/candidates/:candidate >> /api/v1/candidates/123sadasdf23
       function replaceIdInRoute(route){
         if(route.restRoute.indexOf(":") > -1){
           //split url string into array >> replace reference fields >> join array into url string
@@ -200,6 +256,8 @@ angular.module('dbtools').controller('DocumentationCtrl', ['$scope', '$http', '$
         }
         return querystring;
       }
+
+
 /*
             $scope.controllers = {
               'orders':{

@@ -91,12 +91,17 @@
                 </div>
                 <!-- End Tabs -->
 
-                <!-- Test Routes -->
                 <button class="btn btn-info" style="margin-top:10px;margin-bottom:10px;" ng-click="item.showTestRoute = !item.showTestRoute">
                   <span class="glyphicon glyphicon-record" ></span>
                   {{item.showTestRoute ? 'Hide Test Route' : 'Test Route'}}
                 </button>
-                <div class="panel panel-default" ng-if="item.showTestRoute">
+                <button class="btn btn-warning" style="margin-top:10px;margin-bottom:10px;" ng-click="getUnittests(item);">
+                  <span class="glyphicon glyphicon-wrench" ></span>
+                  {{item.showUnittests ? 'Hide Unit Tests' : 'Show Unit Tests'}}
+                </button>
+
+                <!-- Test Routes -->
+                <div class="panel panel-info" ng-if="item.showTestRoute">
                   <div class="panel-heading">
                     <h4>Try out route</h4>
                   </div>
@@ -157,20 +162,33 @@
                 </div>
                 <!-- End Test Routes -->
 
-               <div class="panel panel-danger">
+                <!-- Unit Tests -->
+                <!-- Test Routes -->
+                <div class="panel panel-warning" ng-if="item.showUnittests">
                   <div class="panel-heading">
                     <h4>Unit Tests</h4>
                   </div>
                   <div class="panel-body">
                     <div class="table">
-                      <div ng-repeat="(name, test) in item.unitTests" class="col-sm-12">
-                        <div class="params col-lg-2 col-md-3 col-sm-2">
-                          <span>{{controller}} {{item.name}} it {{test.itShould}}
+                      <div ng-show="item.unitTests.length === 0">
+                        <p>No Tests</p>
+                      </div>
+                      <div ng-repeat="test in item.unitTests" class="col-sm-12">
+                        <div class="params col-lg-3 col-md-3 col-sm-2">
+                          <h4>{{test.name}}</h4>
+                        </div>
+                        <div class="col-lg-3 col-lg-offset-1">
+                          <button class="btn btn-warning" ng-click="runUnittest(test)">Run Test</button>
+                        </div>
+                        <div class="col-lg-5" style="text-align:center" ng-show="test.testResults">
+                          <div class="alert alert-success" ng-show="test.displayResults">{{test.testResults}}</div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
+                <!-- End Unit Tests -->
+
                 <!-- Confirmation Panel -->
 
 
