@@ -52,11 +52,16 @@ angular.module('dbtools')
 				});
 
 			$scope.startRecording = function(){
-				$http.get($scope.apiHost + '/admin/startRecordingAll')
-				.then(function(response){
-					$scope.recording = true;
-				}, function(err){
-				});
+				if($scope.apiHost.indexOf('localhost') > -1){
+					$http.get($scope.apiHost + '/admin/startRecordingAll')
+					.then(function(response){
+						$scope.recording = true;
+					}, function(err){
+					});
+				}else{
+					$scope.msgs = {error:"You are not running this on localhost"};
+					$timeout(function(){$scope.msgs = {};},2500);
+				}
 			};
 
 			$scope.stopRecording = function(){
