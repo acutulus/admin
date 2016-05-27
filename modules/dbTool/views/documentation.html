@@ -2,12 +2,16 @@
     <div ng-controller="DocumentationCtrl" class="controller-wrap">
       <div class="container-fluid">
 
-        <div class="row" style="margin-top:40px;" ng-if="loadingRestRoutes">
+        <div class="row" style="margin-top:40px;" ng-if="msgs.loading">
           <div class="col-sm-4 col-sm-offset-4" style="text-align:center" >
-            <div class="alert alert-info">Loading Documentation&nbsp&nbsp<i class="fa fa-spinner fa-spin"></i></div>
+            <div class="alert alert-info" >Loading Documentation&nbsp&nbsp<i class="fa fa-spinner fa-spin"></i></div>
           </div>
-        </div> 
-
+        </div>
+        <div class="row" style="position:absolute" ng-if="msgs.error">
+          <div class="col-sm-4 col-sm-offset-4" style="text-align:center;">
+          <div class="alert alert-danger"> {{msgs.error}}</div>
+          </div>
+        </div>
         <div class="row">
         <!-- SIDEBAR -->
           <div class="sidebar col-sm-2">
@@ -91,11 +95,11 @@
                 </div>
                 <!-- End Tabs -->
 
-                <button class="btn btn-info" style="margin-top:10px;margin-bottom:10px;" ng-click="item.showTestRoute = !item.showTestRoute">
+                <button class="btn btn-info" style="margin-top:10px;margin-bottom:10px;" ng-click="item.showTestRoute = !item.showTestRoute;item.testResults = false;item.showUnittests = false;">
                   <span class="glyphicon glyphicon-record" ></span>
                   {{item.showTestRoute ? 'Hide Test Route' : 'Test Route'}}
                 </button>
-                <button class="btn btn-warning" style="margin-top:10px;margin-bottom:10px;" ng-click="getUnittests(item);">
+                <button class="btn btn-warning" style="margin-top:10px;margin-bottom:10px;" ng-click="getUnittests(item);item.showTestRoute = false;item.testResults = false;">
                   <span class="glyphicon glyphicon-wrench" ></span>
                   {{item.showUnittests ? 'Hide Unit Tests' : 'Show Unit Tests'}}
                 </button>
@@ -159,30 +163,55 @@
                       </tr>  
                     </table>
                   </div>
+                  <div class="panel panel-body">
+                    <h4>Turn this request into a new unit test?</h4>
+
+                    <button class="btn btn-success" type="button" ng-click="buildUnitTest(item)">
+                      Build Unit tests
+                    </button>
+
+                    <div ng-show="item.newUnitTests">
+                      <h4 ng-show="item.newUnitTests.length === 0"> No new tests created</h4>
+                      <div class="col-sm-8 col-sm-offset-2" ng-repeat="test in item.newUnitTests">
+                        <h5>Test {{$index}}</h5>
+                        <label>Name:</label>
+                        <input type="text" class="form-control" ng-model="test.name"  placeholder="{{test.name}}">
+                        <label>Title:</label>
+                        <input type="text" class="form-control" ng-model="test.title"  placeholder="{{test.title}}">
+                        <label>ItShould:</label>
+                        <input type="text" class="form-control" ng-model="test.itShould" placeholder="{{test.itShould}}">
+                        <div class="alert alert-success" ng-show="test.updateMessages.success">{{test.updateMessages.success}}</div>
+                        <div class="alert alert-success" ng-show="test.updateMessages.error">{{test.updateMessages.error}}</div>
+                        <button ng-click="updateUnitTest(test)" style="margin-top:10px;"class="btn btn-success">Update Test</button>
+                        <hr>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <!-- End Test Routes -->
 
                 <!-- Unit Tests -->
                 <!-- Test Routes -->
-                <div class="panel panel-warning" ng-if="item.showUnittests">
+                <div class="panel panel-default" ng-if="item.showUnittests">
                   <div class="panel-heading">
                     <h4>Unit Tests</h4>
                   </div>
                   <div class="panel-body">
-                    <div class="table">
-                      <div ng-show="item.unitTests.length === 0">
-                        <p>No Tests</p>
+                    <div ng-show="item.unitTests.length === 0">
+                      <p>No Tests</p>
+                    </div>
+                    <div ng-repeat="test in item.unitTests" class="col-sm-12">
+                      <div class="col-lg-6">
+                        <h5><b>{{test.name}}</b> - {{test.itShould}}</h5>
                       </div>
-                      <div ng-repeat="test in item.unitTests" class="col-sm-12">
-                        <div class="params col-lg-3 col-md-3 col-sm-2">
-                          <h4>{{test.name}}</h4>
-                        </div>
-                        <div class="col-lg-3 col-lg-offset-1">
-                          <button class="btn btn-warning" ng-click="runUnittest(test)">Run Test</button>
-                        </div>
-                        <div class="col-lg-5" style="text-align:center" ng-show="test.testResults">
-                          <div class="alert alert-success" ng-show="test.displayResults">{{test.testResults}}</div>
-                        </div>
+                      <div class="col-lg-5 col-lg-offset-1">
+                        <button class="btn btn-warning" ng-click="runUnittest(test)">Run Test</button>
+                      </div>
+                      <div class="col-lg-8 col-lg-offset-2" style="text-align:center" ng-show="test.testResults">
+                        <div class="alert alert-success" ng-show="test.displayResults">{{test.testResults}}</div>
+                      </div>
+                      <div class="col-lg-12">
+                        <hr>
                       </div>
                     </div>
                   </div>

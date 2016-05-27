@@ -2,10 +2,10 @@
 
 angular.module('dbtools').controller('DocumentationCtrl', ['$scope', '$http', '$anchorScroll', "$timeout",
   function($scope, $http, $anchorScroll, $timeout){
-      $scope.loadingRestRoutes = true;
+      $scope.msgs = {loading:true};
       $http.get($scope.apiHost + '/admin/restRoutes')
         .then(function(response){
-          $scope.loadingRestRoutes = false;
+          $scope.msgs = {};
           $scope.controllers = response.data;
           addTestParams();
         });
@@ -63,14 +63,50 @@ angular.module('dbtools').controller('DocumentationCtrl', ['$scope', '$http', '$
       $scope.runUnittest = function(test){
         $http.get($scope.apiHost + "/api/v1/unitTests/" + test._id + "/runTest")
         .then(function(success){
-          console.log(success);
           test.testResults = success.data;
           test.displayResults = true;
           $timeout(function(){
             test.displayResults = false;
-          }, 1500);
+          }, 5000);
         }, function(err){
           console.error(err);
+        });
+      }
+
+      $scope.buildUnitTest = function(route){
+        if($scope.apiHost.indexOf('localhost') > -1){
+          var testStart = new Date().getTime();
+          $http.get($scope.apiHost + '/admin/startRecordingAll')
+          .then(function(response){
+            $scope.testRoute(route, function(){
+              $http.get($scope.apiHost + '/admin/stopRecordingAll')
+              .then(function(response){
+                $http.get($scope.apiHost + "/api/v1/unitTests/recent?time=" + testStart)
+                .then(function(tests){
+
+                  route.newUnitTests = tests.data;
+
+                }, function(err){
+                  console.error(err);
+                });//end get recent tests
+              }, function(err){
+                console.error(err);
+              }); //end stop recording         
+            });//end testRoute
+          }, function(err){
+            console.error(err);
+          });//end start recording
+        }
+      }
+
+      $scope.updateUnitTest = function(test){
+        $http.put($scope.apiHost + "/api/v1/unitTests/" + test._id, {unitTest:test})
+        .then(function(success){
+          test.updateMessages = {success:"Test updated"};
+          $timeout(function(){test.updateMessages = {};},2500);
+        }, function(err){
+          test.updateMessage = {error:err};
+          $timeout(function(){test.updateMessages = {};},5000);
         });
       }
 
@@ -155,62 +191,71 @@ angular.module('dbtools').controller('DocumentationCtrl', ['$scope', '$http', '$
         }
       }
 
-      $scope.testRoute = function(route){
-        console.log(route);
+      $scope.testRoute = function(route, cb){
         switch(route.method){
-          case('get'): return runGetRequest(route);
-          case('post'): return runPostRequest(route);
-          case('put'): return runPutRequest(route);
-          case('delete'): return runDeleteRequest(route);
+          case('get'): runGetRequest(route, cb);
+                        break;
+          case('post'): runPostRequest(route, cb);
+                        break;
+          case('put'): runPutRequest(route, cb);
+                        break;
+          case('delete'): runDeleteRequest(route, cb);
+                        break;
         }
       };     
 
-      function runGetRequest(route){
-        var url = replaceIdInRoute(route);
-        url += buildQuerystring(route);
+      function runGetRequest(route, cb){
+        var request = replaceIdInRoute(route);
+        request.url += buildQuerystring(route);
 
-        $http.get($scope.apiHost + url)
+        $http.get($scope.apiHost + request.url)
         .then(function(success){
           displayRequestResults(route, success);
+          if(cb) cb();
         }, function(err){
           displayRequestResults(route, err);
+          if(cb) cb();
         })
       }
       /*build request body
       */
-      function runPostRequest(route){
-        var url = replaceIdInRoute(route);
-        var body = route.testRouteParams;
+      function runPostRequest(route, cb){
+        var request = replaceIdInRoute(route);
        
-        $http.post($scope.apiHost + url, body)
+        $http.post($scope.apiHost + request.url, request.body)
         .then(function(success){
           displayRequestResults(route, success);
+           if(cb) cb();
         }, function(err){
           displayRequestResults(route, err);
+          if(cb) cb();
         });
       };
 
-      function runPutRequest(route){
-        var url = replaceIdInRoute(route);
-        var body = route.testRouteParams;
+      function runPutRequest(route, cb){
+        var request = replaceIdInRoute(route);
 
-        $http.put($scope.apiHost + url, body)
+        $http.put($scope.apiHost + request.url, request.body)
         .then(function(success){
           displayRequestResults(route,success);
+          if(cb) cb();
         }, function(err){
           displayRequestResults(route, err);
+          if(cb) cb();
         });
       };
 
-      function runDeleteRequest(route){
-        var url = replaceIdInRoute(route);
-        url += buildQuerystring(route);
+      function runDeleteRequest(route, cb){
+        var request = replaceIdInRoute(route);
+        request.url += buildQuerystring(route);
 
-        $http.delete($scope.apiHost + url)
+        $http.delete($scope.apiHost + request.url)
         .then(function(success){
           displayRequestResults(route, success);
+          if(cb) cb();
         }, function(err){
           displayRequestResults(route, err);
+          if(cb) cb();
         });
       };
 
@@ -227,20 +272,21 @@ angular.module('dbtools').controller('DocumentationCtrl', ['$scope', '$http', '$
 
       //replace /:model with id in route e.g. /api/v1/candidates/:candidate >> /api/v1/candidates/123sadasdf23
       function replaceIdInRoute(route){
+        var body = JSON.parse(JSON.stringify(route.testRouteParams));
         if(route.restRoute.indexOf(":") > -1){
           //split url string into array >> replace reference fields >> join array into url string
           var url = route.restRoute.split('/');
           for(var i = 0; i < url.length; i++){
             if(url[i].indexOf(":") > -1){
               var key = url[i].slice(1);
-              url[i] = route.testRouteParams[key];
-              delete route.testRouteParams[key]; //remove field so it doesnt get added to querystring or body
+              url[i] = body[key];
+              delete body[key]; //remove field so it doesnt get added to querystring or body
             } 
           }
           url = url.join('/');
-          return url;
+          return {url:url, body:body};
         }else{
-          return route.restRoute;
+          return {url:route.restRoute, body:body};
         }
       }
       //returns "?params=value" or ""
