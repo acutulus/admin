@@ -46,7 +46,7 @@ angular.module('dbtools').controller('SignInController', ['$scope', '$http', '$l
 				}
 				if(data.admin){
 					$timeout(function(){
-						location.href ="#!/dbtools/summary";//route to app
+						location.href = "/admin";//route to app
 					},900);
 				}else{
 					$scope.msgs = {};

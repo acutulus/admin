@@ -1,3 +1,15 @@
+@media print
+{    
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+
+    .docs-content {
+      margin-left: 0 !important;
+    }
+}
+
 .navbar {
   text-transform: capitalize;
 }
