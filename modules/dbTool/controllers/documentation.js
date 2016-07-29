@@ -42,22 +42,18 @@ angular.module('dbtools').controller('DocumentationCtrl', ['$scope', '$http', '$
           }
         }
       };
+
       function convertToSocketRoute(route){
         var methodMap = {"get":"read", "put":"update", "post":"create", "delete":"delete"};
         var sRoute = route.method;
+        var sName = route.name;
         var urlRoute = route.restRoute.split('/');
         for(var i = 0; i < urlRoute.length; i++){
           if(urlRoute[i] === 'v1'){
             sRoute += "." + urlRoute[i+1].slice(0, urlRoute[i+1].length-1);
           }
         }
-        i--;
-        if(urlRoute[i].indexOf(':') === 0){
-          sRoute += "." + methodMap[route.method];
-        }else{
-          sRoute += "." + urlRoute[i];
-        }
-        return sRoute;
+        return sRoute + "." + sName;
       }
 
       $scope.runUnittest = function(test){
