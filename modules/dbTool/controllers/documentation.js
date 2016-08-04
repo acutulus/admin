@@ -8,22 +8,179 @@ angular.module('dbtools').controller('DocumentationCtrl', ['$scope', '$http', '$
           $scope.msgs = {};
           $scope.controllers = response.data;
           addTestParams();
+          if ($scope.models && $scope.controllers) {
+            $scope.buildDiagrams();          
+          }
         });
 
       $http.get($scope.apiHost + '/admin/models')
       .then(function(response){
         $scope.models = response.data;
         addTestParams();
+        if ($scope.models && $scope.controllers) {
+          $scope.buildDiagrams();          
+        }
       }); 
 
       $scope.openAPIExplorer = function(route) {
 
       };
 
+      $scope.fieldBtn = function(field) {
+        if ($scope.isRef(field)) {
+          $scope.toScroll('model'+field.type.slice(1));
+        }
+        if ($scope.isComplexType(field)) {
+          field._showSubSchema = !field._showSubSchema;
+        }
+      };
+
+      $scope.getTypeLabel = function(field) {
+        if (field.type === 'array' && typeof field.subSchema === 'string') {
+          return field.type + ' ' + field.subSchema;
+        } else {
+          return field.type;
+        }
+      };
+
+      $scope.isRef = function(field) {
+        if (typeof field === 'string') {
+          return (field.type.charAt(0) === ':');
+        } else if (typeof field === 'object' && field.type !== 'array'){
+          return (field.type.charAt(0) === ':');
+        } else if (typeof field === 'object' && field.type === 'array' && typeof field.subSchema === 'string'){
+          return (field.type.charAt(0) === ':');
+        } else {
+          return false;
+        }
+      };
+
+      $scope.isComplexType = function(field) {
+        return ((field.type === 'object' || field.type === 'array') && typeof field.subSchema === 'object');
+      };
+
+
+      $scope.displayJSON = function(model){
+        if(!model.displayTable){
+          model.displayTable = true;
+          if(!model.jsonDisplayData){
+            var str = JSON.stringify(model, undefined, 4);
+            model.jsonDisplayData = str;
+          }
+        }else{
+          model.displayTable = false;
+        }
+      };
 
       $scope.toScroll = function(route) {
-        $anchorScroll(route.restRoute);
+        $anchorScroll(route);
       };
+
+$scope.buildDiagrams = function() {
+var graph = new joint.dia.Graph();
+
+var paper = new joint.dia.Paper({
+    el: $('#uml'),
+    width: 800,
+    height: 600,
+    gridSize: 1,
+    model: graph
+});
+
+
+var uml = joint.shapes.uml;
+
+var classes = {};
+var attrs;
+var methods;
+var x = 0, y = 0;
+for (var i in $scope.models) {
+  attrs = [];
+  methods = [];
+  var j;
+  for (j in $scope.models[i].schema) {
+    attrs.push(j+': '+$scope.models[i].schema[j].type);
+  }
+  if (i in $scope.controllers) {
+    for (j in $scope.controllers[i].functions) {
+      methods.push($scope.controllers[i].functions[j].name+'(): json');
+    }    
+  }
+
+  x += 20;
+  y += 20;
+
+  classes[i] = new uml.Class({
+        position: { x:x  , y: y },
+        size: { width: 220, height: 50+(attrs.length*15)+(methods.length*15) },
+        name: (($scope.models[i].properties && $scope.models[i].properties.label) ? $scope.models[i].properties.label : i ),
+        attributes: attrs,
+        methods: methods,
+        attrs: {
+            '.uml-class-name-rect': {
+                fill: '#ff8450',
+                stroke: '#fff',
+                'stroke-width': 0.5,
+            },
+            '.uml-class-attrs-rect, .uml-class-methods-rect': {
+                fill: '#fe976a',
+                stroke: '#fff',
+                'stroke-width': 0.5
+            },
+            '.uml-class-attrs-text': {
+                ref: '.uml-class-attrs-rect',
+                'ref-y': 0.5,
+                'y-alignment': 'middle'
+            },
+            '.uml-class-methods-text': {
+                ref: '.uml-class-methods-rect',
+                'ref-y': 0.5,
+                'y-alignment': 'middle'
+            }
+        }
+    });
+}
+
+_.each(classes, function(c) { graph.addCell(c); });
+
+/*
+var relations = [
+    new uml.Generalization({ source: { id: classes.man.id }, target: { id: classes.person.id }}),
+    new uml.Generalization({ source: { id: classes.woman.id }, target: { id: classes.person.id }}),
+    new uml.Implementation({ source: { id: classes.person.id }, target: { id: classes.mammal.id }}),
+    new uml.Aggregation({ source: { id: classes.person.id }, target: { id: classes.address.id }}),
+    new uml.Composition({ source: { id: classes.person.id }, target: { id: classes.bloodgroup.id }})
+];
+*/
+_.each(relations, function(r) { graph.addCell(r); });
+
+// Here is the real deal. Listen on cell:pointerup and link to an element found below.
+paper.on('cell:pointerup', function(cellView, evt, x, y) {
+
+    // Find the first element below that is not a link nor the dragged element itself.
+    var elementBelow = graph.get('cells').find(function(cell) {
+        if (cell instanceof joint.dia.Link) return false; // Not interested in links.
+        if (cell.id === cellView.model.id) return false; // The same element as the dropped one.
+        if (cell.getBBox().containsPoint(g.point(x, y))) {
+            return true;
+        }
+        return false;
+    });
+    
+    // If the two elements are connected already, don't
+    // connect them again (this is application specific though).
+    if (elementBelow && !_.contains(graph.getNeighbors(elementBelow), cellView.model)) {
+        
+        graph.addCell(new joint.dia.Link({
+            source: { id: cellView.model.id }, target: { id: elementBelow.id },
+            attrs: { '.marker-source': { d: 'M 10 0 L 0 5 L 10 10 z' } }
+        }));
+        // Move the element a bit to the side.
+        cellView.model.translate(-200, 0);
+    }
+});
+
+};
 
       /*### UNIT TESTING STUFF ###*/ 
       $scope.getUnittests = function(item) {

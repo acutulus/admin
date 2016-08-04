@@ -27,7 +27,7 @@ angular.module('dbtools').controller('ModelsCtrl', ['$scope','$http','$statePara
     };
 
     $scope.isComplexType = function(field) {
-      return (field.type === 'object' || field.type === 'array');
+      return ((field.type === 'object' || field.type === 'array') && typeof field.subSchema === 'object');
     };
 
 

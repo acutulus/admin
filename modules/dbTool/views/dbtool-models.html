@@ -1,6 +1,6 @@
 <section data-ng-controller="ModelsCtrl">
 	<div class="container">
-		<h2 style="text-transform: capitalize">{{modelName}}</h2>
+		<h2 style="text-transform: capitalize">The <i>{{modelName}}</i> Model</h2>
 		<p class="lead" ng-show="model.properties.description">{{model.properties.description}}</p>
 		<table class="table table-striped table-bordered table-hover" >
 		  <thead>
@@ -8,6 +8,7 @@
 		      <th>Field</th>
 		      <th>Description</th>
 		      <th>Constraints</th>
+		      <th>Example</th>
 		    </tr>
 		  </thead>
 		  <tbody ng-repeat="(name, field) in model.schema">
@@ -15,9 +16,12 @@
 		      <td>
 		        {{name}}<br/>
 		        <button type="button" class="btn btn-default btn-xs" ng-disabled="(!isRef(field) && !isComplexType(field))" ng-click="fieldBtn(field)">{{field.type}}</button>
+		        <button type="button" class="btn btn-link btn-xs" disabled="true" ng-if="field.readOnly || field.virtual">Read-Only</button>
+		        <button type="button" class="btn btn-link btn-xs" disabled="true" ng-if="field.index">Indexed</button>
 		      </td>
 		      <td>{{field.description}}</td>
 		      <td>
+		      	<p ng-if="field.virtual">This is a virtual field<br /><code>={{field.virtual}}</code></p>
 		      	<p ng-if="field.match">This string must match {{field.match}}</p>
 		      	<p ng-if="field.minlength">This field must be at least {{field.minlength}} characters long</p>
 		      	<p ng-if="field.maxlength">This field cannot be more than {{field.maxlength}} characters long</p>
@@ -36,6 +40,9 @@
 		      	<p ng-if="field.options">Options for field {{field.options}}</p>
 		      	<p ng-if="field.maxpicked">Cannot choose more than {{field.maxpicked}}</p>
 		      	<p ng-if="field.minpicked">Must choose at least {{field.minpicked}}</p>
+		      </td>
+		      <td>
+		      	<p ng-if="field.example">{{field.example}}</p>
 		      </td>
 		    </tr>
 		    <tr ng-show="field._showSubSchema">

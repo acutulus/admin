@@ -6,8 +6,7 @@
     "Ed Parsons <ed@ekpsoftware.com>"
   ],
   "description": "Keps Admin",
-  "main": [
-  ],
+  "main": [],
   "ignore": [
     "**/.*",
     "gulpfile.js",
@@ -17,11 +16,12 @@
     "CONTRIBUTING.md"
   ],
   "dependencies": {
+    "jointjs": "joint#~0.9.10",
+    "lodash": "3.10.1",
+    "backbone": "1.2.1",
     "ngkeps": "https://bitbucket.org/ekpsoftware/ngkeps.git#master"
   },
-  "keywords": [
-  ],
+  "keywords": [],
   "private": true,
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }

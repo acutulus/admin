@@ -11,6 +11,21 @@ angular.module('dbtools').controller('SignInController', ['$scope', '$http', '$l
 			$scope.hosts = JSON.parse(localStorage.kepsApiPrefixHosts);
 		}
 
+		if (localStorage.kepsApiPrefix) {
+			$http.get(localStorage.kepsApiPrefix+'/api/config').then(function(response) {
+				$scope.hostConfig = response.data;
+				var u = new URL(localStorage.kepsApiPrefix);
+				$scope.hostConfigMsg = $scope.hostConfig.name+'@'+u.hostname;
+				if (u.hostname === $scope.hostConfig.hostname) {
+					$scope.hostConfigMsg += ' PRODUCTION';
+				} else {
+					$scope.hostConfigMsg += ' DEVELOPMENT';					
+				}
+			});			
+		} else {
+			$scope.hostConfigMsg = 'No Host Set';
+		}
+
 		if($scope.user && !$scope.user.admin){
 			$scope.msgs = {};
 			$scope.msgs.msg = "You are signed in as a non-admin user, contact Acutulus to have your account permissions elevated.";
@@ -31,7 +46,7 @@ angular.module('dbtools').controller('SignInController', ['$scope', '$http', '$l
 				}
 				if(data.admin){
 					$timeout(function(){
-						location.href ="#!/dbtools/summary";//route to app
+						location.href = "/admin";//route to app
 					},900);
 				}else{
 					$scope.msgs = {};
