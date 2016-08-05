@@ -3,15 +3,16 @@
 angular.module('dbtools').controller('DocumentationCtrl', ['$scope', '$http', '$anchorScroll', "$timeout",
   function($scope, $http, $anchorScroll, $timeout){
       $scope.msgs = {loading:true};
+   
       $http.get($scope.apiHost + '/admin/restRoutes')
-        .then(function(response){
-          $scope.msgs = {};
-          $scope.controllers = response.data;
-          addTestParams();
-          if ($scope.models && $scope.controllers) {
-            $scope.buildDiagrams();          
-          }
-        });
+      .then(function(response){
+        $scope.msgs = {};
+        $scope.controllers = response.data;
+        addTestParams();
+        if ($scope.models && $scope.controllers) {
+          $scope.buildDiagrams();          
+        }
+      });
 
       $http.get($scope.apiHost + '/admin/models')
       .then(function(response){
@@ -20,7 +21,22 @@ angular.module('dbtools').controller('DocumentationCtrl', ['$scope', '$http', '$
         if ($scope.models && $scope.controllers) {
           $scope.buildDiagrams();          
         }
-      }); 
+      });
+      
+      var dontDisplayModels = ['unitTest','pushNotification','oauth','userToken','userEvent','trackedEvent','page','device','copy','email']
+      $scope.doNotDisplayModels = function(name){
+        return dontDisplayModels.indexOf(name) > -1;
+      }
+      
+      var dontDisplayFields = ['_createdAt', '_v', '_id', '_updatedAt', '_seed']
+      $scope.doNotDisplayFields = function(name){
+        return dontDisplayFields.indexOf(name) > -1
+      } 
+      
+      var dontDisplayRoutes = ['auth','email','device','graphql','oauth','pushNotification','trackedEvent','user','userEvent','userToken','unitTest'];
+      $scope.doNotDisplayRoutes = function(name){
+        return dontDisplayRoutes.indexOf(name) > -1;
+      }
 
       $scope.openAPIExplorer = function(route) {
 
@@ -286,7 +302,8 @@ paper.on('cell:pointerup', function(cellView, evt, x, y) {
         }
       }
 
-      /*Convert types like _user and reference to string, match _model to corresponding model schema*/
+      /*Convert types like _user and reference to string, so input can be did
+         match _model to corresponding model schema*/
       function modifyObjectAndReferenceParams(params){
         if(typeof params === "string"){
          
