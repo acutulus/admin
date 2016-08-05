@@ -44,6 +44,10 @@ angular.module('dbtools').config(['$stateProvider', '$urlRouterProvider', '$loca
 			url:'/documentation',
 			templateUrl:'modules/dbTool/views/documentation.html'
 		})
+		.state('dbtools.testing', {
+			url:"/testing",
+			templateUrl:"modules/dbTool/views/testing.html"
+		})
 		.state('dbtools.signin',{
 			url:'/signin',
 			templateUrl:'modules/dbTool/views/signin.html'
