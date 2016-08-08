@@ -1,5 +1,5 @@
     <!-- SIDEBAR -->
-      <div class="sidebar col-sm-2 no-print">
+    <div class="sidebar col-sm-2 no-print">
         <div class="sidebar-inner">
           <div>
             <h4>Diagrams</h4>
@@ -11,16 +11,19 @@
             <h4>Models</h4>
             {% for name, item in models %}
             <a href="" class="item" ng-click="toScroll('model'+{{name}})">
-              <span style="text-transform:capitalize;">{{item.properties.label ? item.properties.label : name}}</span>
+              <span style="text-transform:capitalize;">
+              {% if item.properties.label %}{{item.properties.label}}{% endif %}
+              {% if !item.properties.label %}{{name}}{% endif %}
+              </span>
             </a>
+            {% endfor %}
           </div>
-          {% endfor %}
           {% for name, controller in controllers %}
           <div>
             <h4>{{name}}</h4>
             {% for item in controller.functions %}
             <a href="" class="item" ng-click="toScroll('{{item.restRoute}}')">
-              <span class="label" class="
+              <span class="label
               {% if item.method === 'get' %}label-success{% endif %}
               {% if item.method === 'post' %}label-primary{% endif %}
               {% if item.method === 'delete' %}label-danger{% endif %}
@@ -28,6 +31,7 @@
               {{item.method}}</span>
               <span>{{item.restRoute}}</span>
             </a>
+            {% endfor %}
           </div>
           {% endfor %}
         </div>
@@ -44,7 +48,7 @@
       <!-- MODELS -->
       {% for name, item in models %}
       <div>
-        <div class="docs-content col-lg-10 col-md-10" id="model{{name}}">
+        <div class="docs-content col-lg-10 col-md-10" id="model{{name}}" ng-controller="modelCtrl">
           <h2 style="text-transform: capitalize">The <i>{{name}}</i> Model</h2>
           {% if model.properties.description %}
           <p class="lead">{{model.properties.description}}</p>
@@ -58,44 +62,48 @@
                 <th>Example</th>
               </tr>
             </thead>
-            {% for name, field in model.schema %}
+            {% for name, field in item.schemaOriginal %}
             <tbody>
               <tr>
                 <td>
                   {{name}}<br/>
-                  <button type="button" class="btn btn-default btn-xs" ng-disabled="::(!isRef(field) && !isComplexType(field))" ng-click="fieldBtn(field)" ng-bind="::getTypeLabel(field)"></button>
-                  <button type="button" class="btn btn-link btn-xs" disabled="true" ng-if="::field.readOnly || field.virtual">Read-Only</button>
-                  <button type="button" class="btn btn-link btn-xs" disabled="true" ng-if="::field.index">Indexed</button>
+                  <button type="button" class="btn btn-default btn-xs" {% if (!isRef(field) && !isComplexType(field))%}disabled="disabled"{% endif %} ng-click="fieldBtn(field)">
+                  {{getTypeLabel(field)}}
+                  </button>
+                  {% if (field.readOnly || field.virtual) %}<button type="button" class="btn btn-link btn-xs" disabled="true">Read-Only</button>{% endif %}
+                  {% if (field.index) %}<button type="button" class="btn btn-link btn-xs" disabled="true">Indexed</button>{% endif %}
                 </td>
                 <td>{{field.description}}</td>
                 <td>
-                  <p ng-if="::field.virtual">This is a virtual field<br /><code>={{::field.virtual}}</code></p>
-                  <p ng-if="::field.match">This string must match {{::field.match}}</p>
-                  <p ng-if="::field.minlength">This field must be at least {{::field.minlength}} characters long</p>
-                  <p ng-if="::field.maxlength">This field cannot be more than {{::field.maxlength}} characters long</p>
-                  <p ng-if="::field.unique">This field must be unique</p>
-                  <p ng-if="::field.required">This field is required</p>
-                  <p ng-if="::field.max">This field cannot exceed {{::field.max}}</p>
-                  <p ng-if="::field.min">This field cannot exceed {{::field.min}}</p>
-                  <p ng-if="::field.choices">This field displayed as {{::field.choices}}</p>
-                  <p ng-if="::field.fileType">This must be {{::field.fileType}} type</p>
-                  <p ng-if="::field.maxSize">File size must not exceed {{::field.maxSize}}</p>
-                  <p ng-if="::field.protocol">Url must use {{::field.protocol}}</p>
-                  <p ng-if="::field.maxlat">Maximum latitude is {{::field.maxlat}}</p>
-                  <p ng-if="::field.minlat">Minimum latitude is {{::field.minlat}}</p>
-                  <p ng-if="::field.maxlng">Maximum longitude is {{::field.maxlng}}</p>
-                  <p ng-if="::field.minlng">Minimum longitude is {{::field.minlng}}</p>
-                  <p ng-if="::field.options">Options for field {{::field.options}}</p>
-                  <p ng-if="::field.maxpicked">Cannot choose more than {{::field.maxpicked}}</p>
-                  <p ng-if="::field.minpicked">Must choose at least {{::field.minpicked}}</p>
+                  {% if field.virtual %}<p>This is a virtual field<br /><code>={{field.virtual}}</code></p>{% endif %}
+                  {% if field.match %}<p>This string must match {{field.match}}</p>{% endif %}
+                  {% if field.minlength %}<p>This field must be at least {{field.minlength}} characters long</p>{% endif %}
+                  {% if field.maxlength %}<p>This field cannot be more than {{field.maxlength}} characters long</p>{% endif %}
+                  {% if field.unique %}<p>This field must be unique</p>{% endif %}
+                  {% if field.required %}<p>This field is required</p>{% endif %}
+                  {% if field.max %}<p>This field cannot exceed {{field.max}}</p>{% endif %}
+                  {% if field.min %}<p>This field cannot exceed {{field.min}}</p>{% endif %}
+                  {% if field.choices %}<p>This field displayed as {{field.choices}}</p>{% endif %}
+                  {% if field.fileType %}<p>This must be {{field.fileType}} type</p>{% endif %}
+                  {% if field.maxSize %}<p>File size must not exceed {{field.maxSize}}</p>{% endif %}
+                  {% if field.protocol %}<p>Url must use {{field.protocol}}</p>{% endif %}
+                  {% if field.maxlat %}<p>Maximum latitude is {{field.maxlat}}</p>{% endif %}
+                  {% if field.minlat %}<p>Minimum latitude is {{field.minlat}}</p>{% endif %}
+                  {% if field.maxlng %}<p>Maximum longitude is {{field.maxlng}}</p>{% endif %}
+                  {% if field.minlng %}<p>Minimum longitude is {{field.minlng}}</p>{% endif %}
+                  {% if field.options %}<p>Options for field {{field.options}}</p>{% endif %}
+                  {% if field.maxpicked %}<p>Cannot choose more than {{field.maxpicked}}</p>{% endif %}
+                  {% if field.minpicked %}<p>Must choose at least {{field.minpicked}}</p>{% endif %}
                 </td>
                 <td>
-                  <p ng-if="::field.example">{{::field.example}}</p>
+                  {% if field.example %}<p>{{field.example}}</p>{% endif %}
                 </td>
               </tr>
-              <tr ng-show="field._showSubSchema" ng-if="::isComplexType(field)">
+
+              {% if (isComplexType(field)) %}
+              <tr ng-show="field._showSubSchema">
                 <td colspan="3">
-                  <h5 style="text-transform:capitalize;">{{::name}} Subschema</h5>
+                  <h5 style="text-transform:capitalize;">{{name}} Subschema</h5>
                   <table class="table table-striped table-bordered table-hover" >
                     <thead>
                       <tr>
@@ -104,65 +112,73 @@
                         <th>Constraints</th>
                       </tr>
                     </thead>
-                    <tbody ng-repeat="(name, field) in field.subSchema">
+                    {% for subname, subfield in field.subSchema %}
+                    <tbody>
                       <tr>
                         <td>
-                          {{::name}}<br/>
-                          <button type="button" class="btn btn-default btn-xs" ng-disabled="::!isRef(field) || isComplexType(field)" ng-click="fieldBtn(field)">{{::field.type}}</button>
+                          {{subname}}<br/>
+                          <button type="button" class="btn btn-default btn-xs" {% if (!isRef(subfield) && !isComplexType(subfield))%}disabled="disabled"{% endif %} ng-click="fieldBtn(field)">
+                          {{getTypeLabel(subfield)}}
+                          </button>
                         </td>
-                        <td>{{::field.description}}</td>
+                        <td>{{subfield.description}}</td>
                         <td>
-                          <p ng-if="::field.match">This string must match {{::field.match}}</p>
-                          <p ng-if="::field.minlength">This field must be at least {{::field.minlength}} characters long</p>
-                          <p ng-if="::field.maxlength">This field cannot be more than {{::field.maxlength}} characters long</p>
-                          <p ng-if="::field.unique">This field must be unique</p>
-                          <p ng-if="::field.required">This field is required</p>
-                          <p ng-if="::field.max">This field cannot exceed {{::field.max}}</p>
-                          <p ng-if="::field.min">This field cannot exceed {{::field.min}}</p>
-                          <p ng-if="::field.choices">This field displayed as {{::field.choices}}</p>
-                          <p ng-if="::field.fileType">This must be {{::field.fileType}} type</p>
-                          <p ng-if="::field.maxSize">File size must not exceed {{::field.maxSize}}</p>
-                          <p ng-if="::field.protocol">Url must use {{::field.protocol}}</p>
-                          <p ng-if="::field.maxlat">Maximum latitude is {{::field.maxlat}}</p>
-                          <p ng-if="::field.minlat">Minimum latitude is {{::field.minlat}}</p>
-                          <p ng-if="::field.maxlng">Maximum longitude is {{::field.maxlng}}</p>
-                          <p ng-if="::field.minlng">Minimum longitude is {{::field.minlng}}</p>
-                          <p ng-if="::field.options">Options for field {{::field.options}}</p>
-                          <p ng-if="::field.maxpicked">Cannot choose more than {{::field.maxpicked}}</p>
-                          <p ng-if="::field.minpicked">Must choose at least {{::field.minpicked}}</p>
-                        </td>
-                      </tr>
-                      <tr ng-show="field._showSubSchema">
-                        <td colspan="3">
-                          {{::field.name}} Subschema<br/>
+                          {% if subfield.virtual %}<p>This is a virtual field<br /><code>={{subfield.virtual}}</code></p>{% endif %}
+                          {% if subfield.match %}<p>This string must match {{subfield.match}}</p>{% endif %}
+                          {% if subfield.minlength %}<p>This field must be at least {{subfield.minlength}} characters long</p>{% endif %}
+                          {% if subfield.maxlength %}<p>This field cannot be more than {{subfield.maxlength}} characters long</p>{% endif %}
+                          {% if subfield.unique %}<p>This field must be unique</p>{% endif %}
+                          {% if subfield.required %}<p>This field is required</p>{% endif %}
+                          {% if subfield.max %}<p>This field cannot exceed {{subfield.max}}</p>{% endif %}
+                          {% if subfield.min %}<p>This field cannot exceed {{subfield.min}}</p>{% endif %}
+                          {% if subfield.choices %}<p>This field displayed as {{subfield.choices}}</p>{% endif %}
+                          {% if subfield.fileType %}<p>This must be {{subfield.fileType}} type</p>{% endif %}
+                          {% if subfield.maxSize %}<p>File size must not exceed {{subfield.maxSize}}</p>{% endif %}
+                          {% if subfield.protocol %}<p>Url must use {{subfield.protocol}}</p>{% endif %}
+                          {% if subfield.maxlat %}<p>Maximum latitude is {{subfield.maxlat}}</p>{% endif %}
+                          {% if subfield.minlat %}<p>Minimum latitude is {{subfield.minlat}}</p>{% endif %}
+                          {% if subfield.maxlng %}<p>Maximum longitude is {{subfield.maxlng}}</p>{% endif %}
+                          {% if subfield.minlng %}<p>Minimum longitude is {{subfield.minlng}}</p>{% endif %}
+                          {% if subfield.options %}<p>Options for field {{subfield.options}}</p>{% endif %}
+                          {% if subfield.maxpicked %}<p>Cannot choose more than {{subfield.maxpicked}}</p>{% endif %}
+                          {% if subfield.minpicked %}<p>Must choose at least {{subfield.minpicked}}</p>{% endif %}
                         </td>
                       </tr>
                     </tbody>
+                    {% endfor %}
                   </table>
                 </td>
               </tr>
+              {% endif %}
             </tbody>
             {% endfor %}
           </table>
           <button type="button" class="btn btn-default btn-xs" ng-click="displayJSON(model)" style="margin-bottom:10px;">
-            {{model.displayTable ? 'Hide JSON' : 'Display as raw JSON'}}
+            {{ '{{' }}model.displayTable ? 'Hide JSON' : 'Display as raw JSON'{{ '}}' }}
           </button>
-          <pre ng-show="model.displayTable">{{model.jsonDisplayData}}</pre>
+          <pre ng-show="model.displayTable">{{model || json}}</pre>
         </div>
       </div>
       {% endfor %}
       <!-- END MODELS -->
 
 
-      <div ng-repeat="controller in controllers" style="border-top:1px solid #333;">
-        <div ng-repeat="item in controller.functions" class="height-fix">
-          <div class="docs-content col-lg-6 col-md-12" id="{{::item.restRoute}}">
-            <h4 style="color:#bbb;font-weight:300;">{{::item.name}}</h4>
+      {% for controller in controllers %}
+      <div style="border-top:1px solid #333;" ng-controller="controllerCtrl">
+        {% for item in controller.functions %}
+        <div class="height-fix">
+          <div class="docs-content col-lg-6 col-md-12" id="{{item.restRoute}}">
+            <h4 style="color:#bbb;font-weight:300;">{{item.name}}</h4>
             <h3>
-              <span class="label label-primary" ng-class="::{'label-success' : item.method === 'get', 'label-primary': item.method === 'post', 'label-danger': item.method === 'delete', 'label-info': item.method === 'put'}">{{::item.method}}</span>
-              {{::item.restRoute}}
+              <span class="label
+              {% if item.method === 'get' %}label-success{% endif %}
+              {% if item.method === 'post' %}label-primary{% endif %}
+              {% if item.method === 'delete' %}label-danger{% endif %}
+              {% if item.method === 'put' %}label-info{% endif %}">
+              {{item.method}}</span>
+              {{item.restRoute}}
             </h3>
-            <p class="text-muted">{{::item.label}}</p>
+            <p class="text-muted">{{item.label}}</p>
 
             <hr>
 
@@ -170,22 +186,24 @@
             <div class="panel panel-default">
               <div class="panel-body">
                 <div class="table">
-                  <div ng-repeat="(name, param) in item.params" class="col-sm-12">
+                  {% for name, param in item.params %}
+                  <div class="col-sm-12">
                     <div class="params col-lg-3 col-md-3 col-sm-2">
-                      <span><strong>{{::name}}</strong>:</span><br>
-                      <span class="text-danger" ng-if="::param.required">Required</span>
+                      <span><strong>{{name}}</strong>:</span><br>
+                      {% if param.required %}<span class="text-danger">Required</span>{% endif %}
                     </div>
                     <div class="col-lg-9 col-md-9 col-sm-10">
-                      <span><strong>{{::param.type || param}}</strong></span>
-                      <p class="text-muted" ng-if="::param.description">{{::param.description}}</p>
+                      <span><strong>{{param.type || param}}</strong></span>
+                      {% if param.required %}<p class="text-muted">{{param.description}}</p>{% endif %}
                     </div>
                   </div>
+                  {% endfor %}
                 </div>
               </div>
             </div>
             <!-- End Description Panel -->
 
-            <p class="item-description">{{::item.description}}</p>
+            <p class="item-description">{{item.description}}</p>
 
             <div class="no-print">
               <!-- Nav Tabs -->
@@ -201,7 +219,7 @@
                   <pre>
                     <code class="javascript">
 
-                      {{::item.results.success}}
+                      {{item.results.success}}
 
                     </code>
                   </pre>
@@ -225,11 +243,11 @@
 
               <button class="btn btn-info" style="margin-top:10px;margin-bottom:10px;" ng-click="item.showTestRoute = !item.showTestRoute;item.testResults = false;item.showUnittests = false;">
                 <span class="glyphicon glyphicon-record" ></span>
-                {{item.showTestRoute ? 'Hide Test Route' : 'Test Route'}}
+                {{ '{{' }}item.showTestRoute ? 'Hide Test Route' : 'Test Route'}}
               </button>
               <button class="btn btn-warning" style="margin-top:10px;margin-bottom:10px;" ng-click="getUnittests(item);item.showTestRoute = false;item.testResults = false;">
                 <span class="glyphicon glyphicon-wrench" ></span>
-                {{item.showUnittests ? 'Hide Unit Tests' : 'Show Unit Tests'}}
+                {{ '{{' }}item.showUnittests ? 'Hide Unit Tests' : 'Show Unit Tests'}}
               </button>
 
               <!-- Test Routes -->
@@ -256,11 +274,11 @@
                   <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                 </a>
 
-                <div style="background-color:{{item.testResults.statusColor;}};height:10px;width:10px;border-radius:50%;display:inline-block;"></div>
-                  {{item.testResults.status}} - {{item.testResults.statusText}}
+                <div style="background-color:{{'{{'}}item.testResults.statusColor;{{'}}'}};height:10px;width:10px;border-radius:50%;display:inline-block;"></div>
+                  {{'{{'}} item.testResults.status{{'}}'}} - {{'{{'}}item.testResults.statusText{{'}}'}}
                 </div>
                 <div class="panel panel-body">
-                  <pre >{{ item.testResults.data | json }}</pre>
+                  <pre >{{'{{'}} item.testResults.data | json {{'}}'}}</pre>
                 </div>       
 
                 <div class="panel panel-body">
@@ -270,7 +288,7 @@
                         Method
                       </th>
                       <td style="overflow:scroll">
-                        {{item.testResults.method}}
+                        {{'{{'}}item.testResults.method{{'}}'}}
                       </td>
                     </tr> 
                     <tr ng-show="item.testResults.url">
@@ -278,7 +296,7 @@
                         Url
                       </th>
                       <td style="overflow:scroll">
-                        {{item.testResults.url}}
+                        {{'{{'}}item.testResults.url{{'}}'}}
                       </td>
                     </tr>                     
                     <tr ng-show="item.testResults.headers">
@@ -286,7 +304,7 @@
                         Headers
                       </th>
                       <td style="overflow:scroll">
-                        {{item.testResults.headers}}
+                        {{'{{'}}item.testResults.headers{{'}}'}}
                       </td>
                     </tr>  
                   </table>
@@ -301,15 +319,15 @@
                   <div ng-show="item.newUnitTests">
                     <h4 ng-show="item.newUnitTests.length === 0"> No new tests created</h4>
                     <div class="col-sm-8 col-sm-offset-2" ng-repeat="test in item.newUnitTests">
-                      <h5>Test {{$index}}</h5>
+                      <h5>Test {{ '{{' }}$index}}</h5>
                       <label>Name:</label>
-                      <input type="text" class="form-control" ng-model="test.name"  placeholder="{{test.name}}">
+                      <input type="text" class="form-control" ng-model="test.name"  placeholder="{{'{{'}}test.name{{'}}'}}">
                       <label>Title:</label>
-                      <input type="text" class="form-control" ng-model="test.title"  placeholder="{{test.title}}">
+                      <input type="text" class="form-control" ng-model="test.title"  placeholder="{{'{{'}}test.title{{'}}'}}">
                       <label>ItShould:</label>
-                      <input type="text" class="form-control" ng-model="test.itShould" placeholder="{{test.itShould}}">
-                      <div class="alert alert-success" ng-show="test.updateMessages.success">{{test.updateMessages.success}}</div>
-                      <div class="alert alert-success" ng-show="test.updateMessages.error">{{test.updateMessages.error}}</div>
+                      <input type="text" class="form-control" ng-model="test.itShould" placeholder="{{'{{'}}test.itShould{{'}}'}}">
+                      <div class="alert alert-success" ng-show="test.updateMessages.success">{{ '{{' }}test.updateMessages.success{{'}}'}}</div>
+                      <div class="alert alert-success" ng-show="test.updateMessages.error">{{ '{{' }}test.updateMessages.error{{'}}'}}</div>
                       <button ng-click="updateUnitTest(test)" style="margin-top:10px;"class="btn btn-success">Update Test</button>
                       <hr>
                     </div>
@@ -392,7 +410,9 @@
             </div>
           </div>
         </div>
+        {% endfor %}
       </div>
+      {% endfor %}
       <!-- End Code Example -->
     </div>
   </div>

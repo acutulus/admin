@@ -1,18 +1,14 @@
 'use strict';
 
-angular.module('dbtools').controller('DocumentationCtrl', ['$scope', '$http', '$anchorScroll', "$timeout",
-  function($scope, $http, $anchorScroll, $timeout){
+angular.module('dbtools').controller('DocumentationCtrl', ['$scope', '$http', '$anchorScroll', "$timeout", "$sce",
+  function($scope, $http, $anchorScroll, $timeout, $sce){
       $scope.msgs = {loading:true};
-      $http.get($scope.apiHost + '/admin/restRoutes')
+      $http.get($scope.apiHost + '/admin/documentation')
         .then(function(response){
-          $scope.msgs = {};
-          $scope.controllers = response.data;
-          addTestParams();
-          if ($scope.models && $scope.controllers) {
-            $scope.buildDiagrams();          
-          }
+          $scope.documentationhtml = $sce.trustAsHtml(response.data);
+          $scope.msgs.loading = false;
         });
-
+      /*
       $http.get($scope.apiHost + '/admin/models')
       .then(function(response){
         $scope.models = response.data;
@@ -21,7 +17,7 @@ angular.module('dbtools').controller('DocumentationCtrl', ['$scope', '$http', '$
           $scope.buildDiagrams();          
         }
       }); 
-
+      */
       $scope.openAPIExplorer = function(route) {
 
       };
