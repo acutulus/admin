@@ -3,12 +3,23 @@
 angular.module('dbtools').controller('DocumentationCtrl', ['$scope', '$http', '$anchorScroll', "$timeout", "$sce",
   function($scope, $http, $anchorScroll, $timeout, $sce){
       $scope.msgs = {loading:true};
+
       $http.get($scope.apiHost + '/admin/documentation')
         .then(function(response){
           $scope.documentationhtml = $sce.trustAsHtml(response.data);
           $scope.msgs.loading = false;
         });
       /*
+      $http.get($scope.apiHost + '/admin/restRoutes')
+      .then(function(response){
+        $scope.msgs = {};
+        $scope.controllers = response.data;
+        addTestParams();
+        if ($scope.models && $scope.controllers) {
+          $scope.buildDiagrams();          
+        }
+      });
+
       $http.get($scope.apiHost + '/admin/models')
       .then(function(response){
         $scope.models = response.data;
@@ -18,6 +29,22 @@ angular.module('dbtools').controller('DocumentationCtrl', ['$scope', '$http', '$
         }
       }); 
       */
+      
+      var dontDisplayModels = ['unitTest','pushNotification','oauth','userToken','userEvent','trackedEvent','page','device','copy','email']
+      $scope.doNotDisplayModels = function(name){
+        return dontDisplayModels.indexOf(name) > -1;
+      }
+      
+      var dontDisplayFields = ['_createdAt', '_v', '_id', '_updatedAt', '_seed']
+      $scope.doNotDisplayFields = function(name){
+        return dontDisplayFields.indexOf(name) > -1
+      } 
+      
+      var dontDisplayRoutes = ['auth','email','device','graphql','oauth','pushNotification','trackedEvent','user','userEvent','userToken','unitTest'];
+      $scope.doNotDisplayRoutes = function(name){
+        return dontDisplayRoutes.indexOf(name) > -1;
+      }
+
       $scope.openAPIExplorer = function(route) {
 
       };
@@ -195,22 +222,18 @@ paper.on('cell:pointerup', function(cellView, evt, x, y) {
           }
         }
       };
+
       function convertToSocketRoute(route){
         var methodMap = {"get":"read", "put":"update", "post":"create", "delete":"delete"};
         var sRoute = route.method;
+        var sName = route.name;
         var urlRoute = route.restRoute.split('/');
         for(var i = 0; i < urlRoute.length; i++){
           if(urlRoute[i] === 'v1'){
             sRoute += "." + urlRoute[i+1].slice(0, urlRoute[i+1].length-1);
           }
         }
-        i--;
-        if(urlRoute[i].indexOf(':') === 0){
-          sRoute += "." + methodMap[route.method];
-        }else{
-          sRoute += "." + urlRoute[i];
-        }
-        return sRoute;
+        return sRoute + "." + sName;
       }
 
       $scope.runUnittest = function(test){
@@ -286,7 +309,8 @@ paper.on('cell:pointerup', function(cellView, evt, x, y) {
         }
       }
 
-      /*Convert types like _user and reference to string, match _model to corresponding model schema*/
+      /*Convert types like _user and reference to string, so input can be did
+         match _model to corresponding model schema*/
       function modifyObjectAndReferenceParams(params){
         if(typeof params === "string"){
          

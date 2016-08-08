@@ -8,10 +8,10 @@ angular.module('dbtools').config(['$stateProvider', '$urlRouterProvider', '$loca
 		
 		//set restService route
 		if (localStorage.kepsApiPrefix) {
-			$nkRestServiceProvider.setApiPrefix(localStorage.kepsApiPrefix+'/admin/rest/');
+			$nkRestServiceProvider.setApiPrefix(localStorage.kepsApiPrefix+'/admin/');
 			$nkAuthServiceProvider.setApiPrefix(localStorage.kepsApiPrefix+'/api/v1/');
 		} else {
-			$nkRestServiceProvider.setApiPrefix('/admin/rest/');
+			$nkRestServiceProvider.setApiPrefix('/admin/');
 			$nkAuthServiceProvider.setApiPrefix('/api/v1/');
 		}
 		// Home state routing
@@ -43,6 +43,10 @@ angular.module('dbtools').config(['$stateProvider', '$urlRouterProvider', '$loca
 		.state('dbtools.documentation',{
 			url:'/documentation',
 			templateUrl:'modules/dbTool/views/documentation.html'
+		})
+		.state('dbtools.testing', {
+			url:"/testing",
+			templateUrl:"modules/dbTool/views/testing.html"
 		})
 		.state('dbtools.signin',{
 			url:'/signin',

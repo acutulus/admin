@@ -32,9 +32,14 @@
 					<a ui-sref="dbtools.documentation">
 						Documentation
 					</a>
-				<li>
+				<li ng-show="user.admin">
 					<a ui-sref="dbtools.graph">
 						Analytics
+					</a>
+				</li>
+				<li ng-show="user.admin">
+					<a ui-sref="dbtools.testing">
+						Testing
 					</a>
 				</li>
 			</ul>

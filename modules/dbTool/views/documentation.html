@@ -29,16 +29,18 @@
           </div>
           <div>
             <h4>Models</h4>
-            <a href="" ng-repeat="(name,item) in models" class="item" ng-click="toScroll('model'+name)">
+            <a href="" ng-repeat="(name,item) in models" class="item" ng-if="!doNotDisplayModels(name)" ng-click="toScroll('model'+name)">
               <span style="text-transform:capitalize;">{{item.properties.label ? item.properties.label : name}}</span>
             </a>
           </div>            
-          <div ng-repeat="(name, controller) in controllers">
-            <h4>{{name}}</h4>
-            <a href="" ng-repeat="item in controller.functions" class="item" ng-click="toScroll(item.restRoute)">
-              <span class="label" ng-class="{'label-success' : item.method === 'get', 'label-primary': item.method === 'post', 'label-danger': item.method === 'delete', 'label-info': item.method === 'put'}">{{item.method}}</span>
-              <span>{{item.restRoute}}</span>
-            </a>
+          <div ng-repeat="(name, controller) in controllers" ng-if="!doNotDisplayRoutes(name)">
+            <div >
+              <h4>{{name}}</h4>
+              <a href="" ng-repeat="item in controller.functions" class="item" ng-click="toScroll(item.restRoute)">
+                <span class="label" ng-class="{'label-success' : item.method === 'get', 'label-primary': item.method === 'post', 'label-danger': item.method === 'delete', 'label-info': item.method === 'put'}">{{item.method}}</span>
+                <span>{{item.restRoute}}</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -53,7 +55,7 @@
 
       <!-- MODELS -->
       <div ng-repeat="(name,model) in models">
-        <div class="docs-content col-lg-10 col-md-10" id="model{{::name}}">
+        <div class="docs-content col-lg-10 col-md-10" id="model{{::name}}" ng-if="!doNotDisplayModels(name)">
           <h2 style="text-transform: capitalize">The <i>{{::name}}</i> Model</h2>
           <p class="lead" ng-show="model.properties.description">{{::model.properties.description}}</p>
           <table class="table table-striped table-bordered table-hover" >
@@ -65,8 +67,8 @@
                 <th>Example</th>
               </tr>
             </thead>
-            <tbody ng-repeat="(name, field) in model.schema">
-              <tr>
+            <tbody ng-repeat="(name, field) in model.schema" >
+              <tr ng-if="!doNotDisplayFields(name)">
                 <td>
                   {{::name}}<br/>
                   <button type="button" class="btn btn-default btn-xs" ng-disabled="::(!isRef(field) && !isComplexType(field))" ng-click="fieldBtn(field)" ng-bind="::getTypeLabel(field)"></button>
@@ -157,14 +159,14 @@
       </div>
       <!-- END MODELS -->
 
-
-      <div ng-repeat="controller in controllers" style="border-top:1px solid #333;">
-        <div ng-repeat="item in controller.functions" class="height-fix">
-          <div class="docs-content col-lg-6 col-md-12" id="{{::item.restRoute}}">
+      <div ng-repeat="(name,controller) in controllers" style="border-top:1px solid #333;">
+        <div ng-if="!doNotDisplayRoutes(name)" ng-repeat="item in controller.functions" class="height-fix" >
+          <div class="docs-content col-lg-7 col-md-12 col-sm-12" id="{{::item.restRoute}}">
             <h4 style="color:#bbb;font-weight:300;">{{::item.name}}</h4>
             <h3>
               <span class="label label-primary" ng-class="::{'label-success' : item.method === 'get', 'label-primary': item.method === 'post', 'label-danger': item.method === 'delete', 'label-info': item.method === 'put'}">{{::item.method}}</span>
               {{::item.restRoute}}
+              <span style="float:right;font-size:16px;color:red;">{{item.internal ? 'Internal Only' : ''}}</span>
             </h3>
             <p class="text-muted">{{::item.label}}</p>
 
@@ -190,16 +192,15 @@
             <!-- End Description Panel -->
 
             <p class="item-description">{{::item.description}}</p>
-
+            <!--
             <div class="no-print">
-              <!-- Nav Tabs -->
-                <ul class="nav nav-pills">
+              <!-- Nav Tabs                 
+              <ul class="nav nav-pills">
                     <li role="presentation" class="active"><a aria-controls="json" href="#javascript" role="tab" data-toggle="pill">JavaScript</a></li>
                     <li role="presentation" color="text-muted"><a aria-controls="python" href="#python" role="tab" data-toggle="pill">Python</a></li>
                     <li role="presentation" color="text-muted"><a aria-controls="node" href="#node" role="tab" data-toggle="pill">Node</a></li>
                 </ul>
 
-              <!-- Tab Content -->
               <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="javascript">
                   <pre>
@@ -225,18 +226,20 @@
                   </pre>
                 </div>
               </div>
+              -->
               <!-- End Tabs -->
-
-              <button class="btn btn-info" style="margin-top:10px;margin-bottom:10px;" ng-click="item.showTestRoute = !item.showTestRoute;item.testResults = false;item.showUnittests = false;">
+              <!--
+              <button class="btn btn-info" style="margin-top:10px;margin-bottom:10px;" ng-click="item.showTestRoute = !item.showTestRoute;item.testResults = false;item.showUnittests = false;" ng-if="!item.internal">
                 <span class="glyphicon glyphicon-record" ></span>
                 {{item.showTestRoute ? 'Hide Test Route' : 'Test Route'}}
               </button>
-              <button class="btn btn-warning" style="margin-top:10px;margin-bottom:10px;" ng-click="getUnittests(item);item.showTestRoute = false;item.testResults = false;">
+              <button class="btn btn-warning" style="margin-top:10px;margin-bottom:10px;" ng-click="getUnittests(item);item.showTestRoute = false;item.testResults = false;" ng-if="!item.internal">
                 <span class="glyphicon glyphicon-wrench" ></span>
                 {{item.showUnittests ? 'Hide Unit Tests' : 'Show Unit Tests'}}
               </button>
-
+              -->
               <!-- Test Routes -->
+              <!--
               <div class="panel panel-info" ng-if="item.showTestRoute">
                 <div class="panel-heading">
                   <h4>Try out route</h4>
@@ -320,10 +323,12 @@
                   </div>
                 </div>
               </div>
+              -->
               <!-- End Test Routes -->
 
               <!-- Unit Tests -->
               <!-- Test Routes -->
+              <!--
               <div class="panel panel-default" ng-if="item.showUnittests">
                 <div class="panel-heading">
                   <h4>Unit Tests</h4>
@@ -348,6 +353,7 @@
                   </div>
                 </div>
               </div>
+              -->
               <!-- End Unit Tests -->
 
               <!-- Confirmation Panel -->
@@ -361,14 +367,13 @@
                   <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde deserunt, a provident earum aut facilis voluptas voluptatem, soluta officiis nulla tempore ullam dolor incidunt vitae. Soluta et error, aut quia?</p>
                 </div>
               </div> -->
-            </div>
+          </div>
             <!-- End No Print -->
 
-          </div>
           <!-- End Row -->
 
           <!-- Code Example -->
-          <div class="docs-right col-lg-4 col-md-12 no-print">
+          <div class="docs-right col-lg-3 col-md-12 no-print">
             <h5 class="text-muted">Definition</h5>
             <p class="example-url text-muted">http://sampleapi.acutulus.co<span class="highlight">{{item.restRoute}}</span></p>
             <h5 class="text-muted results-heading">Results Format</h5>
