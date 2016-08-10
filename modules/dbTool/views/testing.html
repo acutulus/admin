@@ -41,6 +41,7 @@
 
 			<div class="col-md-8">
 				<h4> Run Tests {{activeRoute.name}}</h4>
+				<p>{{activeRoute.description}}</p>
 				<span ng-show="activeTests">
 					Found {{activeTests.length}} test{{activeTests.length === 1 ? '' :'s'}}  for this route
 					<button style="float:right;margin-left:15px;" class="btn btn-success" ng-click="createTest();">Create Test</button>
