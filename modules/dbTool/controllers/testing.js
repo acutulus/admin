@@ -151,7 +151,8 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
         test.output = JSON.parse(test.output);
         test.itShould = test.itShouldEdit;
         test.itShouldEdit = '';
-        tests.msgs = {updated:true};
+        test.msgs = {updated:true};
+        $timeout(function(){test.msgs = {}},1000);
       }, function(err){
         test.itShould = '';
         console.error(err);
@@ -190,13 +191,16 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
       test.msgs = {error:err};
     });  
   }
-
-  //push a test into that tests list, cant auto push all tests because some routes generate a bunch of 
-  //unrelated ones
-  $scope.pushTestToActiveList = function(test){
-    $scope.activeTests.push(test);
+  
+  //add tests to activeTests list, set all views to false
+  $scope.finishCreatingTests = function(){
+    for(var i = 0; i < $scope.createdTests.length; i++){
+      $scope.activeTests.push($scope.createdTests[i]);
+    }
+    $scope.showCreated = false;
+    $scope.showCreate = false;
+    $scope.showTests = false;
   }
-
 
   /* BUILDING/SPOOFING HTTP REQUEST CODE STUFF */
   function testRoute(route, cb){

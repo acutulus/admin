@@ -60,7 +60,7 @@
 						</div>
 						<div class="alert alert-success" ng-show="test.msgs.deleted">Test Deleted</div>
 						<br>
-						<h5>{{test.testResults.status}} - {{test.testResults.data}}</h5>
+						<h5>{{test.testResults.status}} {{test.testResults.data}}</h5>
 						<code style="color:blue">{{test.testResults.displayCode}}</code>
 						<hr>
 					</div>
@@ -124,8 +124,8 @@
 							</div>
 						</div>
 					</div>
-
-					<button class="btn btn-success" ng-click="buildUnitTest(activeRoute)">
+					<button class="btn btn-warning" ng-click="finishCreatingTests()" ng-show="showCreatedTests">Finished</button>
+					<button class="btn btn-success" ng-click="buildUnitTest(activeRoute)" ng-show="!showCreatedTests">
 						Create Test
 					</button>
 				</div>
