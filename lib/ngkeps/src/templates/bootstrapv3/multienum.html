@@ -5,7 +5,7 @@
     <label><input 
         type="checkbox" 
         ng-click="checkMulti(opt);errorChecking();"
-        ng-checked="data.value.indexOf(opt) > -1"
+        ng-checked="inArray(opt)"
         ng-readonly="kepsReadonly">
       {{opt}}
     </label> 

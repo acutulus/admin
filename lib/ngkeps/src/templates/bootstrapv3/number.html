@@ -2,10 +2,13 @@
 	<span ng-show="kepsType.required" style="color:red;">*</span>	
 	<label class="{{kepsLabelClass}}">{{kepsType.label}}</label>
 	<input 	type="number" 
-			ng-model="data.value" 
+			ng-model="data.value"
+			min={{kepsType.min}}
+			max={{kepsType.max}} 
 			class="form-control {{kepsInputClass}}" 
 			ng-required="kepsType.required" 
 			placeholder="{{kepsType.placeholder}}"
+			numbers-only="{{kepsType.round == 0}}"
 			ng-keyup="errorChecking()"
 			ng-readonly="kepsReadonly"/>
 	<span class="help-block"  ng-if="kepsType.instructions">

@@ -1,0 +1,139 @@
+<div class="model" style="width:400px" ng-class="{'shake': shakeForm}">
+  <div class="" ng-show="!user">
+    <div class="" ng-show="show=='login'">
+      <h4 class="modal-title" >Login</h4>
+      <hr />
+      <form name="loginForm" data-ng-submit="signin('local')">
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" class="form-control" ng-model="login.username" required placeholder="Your Email">
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" class="form-control" ng-model="login.password" required placeholder="Your Password">
+          </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-xs-6 ">
+              <p class="help-block"><a ng-click="showForgottenPassword()">Forgot password?</a></p>
+            </div>
+          </div>
+        </div>
+        <div class="alert alert-success alert-dismissible fade in" ng-show="msgs.signedIn">
+          {{msgs.signedIn}}
+        </div>
+        <div class="alert alert-warning alert-dismissible fade in" ng-show="msgs.error">
+          {{msgs.error}}
+        </div>
+        <div class="form-group no-margin" ng-if="config.oauth.google">
+          <button type="button" ng-click="signin('google')" class="btn btn-theme btn-lg btn-t-primary btn-block">Log In With Google</button>
+        </div>
+        <div class="form-group no-margin" ng-if="config.oauth.facebook">
+          <button type="button" ng-click="signin('facebook')" class="btn btn-theme btn-lg btn-t-primary btn-block">Log In With Facebook</button>
+        </div>
+        <div class="form-group no-margin" ng-if="config.register">
+          <button type="button" ng-click="showRegister()" class="btn btn-theme btn-lg btn-t-primary btn-block">Register</button>
+        </div>
+
+        <div class="form-group no-margin">
+          <button type="submit" class="btn btn-theme btn-lg btn-t-primary btn-block">Log In</button>
+        </div>
+      </form><!-- form login -->
+    </div>
+    <div class="" ng-show="show=='register'">
+      <h4 class="modal-title">Register</h4>
+      <hr />
+      <form name="registerForm" data-ng-submit="register()"> 
+        <div class="form-group">
+          <label>First name</label>
+          <input type="text" class="form-control" required ng-model="newUser.firstName" required placeholder="first name">
+        </div>
+        <div class="form-group">
+          <label>Last name</label>
+          <input type="text" class="form-control" required ng-model="newUser.lastName" required placeholder="last name">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" class="form-control" ng-model="newUser.email" required placeholder="Your Email">
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" class="form-control" ng-model="newUser.password" required placeholder="Your Password">
+        </div>
+        <div class="form-group">
+          <label>Re-type Password</label>
+          <input type="password" class="form-control" ng-model="rePassword" required placeholder="Re-type Your Password">
+        </div>
+        <!--Error/success messages -->
+        <div class="alert alert-warning alert-dismissible fade in" ng-show="msgs.passwordsDontMatch">
+          Passwords dont match.
+        </div>
+        <div class="alert alert-warning alert-dismissible fade in" ng-show="msgs.passwordShort">
+          Password needs to be 7 or more characters.
+        </div>
+        <div class="alert alert-warning alert-dismissible fade in" ng-show="msgs.formError">
+          Error in the form.
+        </div>
+        <div class="alert alert-success alert-dismissible fade in" ng-show="msgs.created">
+          You are registered!
+        </div>
+        <div class="alert alert-warning alert-dismissible fade in" ng-show="msgs.emailUsed">
+          Email has already been used to create an account
+        </div>
+        <div class="alert alert-danger alert-dismissible fade in" ng-show="msgs.error">
+          {{msgs.error}}
+        </div>
+        <div class="white-space-10"></div>
+        <div class="form-group no-margin">
+          <button type="button" class="btn btn-default btn-theme" ng-click="showLogin()">Cancel</button>
+          <button type="submit" class="btn btn-theme btn-lg btn-t-primary btn-block">Register</button>
+        </div>
+      </form><!-- form login -->
+      <hr/>
+      <div class="text-center color-white">By creating an account, you agree to {{config.name}} <br/><a href="#" class="link-white"><strong>Terms of Service</strong></a> and consent to our <a href="#" class="link-white"><strong>Privacy Policy</strong></a>.</div>
+    </div>
+    <div class="" ng-show="show=='forgottenPassword'">
+      <h4 class="modal-title" >Forgot Password</h4>
+      <hr />
+      <div class="form-group">
+        <label>Enter Your Email</label>
+        <input type="email" class="form-control " name="text" placeholder="Email">
+      </div>
+      <hr />
+      <button type="button" class="btn btn-default btn-theme" ng-click="showLogin()">Cancel</button>
+      <button type="submit" class="btn btn-success btn-theme">Send</button>
+    </div>
+    <div class="" ng-show="show=='twofactor'">
+      <h4 class="modal-title">Two Factor Authentication</h4>
+      <hr />
+      <div class="form-group">
+        <label>Enter Your Email</label>
+        <input type="email" class="form-control " name="text" placeholder="Email">
+      </div>
+      <hr />
+      <button type="button" class="btn btn-default btn-theme" ng-click="showLogin()">Cancel</button>
+      <button type="submit" class="btn btn-success btn-theme">Send</button>
+    </div>
+    <div class="" ng-show="show=='resetPassword'">
+      <h4 class="modal-title">Reset Password</h4>
+      <hr />
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" class="form-control" ng-model="newUser.password" required placeholder="Your Password">
+      </div>
+      <div class="form-group">
+        <label>Re-type Password</label>
+        <input type="password" class="form-control" ng-model="rePassword" required placeholder="Re-type Your Password">
+      </div>
+      <hr />
+      <button type="button" class="btn btn-default btn-theme" data-dismiss="modal">Close</button>
+      <button type="submit" class="btn btn-success btn-theme">Send</button>
+    </div>
+  </div>
+  <div class="col-md-12" ng-show="user">
+    <p>Looks like your already signed in as {{user.username}}.</p>
+    <p><br><a ng-click="signout()">sign out?</a></p>
+  </div>
+  <div style="display:none;"> 
+  </div>
+</div>
