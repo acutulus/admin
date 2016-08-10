@@ -3,7 +3,7 @@
 
 		<!-- Page Title -->
 		<div class="row">
-			<h3>Testing</h3>
+			<h2>Testing</h2>
 		</div>
 		
 		<!-- Loading Messages -->
@@ -13,10 +13,10 @@
 			</div>
 		</div>
 		<hr>
-		<div class="row">
+		<div class="row" style="margin-bottom:80px;">
 			<!-- Sidebar / list of controllers>routes>tests -->
 			<div class="col-md-4" style="border-right:1px solid rgba(100,100,100,0.5);height:600px;overflow:scroll;padding-bottom:50px;">
-				<h4>Tests:</h4>
+				<h3>Tests:</h3>
 
 				<!--controllers -->
 				<div ng-repeat="controller in controllers">
@@ -28,21 +28,12 @@
 					</a>
 					<!-- routes in controller -->
 					<div style="margin-left:20px;" ng-show="controller.showRoutes">
+							<span ng-show="!routes[controller.name].routes || routes[controller.name].routes.length === 0">No Routes</span>
 						<div ng-repeat="route in routes[controller.name].routes">
 							<a 	href="" 
 								ng-click="getTestsForRoute(route)">
 								{{route.name}}
 							</a>
-							<!-- tests in route 
-							<div style="margin-left:16px;" ng-show="route.showTests">
-								<a  href=""
-									ng-repeat="test in route.tests"
-									ng-click="setActiveTest(test)">
-									{{test}}
-								</a>	
-								<div ng-show="route.tests && route.tests.length === 0"> No Tests Found</div>
-							</div>
-							-->
 						</div>
 					</div>
 				</div>
@@ -56,27 +47,86 @@
 					<button style="float:right;" class="btn btn-warning" ng-click="showCreate = false;showTests = true;">View Tests</button>
 				</span>
 				<hr>
-				<div ng-show="showTests">
+				<div ng-show="showTests" style="max-height:800px;overflow:scroll">
 					<div class="" ng-repeat="test in activeTests">
-						<button class="btn btn-warning" ng-click="runTest(test)">Run {{test.name}} <br>{{test.itShould}}</button>
-						{{test.testResults}}
+						<h5>Test: {{test.name}} {{test.itShould ? '- ' + test.itShould : ''}}</h5>
+						<button class="btn btn-info" ng-click="runTest(test)">Run {{test.name}}</button>
+						<button class="btn btn-danger" style="float:right;display:inline-block;" ng-click="deleteUnitTest(test, true)">Delete Test</button>
+						<div class="input-group" style="margin-top:20px;">
+						    <input type="text" class="form-control" ng-model="test.itShouldEdit" placeholder="It Should...."/>
+					        <span class="input-group-btn">
+								<button class="btn btn-success" ng-click="updateUnitTest(test)">Modify It Should Field</button>
+					        </span>
+						</div>
+						<div class="alert alert-success" ng-show="test.msgs.deleted">Test Deleted</div>
+						<br>
+						<h5>{{test.testResults.status}} - {{test.testResults.data}}</h5>
+						<code style="color:blue">{{test.testResults.displayCode}}</code>
+						<hr>
 					</div>
 				</div>
 				<div ng-show="showCreate">
-					<h4>Create new test</h4>
+					<h3>Create new test</h3>
 						<keps-form
 							keps-data="newTestForm.schema"
 							keps-errors="newTestForm.errors"
 							keps-model="newTestForm.values">
 						</keps-form>
-					<div ng-show="showCreatedTests" style="max-height: 300px;overflow:scroll;" ng-repeat="test in createdTests">
-						Result:
-					{{test}}
+					<div ng-show="showCreatedTests" style="max-height: 500px;overflow:scroll;margin:10px;">
+						<h3>Created {{createdTests.length}} Test{{createdTests.length === 1 ? '' : 's'}}</h3> 
+						<div class="list-group" ng-repeat="test in createdTests">
+							<div class="list-group-item">
+								<h4>
+									{{test.title}} - {{test.itShould}}
+									<button style="float:right;" class="btn btn-danger" ng-click="deleteUnitTest(test)">
+										Delete Test
+									</button>
+								</h4>
+								<div class="alert alert-success" ng-show="test.msgs.deleted">Test Deleted</div>
+								<div class="alert alert-success" ng-show="test.msgs.updated">Test Updated</div>
+								<div class="alert alert-danger" ng-show="test.msgs.error">{{test.msgs.error}}</div>
+
+								<div class="input-group" style="margin-top:25px;">
+								  <input type="text" class="form-control" ng-model="test.itShouldEdit" placeholder="It Should...."/>
+							      <span class="input-group-btn">
+									<button class="btn btn-success" ng-click="updateUnitTest(test)">Add It Should Field</button>
+							      </span>
+							    </div>
+
+
+								<hr>
+								<h4>Input:</h4>
+								<p>{{test.input.data}}</p>
+								<hr>
+								<h4>Output:</h4>
+								<div ng-if="test.output.err">
+									<span style="color:red" ng-show="test.output.err[0].status !== 200 && test.output.err[0].status !== 304">{{test.output.err[0].status}}</span>
+									<p ng-repeat="err in test.output.err">
+										{{err.message}}
+									</p>
+								</div>
+								<div ng-if="!test.output.err">
+									<span style="color:green">200</span>	
+								</div>
+								<!-- GRAPHQL OUTPUT -->
+								<div ng-if="test.output.resp.data" ng-repeat="(name, data) in test.output.resp.data">
+									<h4>{{name}}:</h4>
+									<ul ng-repeat="entry in data">
+										<li ng-repeat="(key,val) in entry">
+											{{key}}:{{val}}
+										</li>
+									</ul>
+								</div>
+								<!-- STANDARD ROUTE OUTPUT -->
+								<div ng-if="!test.output.resp.data" ng-repeat="(name,data) in test.output.resp">
+									<h5>{{name}}:<span style="font-size:12px;">{{data}}</span></h5>
+								</div>
+							</div>
+						</div>
 					</div>
 
 					<button class="btn btn-success" ng-click="buildUnitTest(activeRoute)">
 						Create Test
-
 					</button>
 				</div>
 			</div>

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeout",
+angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeout", 
 	function($scope, $http, $timeout){
 	
 	$scope.loading = {loading : true};
@@ -28,18 +28,38 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
       if(dontDisplayRoutes.indexOf(x) > -1){
         //dont display these routes
       }else{
+        //add to controllers and routes array
         controllers.push({name:x});
         for(var k in data[x].functions){
           if(routes[x] && typeof routes[x] === 'object'){
-            routes[x].routes.push({name:k, route:data[x].functions[k]});
+            routes[x].routes.push({
+                                    name:k, 
+                                    route:addInstructionsToRoute(data[x].functions[k])
+                                  });
           }else{
-            routes[x] = {name:x,routes:[{name:k, route:data[x].functions[k]}]};
+            routes[x] = {
+                          name:x,
+                          routes:[{
+                                  name:k, 
+                                  route:addInstructionsToRoute(data[x].functions[k])
+                                  }]
+                        };
           }
         }
       }
     }
     $scope.controllers = controllers;
     $scope.routes = routes;
+  }
+
+  //bind descriptions to instructions for this view, this will force ngkeps to display route descriptions
+  function addInstructionsToRoute(route){
+    for(var x in route.params){
+      if(route.params[x].hasOwnProperty('description')){
+        route.params[x].instructions = route.params[x].description;
+      }
+    }
+    return route;
   }
 
   $scope.getTestsForRoute = function(route){
@@ -78,6 +98,7 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
     $http.get($scope.apiHost + "/api/v1/unitTests/" + test._id + "/runTest")
     .then(function(success){
       test.testResults = success;
+      test.testResults.displayCode = JSON.stringify(success);
       test.displayResults = true;
       $timeout(function(){
         test.displayResults = false;
@@ -101,6 +122,9 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
 
               $scope.showCreatedTests = true;
               $scope.createdTests = tests.data;
+              for(var i = 0; i < $scope.createdTests.length; i++){
+                $scope.createdTests[i].output = JSON.parse($scope.createdTests[i].output);
+              }
 
             }, function(err){
               console.error(err);
@@ -115,12 +139,66 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
     }
   }
 
-  //delete unchecked unit tests, add itshould param to built ones
-  $scope.updateUnitTestBuild = function(){
-
+  //add itShould field to a unitTest
+  $scope.updateUnitTest = function(test){
+    if(!test.itShouldEdit){
+      test.msgs = {error:"ItShould field is empty"};
+    }else{
+      test.itShould = test.itShouldEdit
+      test.output = JSON.stringify(test.output);
+      $http.put($scope.apiHost + "/api/v1/unitTests/" + test._id, {unitTest:test})
+      .then(function(success){
+        test.output = JSON.parse(test.output);
+        test.itShould = test.itShouldEdit;
+        test.itShouldEdit = '';
+        tests.msgs = {updated:true};
+      }, function(err){
+        test.itShould = '';
+        console.error(err);
+        test.msgs = {error:err.data};
+      });
+    }
   }
 
-  /*BUILDING TESTS CODE*/
+  //remove unit test by _id and splice from its test list
+  $scope.deleteUnitTest = function(test, activeTest){
+    $http.delete($scope.apiHost + "/api/v1/unitTests/" + test._id)
+    .then(function(success){
+      test.msgs = {deleted:true};
+      
+      //remove test from list
+      $timeout(function(){
+        if(!activeTest){
+          for(var i = 0; i < $scope.createdTests.length; i++){
+            if($scope.createdTests[i]._id === test._id){
+              $scope.createdTests.splice(i, 1);
+              return test = null;
+            }
+          }
+        }else if(activeTest){
+          for(var i = 0; i < $scope.activeTests.length; i++){
+            if($scope.activeTests[i]._id === test._id){
+              $scope.activeTests.splice(i,1);
+              return test = null;
+            }
+          }
+        }
+      }, 1200);
+
+    }, function(err){
+      console.error(err);
+      test.msgs = {error:err};
+    });  
+  }
+
+  //push a test into that tests list, cant auto push all tests because some routes generate a bunch of 
+  //unrelated ones
+  $scope.pushTestToActiveList = function(test){
+    $scope.activeTests.push(test);
+  }
+
+
+  /* BUILDING/SPOOFING HTTP REQUEST CODE STUFF */
   function testRoute(route, cb){
     switch(route.method){
       case('get'): runGetRequest(route, cb);
@@ -193,13 +271,13 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
   function replaceIdInRoute(route){
     var body = $scope.newTestForm.values;
     if(route.restRoute.indexOf(":") > -1){
-      //split url string into array >> replace reference fields >> join array into url string
+
       var url = route.restRoute.split('/');
       for(var i = 0; i < url.length; i++){
         if(url[i].indexOf(":") > -1){
           var key = url[i].slice(1);
           url[i] = body[key];
-          delete body[key]; //remove field so it doesnt get added to querystring or body
+          delete body[key]; 
         } 
       }
       url = url.join('/');
@@ -208,11 +286,12 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
       return {url:route.restRoute, body:body};
     }
   }
+
   //returns "?params=value" or ""
   function buildQuerystring(route){
     var querystring = "?";
-    for(var x in route.testRouteParams){
-      querystring += x + "=" + route.testRouteParams[x] + "&";
+    for(var x in $scope.newTestForm.values){
+      querystring += x + "=" + $scope.newTestForm.values[x] + "&";
     }
     if(querystring.length > 1){
       querystring = querystring.slice(0, querystring.length - 1);
@@ -220,6 +299,14 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
       querystring = "";
     }
     return querystring;
+  }
+
+  function buildRequestBody(request){
+    if(request.body){
+
+    }else{
+      return request;
+    }
   }
 
 	function checkLoaded(){
