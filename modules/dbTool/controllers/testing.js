@@ -115,28 +115,32 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
       $http.get($scope.apiHost + '/admin/startRecordingAll')
       .then(function(response){
         testRoute(route, function(){
-          $http.get($scope.apiHost + '/admin/stopRecordingAll')
-          .then(function(response){
-            $http.get($scope.apiHost + "/api/v1/unitTests/recent?time=" + testStart)
-            .then(function(tests){
-
-              $scope.showCreatedTests = true;
-              $scope.createdTests = tests.data;
-              for(var i = 0; i < $scope.createdTests.length; i++){
-                $scope.createdTests[i].output = JSON.parse($scope.createdTests[i].output);
-              }
-
-            }, function(err){
-              console.error(err);
-            });//end get recent tests
-          }, function(err){
-            console.error(err);
-          }); //end stop recording         
+          finishBuildTests(testStart);         
         });//end testRoute
       }, function(err){
+        finishBuildTests(testStart);
         console.error(err);
       });//end start recording
     }
+  }
+
+  function finishBuildTests(testStart){
+    $http.get($scope.apiHost + '/admin/stopRecordingAll')
+    .then(function(response){
+      $http.get($scope.apiHost + "/api/v1/unitTests/recent?time=" + testStart)
+      .then(function(tests){
+
+        $scope.showCreatedTests = true;
+        $scope.createdTests = tests.data;
+        for(var i = 0; i < $scope.createdTests.length; i++){
+          $scope.createdTests[i].output = JSON.parse($scope.createdTests[i].output);
+        }
+      }, function(err){
+        console.error(err);
+      });//end get recent tests
+    }, function(err){
+      console.error(err);
+    }); //end stop recording
   }
 
   //add itShould field to a unitTest
@@ -275,13 +279,12 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
   function replaceIdInRoute(route){
     var body = $scope.newTestForm.values;
     if(route.restRoute.indexOf(":") > -1){
-
+      var referenceIds = resolveReferenceIds($scope.newTestForm.values, route.params);
       var url = route.restRoute.split('/');
       for(var i = 0; i < url.length; i++){
         if(url[i].indexOf(":") > -1){
-          var key = url[i].slice(1);
-          url[i] = body[key];
-          delete body[key]; 
+          delete $scope.newTestForm.values[ referenceIds[url[i]].valuesKey ];
+          url[i] = referenceIds[url[i]]._id;
         } 
       }
       url = url.join('/');
@@ -289,6 +292,17 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
     }else{
       return {url:route.restRoute, body:body};
     }
+  }
+  function resolveReferenceIds(values, params){
+    var referenceIds = {};
+    for(var x in params){
+      if(params[x].type.indexOf(':') > -1){
+        referenceIds[':' + x] = {};
+        referenceIds[':' + x]._id = values[x] || '';
+        referenceIds[':' + x].valuesKey = x;
+      }
+    }
+    return referenceIds
   }
 
   //returns "?params=value" or ""
