@@ -73,6 +73,9 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
     if(route.hasOwnProperty('tests')){
       //tests already on route object
       $scope.activeTests = route.tests;
+      for(var i = 0;i < $scope.activeTests.length; i++){
+        $scope.activeTests[i].itShouldEdit = $scope.activeTests[i].itShould || '';
+      }
       return;
     }else{
       //no tests get from server
@@ -80,6 +83,9 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
       .then(function(response){
         route.tests = response.data;
         $scope.activeTests = route.tests;
+        for(var i = 0;i < $scope.activeTests.length; i++){
+          $scope.activeTests[i].itShouldEdit = $scope.activeTests[i].itShould || '';
+        }
       }, function(err){
         console.error(err);
       });
@@ -198,12 +204,22 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
   
   //add tests to activeTests list, set all views to false
   $scope.finishCreatingTests = function(){
-    for(var i = 0; i < $scope.createdTests.length; i++){
-      $scope.activeTests.push($scope.createdTests[i]);
-    }
-    $scope.showCreated = false;
-    $scope.showCreate = false;
-    $scope.showTests = false;
+    $scope.showFinishedMessage = true;
+    $timeout(function(){
+      for(var i = 0; i < $scope.createdTests.length; i++){
+        if($scope.createdTests[i].preserve){
+          $scope.activeTests.push($scope.createdTests[i]);
+        }else{
+          $scope.deleteUnitTest($scope.createdTests[i])
+        }
+      }
+      $scope.showFinishedMessage = false;
+      $scope.showCreated = false;
+      $scope.showCreatedTests = false;
+      $scope.showCreate = false;
+      $scope.showTests = false;
+      $scope.newTestForm.values = {};
+    },1000)
   }
 
   /* BUILDING/SPOOFING HTTP REQUEST CODE STUFF */

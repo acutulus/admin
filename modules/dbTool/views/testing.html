@@ -73,17 +73,22 @@
 							keps-errors="newTestForm.errors"
 							keps-model="newTestForm.values">
 						</keps-form>
-					<div ng-show="showCreatedTests" style="max-height: 500px;overflow:scroll;margin:10px;">
-						<h3>Created {{createdTests.length}} Test{{createdTests.length === 1 ? '' : 's'}}</h3> 
-						<div class="list-group" ng-repeat="test in createdTests">
-							<div class="list-group-item">
+					<div ng-show="showCreatedTests" >
+						<h3>Created {{createdTests.length}} Test{{createdTests.length === 1 ? '' : 's'}}</h3>
+						<h4>Review Tests:
+							<button class="btn btn-warning" ng-click="finishCreatingTests()" ng-show="showCreatedTests">Finished</button>
+						</h4>
+						<div class="alert alert-success" ng-show="showFinishedMessage">Test Create Completed</div>
+						<div class="list-group"  style="max-height: 500px;overflow:scroll;margin:10px;">
+							<div class="list-group-item" ng-repeat="test in createdTests">
+								<div class="checkbox">
+									<label><input type="checkbox" ng-model="test.preserve">Save This Test</label>
+								</div>
+								
+
 								<h4>
-									{{test.title}} - {{test.itShould}}
-									<button style="float:right;" class="btn btn-danger" ng-click="deleteUnitTest(test)">
-										Delete Test
-									</button>
+									{{$index}}. {{test.title}} {{test.itShould}}
 								</h4>
-								<div class="alert alert-success" ng-show="test.msgs.deleted">Test Deleted</div>
 								<div class="alert alert-success" ng-show="test.msgs.updated">Test Updated</div>
 								<div class="alert alert-danger" ng-show="test.msgs.error">{{test.msgs.error}}</div>
 
@@ -125,7 +130,7 @@
 							</div>
 						</div>
 					</div>
-					<button class="btn btn-warning" ng-click="finishCreatingTests()" ng-show="showCreatedTests">Finished</button>
+
 					<button class="btn btn-success" ng-click="buildUnitTest(activeRoute)" ng-show="!showCreatedTests">
 						Create Test
 					</button>
