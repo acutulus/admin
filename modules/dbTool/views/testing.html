@@ -62,17 +62,32 @@
 						<div class="alert alert-success" ng-show="test.msgs.deleted">Test Deleted</div>
 						<br>
 						<h5>{{test.testResults.status}} {{test.testResults.data}}</h5>
-						<code style="color:blue">{{test.testResults.displayCode}}</code>
+						<code style="color:blue">{{test.testResults.displayCode | json}}</code>
 						<hr>
 					</div>
 				</div>
 				<div ng-show="showCreate">
-					<h3>Create new test</h3>
-						<keps-form
-							keps-data="newTestForm.schema"
-							keps-errors="newTestForm.errors"
-							keps-model="newTestForm.values">
-						</keps-form>
+					<div style="padding-bottom:30px;">
+						<div class="col-xs-5">
+							<span style="font-size:20px;font-weight:300;">Create new test</span>
+						</div>
+						<div class="col-xs-4">
+							<p style="float:right;vertical-align:center;">Run Test As User:</p>
+						</div>
+						<div class="col-xs-3">
+							<select style="float:left;" class="form-control" ng-model="testAsUser">
+								<option ng-repeat="user in users" value="{{user._id}}">{{user.name}}</option>
+							</select>
+						</div>
+						<hr>
+					</div>
+					<!-- Input Form -->
+					<keps-form
+						keps-data="newTestForm.schema"
+						keps-errors="newTestForm.errors"
+						keps-model="newTestForm.values">
+					</keps-form>
+					<hr>
 					<div ng-show="showCreatedTests" >
 						<h3>Created {{createdTests.length}} Test{{createdTests.length === 1 ? '' : 's'}}</h3>
 						<h4>Review Tests:

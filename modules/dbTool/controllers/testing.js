@@ -14,11 +14,25 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
   	$scope.loading = {error:err};
   });
 	
+  $http.get($scope.apiHost + "/api/v1/graphqls?q={users{_id,roles,displayName}}")
+  .then(function(users){
+    $scope.users = [{name:'Run As Admin', _id:false}];
+    var users = users.data.data.users;
+    for(var i = 0; i < users.length; i++){
+      $scope.users.push({ _id : users[i]._id, 
+                          name: users[i].displayName + ' : ' + users[i].roles.join(',')
+                        });
+    }
+    checkLoaded();
+  }, function(err){
+    console.error(err);
+    $scope.loading = {error:err};
+  });
   /*
-    Takes controller object from server and adds to scope -controller array, route object, tests object
-    e.g.  controllers = ["user","business"], 
-          routes = { user:['get.user','delete.user'], business:['get.business'] }
-          tests = {'get.user':[{test1},{test2}], 'delete.user':[{test1},{test2}]}
+    Takes controller object from server and adds to scope - controllers, routes
+
+    e.g.  $scope.controllers = [{name:"user"},{name:"business"}], 
+          $scope.routes = { user:{routes:[{name:'get.user', route:{}}]}
   */
   var dontDisplayRoutes = ['auth','email','device','graphql','oauth','pushNotification','trackedEvent','user','userEvent','userToken','unitTest'];
   function controllerDisplayObject(data){
@@ -91,6 +105,7 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
       });
     }
   }
+
   $scope.createTest = function(){
     $scope.newTestForm = {
       errors:{},
@@ -100,6 +115,7 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
     $scope.showCreate = true;
     $scope.showTests = false;
   }
+
   $scope.runTest = function(test){
     $http.get($scope.apiHost + "/api/v1/unitTests/" + test._id + "/runTest")
     .then(function(success){
@@ -218,21 +234,21 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
       $scope.showCreatedTests = false;
       $scope.showCreate = false;
       $scope.showTests = false;
-      $scope.newTestForm.values = {};
+
     },1000)
   }
 
-  /* BUILDING/SPOOFING HTTP REQUEST CODE STUFF */
+  /* Constructs correct HTTP requests using input form and route information */
   function testRoute(route, cb){
     switch(route.method){
-      case('get'): runGetRequest(route, cb);
-                    break;
-      case('post'): runPostRequest(route, cb);
-                    break;
-      case('put'): runPutRequest(route, cb);
-                    break;
+      case('get'):    runGetRequest(route, cb);
+                      break;
+      case('post'):   runPostRequest(route, cb);
+                      break;
+      case('put'):    runPutRequest(route, cb);
+                      break;
       case('delete'): runDeleteRequest(route, cb);
-                    break;
+                      break;
     }
   };     
 
@@ -253,7 +269,9 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
   */
   function runPostRequest(route, cb){
     var request = replaceIdInRoute(route);
-   
+    if($scope.testAsUser){
+      request.body.testing_user = $scope.testAsUser 
+    }
     $http.post($scope.apiHost + request.url, request.body)
     .then(function(success){
       //displayRequestResults(route, success);
@@ -266,7 +284,10 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
 
   function runPutRequest(route, cb){
     var request = replaceIdInRoute(route);
-
+    if($scope.testAsUser){
+      request.testing_user = $scope.testAsUser 
+    }
+    
     $http.put($scope.apiHost + request.url, request.body)
     .then(function(success){
       //displayRequestResults(route,success);
@@ -332,10 +353,18 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
     }else{
       querystring = "";
     }
+    if($scope.testAsUser){
+      if(querystring.length > 1){
+        querystring += "&testing_user=" + $scope.testAsUser;
+      }else{
+        querystring = "?testing_user=" + $scope.testAsUser;
+      }
+    }
     return querystring;
   }
 
   function buildRequestBody(request){
+
     if(request.body){
 
     }else{
@@ -344,7 +373,7 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
   }
 
 	function checkLoaded(){
-		if($scope.controllers){
+		if($scope.controllers && $scope.users){
 			$scope.loading = {completed:true};
 		}
 	}
