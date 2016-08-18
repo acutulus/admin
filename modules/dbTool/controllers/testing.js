@@ -19,9 +19,13 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
     $scope.users = [{name:'Run As Admin', _id:false}];
     var users = users.data.data.users;
     for(var i = 0; i < users.length; i++){
-      $scope.users.push({ _id : users[i]._id, 
-                          name: users[i].displayName + ' : ' + users[i].roles.join(',')
-                        });
+      if(users[i].roles){
+        $scope.users.push({ _id : users[i]._id, 
+                            name: users[i].displayName + ' : ' + users[i].roles.join(',')
+                          });
+      }else{
+        $scope.users.push({_id:users[i]._id, name:users[i].displayName});
+      }
     }
     checkLoaded();
   }, function(err){
