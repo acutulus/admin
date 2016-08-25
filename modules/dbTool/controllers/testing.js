@@ -289,7 +289,7 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
   function runPutRequest(route, cb){
     var request = replaceIdInRoute(route);
     if($scope.testAsUser){
-      request.testing_user = $scope.testAsUser 
+      request.body.testing_user = $scope.testAsUser 
     }
     
     $http.put($scope.apiHost + request.url, request.body)

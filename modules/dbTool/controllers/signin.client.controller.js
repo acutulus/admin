@@ -61,8 +61,12 @@ angular.module('dbtools').controller('SignInController', ['$scope', '$http', '$l
 		};
 
 		$scope.setHost = function() {
-			localStorage.kepsApiPrefix = $scope.host;
-			location.reload();
+			if($scope.host.indexOf('http') > -1){
+				localStorage.kepsApiPrefix = $scope.host;
+				location.reload();
+			}else{
+				$scope.hostConfigMsg = "Missing http or https from hostname";
+			}
 		};
 
 		$scope.signout = function(){

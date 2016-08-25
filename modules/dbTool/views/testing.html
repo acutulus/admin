@@ -121,11 +121,13 @@
 								<hr>
 								<h4>Output:</h4>
 								<div ng-if="test.output.err">
-									<span style="color:red" ng-show="test.output.err[0].status !== 200 && test.output.err[0].status !== 304">{{test.output.err[0].status}}</span>
-									<p ng-repeat="err in test.output.err">
-										{{err.message}}
+									<span style="color:red">{{test.output.err.status}}</span>
+									<p>
+										{{test.output.err.message}}
 									</p>
 								</div>
+								<code style="color:red">{{test.output.err | json}}</code>
+
 								<div ng-if="!test.output.err">
 									<span style="color:green">200</span>	
 								</div>
@@ -138,6 +140,8 @@
 										</li>
 									</ul>
 								</div>
+								<code style="color:blue">{{test.output.resp.data | json}}</code>
+
 								<!-- STANDARD ROUTE OUTPUT -->
 								<div ng-if="!test.output.resp.data" ng-repeat="(name,data) in test.output.resp">
 									<h5>{{name}}:<span style="font-size:12px;">{{data}}</span></h5>
