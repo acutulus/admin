@@ -6,19 +6,19 @@
 				<label class="{{kepsLabelClass}}">{{kepsType.label }}:</label>
 				<div class="list-group">
 					<div class="list-group-item" ng-show="data.value.length > 0">
-						<div ng-repeat="item in data.value">
+						<div ng-repeat="item in data.value track by $index">
 							<div style="width:5%;margin-left:5%;display:inline-block;">
 								<span>{{($index+1) + '.'}}</span>
 							</div>
 							<div style="width:79%;display:inline-block;">
-								<input-item ng-repeat ="(key,val) in kepsType.subSchema"
-								keps-name="key"
+							<input-item
+								keps-name="$index"
 								keps-label="''"
 								keps-group-class="form-horizontal"
-								keps-type="val"
-								keps-model="item[key]"
-								keps-framework="kepsFramework"/>
+								keps-type="kepsType.subSchema.type"
+								keps-model="data.value[$index]"/>
 							</div>
+
 							<div style="width: 3%;display: inline-block;margin-right: 7%;line-height: 0px;">
 								<a href="" style="float:right;" ng-click="removeArrayItem($index)">
 									<span style="color:red;margin-left:15px;" class="glyphicon glyphicon-remove"></span>

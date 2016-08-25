@@ -1,0 +1,42 @@
+<div class="form-group {{kepsGroupClass}}" style="margin-bottom:10px;">
+	<span ng-show="kepsType.required" style="color:red;">*</span>	
+	<label class="{{kepsLabelClass}}">{{kepsType.label}}</label>
+	<br>
+	<div class="col-xs-4">
+		<select	ng-model="data.time.hour"
+				class="form-control {{kepsInputClass}}" 
+				placeholder="{{kepsType.placeholder}}"
+				ng-keyup="errorChecking()"
+				ng-readonly="kepsReadonly"
+				ng-change="timeToMs();">
+			<option ng-repeat="time in data.selectHours" value="{{time}}">{{time}}</option>
+		</select>
+	</div>
+	<div class="col-xs-4">
+		<select	ng-model="data.time.min"
+				class="form-control {{kepsInputClass}}" 
+				placeholder="{{kepsType.placeholder}}"
+				ng-keyup="errorChecking()"
+				ng-readonly="kepsReadonly"
+				ng-change="timeToMs();">
+			<option ng-repeat="time in data.selectMinutes" value="{{time}}">{{time}}</option>
+		</select>
+	</div>
+	<div class="col-xs-4">
+		<select ng-model="data.time.sign"
+				class="form-control {{kepsInputClass}}" 
+				placeholder="{{kepsType.placeholder}}"
+				ng-keyup="errorChecking()"
+				ng-readonly="kepsReadonly"
+				ng-change="timeToMs();">
+			<option value="AM">AM</option>
+			<option value="PM">PM</option>
+		</select>
+	</div>
+	<span class="help-block"  ng-if="kepsType.instructions">
+		{{kepsType.instructions}}
+	</span>
+	<span style="color:red;margin-left:20px;" ng-show="errorMsg">
+		{{errorMsg}}
+	</span>
+</div>

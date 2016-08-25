@@ -111,6 +111,7 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
   }
 
   $scope.createTest = function(){
+    delete $scope.testAsUser;
     $scope.newTestForm = {
       errors:{},
       values:{},
@@ -319,6 +320,11 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
   //replace /:model with id in route e.g. /api/v1/candidates/:candidate >> /api/v1/candidates/123sadasdf23
   function replaceIdInRoute(route){
     var body = $scope.newTestForm.values;
+    for(var x in body){
+      if(body[x] === undefined){
+        delete body[x];
+      }
+    }
     if(route.restRoute.indexOf(":") > -1){
       var referenceIds = resolveReferenceIds($scope.newTestForm.values, route.params);
       var url = route.restRoute.split('/');
