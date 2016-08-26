@@ -38,6 +38,7 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
     e.g.  $scope.controllers = [{name:"user"},{name:"business"}], 
           $scope.routes = { user:{routes:[{name:'get.user', route:{}}]}
   */
+  /* PREPARING DISPLAY DATA */
   var dontDisplayRoutes = ['auth','email','device','graphql','oauth','pushNotification','trackedEvent','user','userEvent','userToken','unitTest'];
   function controllerDisplayObject(data){
     var controllers = [];
@@ -110,17 +111,7 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
     }
   }
 
-  $scope.createTest = function(){
-    delete $scope.testAsUser;
-    $scope.newTestForm = {
-      errors:{},
-      values:{},
-      schema:$scope.activeRoute.params
-    };
-    $scope.showCreate = true;
-    $scope.showTests = false;
-  }
-
+  /* RUNNING TESTS */
   $scope.runTest = function(test){
     $http.get($scope.apiHost + "/api/v1/unitTests/" + test._id + "/runTest")
     .then(function(success){
@@ -135,14 +126,25 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
     });
   }
   
+  /* CREATING NEW TESTS */  
+  $scope.createTest = function(){
+    delete $scope.testAsUser;
+    $scope.newTestForm = {
+      errors:{},
+      values:{},
+      schema:$scope.activeRoute.params
+    };
+    $scope.showCreate = true;
+    $scope.showTests = false;
+  }
   //build unit tests associated with routes
-  $scope.buildUnitTest = function(route){
+  $scope.buildUnitTest = function(route, cb){
     if($scope.apiHost.indexOf('localhost') > -1){
       var testStart = new Date().getTime();
       $http.get($scope.apiHost + '/admin/startRecordingAll')
       .then(function(response){
         testRoute(route, function(){
-          finishBuildTests(testStart);         
+          finishBuildTests(testStart, cb);         
         });//end testRoute
       }, function(err){
         finishBuildTests(testStart);
@@ -151,16 +153,19 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
     }
   }
 
-  function finishBuildTests(testStart){
+  function finishBuildTests(testStart, cb){
     $http.get($scope.apiHost + '/admin/stopRecordingAll')
     .then(function(response){
       $http.get($scope.apiHost + "/api/v1/unitTests/recent?time=" + testStart)
       .then(function(tests){
-
-        $scope.showCreatedTests = true;
-        $scope.createdTests = tests.data;
-        for(var i = 0; i < $scope.createdTests.length; i++){
-          $scope.createdTests[i].output = JSON.parse($scope.createdTests[i].output);
+        if(cb){
+          cb(tests);
+        }else{
+          $scope.showCreatedTests = true;
+          $scope.createdTests = tests.data;
+          for(var i = 0; i < $scope.createdTests.length; i++){
+            $scope.createdTests[i].output = JSON.parse($scope.createdTests[i].output);
+          }
         }
       }, function(err){
         console.error(err);
@@ -170,6 +175,25 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
     }); //end stop recording
   }
 
+  //add tests to activeTests list, set all views to false
+  $scope.finishCreatingTests = function(){
+    $scope.showFinishedMessage = true;
+    $timeout(function(){
+      for(var i = 0; i < $scope.createdTests.length; i++){
+        if($scope.createdTests[i].preserve){
+          $scope.activeTests.push($scope.createdTests[i]);
+        }else{
+          $scope.deleteUnitTest($scope.createdTests[i])
+        }
+      }
+      $scope.showFinishedMessage = false;
+      $scope.showCreated = false;
+      $scope.showCreatedTests = false;
+      $scope.showCreate = false;
+      $scope.showTests = false;
+
+    },1000)
+  }
   //add itShould field to a unitTest
   $scope.updateUnitTest = function(test){
     if(!test.itShouldEdit){
@@ -192,6 +216,7 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
     }
   }
 
+  /* DELETING TESTS */ 
   //remove unit test by _id and splice from its test list
   $scope.deleteUnitTest = function(test, activeTest){
     $http.delete($scope.apiHost + "/api/v1/unitTests/" + test._id)
@@ -223,26 +248,59 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
     });  
   }
   
-  //add tests to activeTests list, set all views to false
-  $scope.finishCreatingTests = function(){
-    $scope.showFinishedMessage = true;
-    $timeout(function(){
-      for(var i = 0; i < $scope.createdTests.length; i++){
-        if($scope.createdTests[i].preserve){
-          $scope.activeTests.push($scope.createdTests[i]);
-        }else{
-          $scope.deleteUnitTest($scope.createdTests[i])
+  /* Rebuild Tests */
+  $scope.rebuildTest = function(test, index){
+    var testUser = JSON.parse(test.input.client);
+    testUser = testUser.req.user._id;
+    var testForm = JSON.parse(test.input.data);
+    if(testForm.hasOwnProperty('testing_user')){
+      delete testForm['testing_user'];
+    }
+    testForm = typeCastStrings(testForm);
+    if(testUser && testForm){
+      $scope.testAsUser = testUser
+      $scope.newTestForm = {};
+      $scope.newTestForm.values = testForm;
+      //call build test flow
+      $scope.buildUnitTest($scope.activeRoute, function(createdTests){
+
+        // clean up by deleting all extra tests and old unit test, 
+        // push new test into list
+        createdTests = createdTests.data;
+        for(var i = 0; i < createdTests.length; i++){
+          if(createdTests[i].route !== test.route){
+            $scope.deleteUnitTest(createdTests[i]);
+          }else if(createdTests[i].route === test.route){
+            $scope.deleteUnitTest(test, true);
+            $scope.activeTests.push(createdTests[i]);
+          }
         }
-      }
-      $scope.showFinishedMessage = false;
-      $scope.showCreated = false;
-      $scope.showCreatedTests = false;
-      $scope.showCreate = false;
-      $scope.showTests = false;
 
-    },1000)
+      });
+    }
   }
-
+  /*test.input field contains all values as strings, 
+    converts them back to original types*/
+  function typeCastStrings(testForm){
+    var schema = $scope.activeRoute.params;
+    for(var x in testForm){
+      if(schema.hasOwnProperty(x)){
+        testForm[x] = convertType(testForm[x], schema[x].type);
+      }
+    }
+    return testForm;
+  }
+  function convertType(str, type){
+    if(type.toLowerCase() === "number"){
+      return Number(str);
+    }else if(type.toLowerCase() === "boolean"){
+      return (str === "true") ? true : false;
+    }else if(type.toLowerCase() === "object"){
+      return JSON.parse(str);
+    }else{
+      return str;
+    }
+  }
   /* Constructs correct HTTP requests using input form and route information */
   function testRoute(route, cb){
     switch(route.method){

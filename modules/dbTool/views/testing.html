@@ -43,6 +43,7 @@
 			</div> <!-- End Sidebar/list -->
 
 			<div class="col-md-8">
+				<!-- Run Tests Area -->
 				<h4> Run Tests {{activeRoute.name}}</h4>
 				<p>{{activeRoute.description}}</p>
 				<span ng-show="activeTests">
@@ -55,7 +56,9 @@
 					<div class="" ng-repeat="test in activeTests">
 						<h5>Test: {{test.name}} {{test.itShould ? '- ' + test.itShould : ''}}</h5>
 						<button class="btn btn-info" ng-click="runTest(test)">Run {{test.name}}</button>
+						
 						<button class="btn btn-danger" style="float:right;display:inline-block;" ng-click="deleteUnitTest(test, true)">Delete Test</button>
+						<button class="btn btn-warning" style="float:right;display:inline-block;margin-right:10px;" ng-click="rebuildTest(test, $index)" title="Delete This test and rerun the calls used to create it.">Rebuild Test</button>
 						<div class="input-group" style="margin-top:20px;">
 						    <input type="text" class="form-control" ng-model="test.itShouldEdit" placeholder="It Should...."/>
 					        <span class="input-group-btn">
@@ -69,6 +72,9 @@
 						<hr>
 					</div>
 				</div>
+				<!-- End Show Tests -->
+
+				<!-- Create Tests Area -->
 				<div ng-show="showCreate">
 					<div style="padding-bottom:30px;">
 						<div class="col-xs-5">
