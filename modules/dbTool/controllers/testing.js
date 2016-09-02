@@ -16,7 +16,7 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
 	
   $http.get($scope.apiHost + "/api/v1/graphqls?q={users{_id,roles,displayName}}")
   .then(function(users){
-    $scope.users = [{name:'Run As Admin', _id:false}];
+    $scope.users = [{name:'Run As Admin', _id:''}];
     var users = users.data.data.users;
     for(var i = 0; i < users.length; i++){
       if(users[i].roles){
@@ -50,19 +50,24 @@ angular.module('dbtools').controller('TestingCtrl', ['$scope', '$http', "$timeou
         //add to controllers and routes array
         controllers.push({name:x});
         for(var k in data[x].functions){
-          if(routes[x] && typeof routes[x] === 'object'){
-            routes[x].routes.push({
+          //dont display internal routes
+          if(data[x].functions[k].hasOwnProperty('internal') && data[x].functions[k].internal){
+
+          }else{
+            if(routes[x] && typeof routes[x] === 'object'){
+              routes[x].routes.push({
+                                      name:k, 
+                                      route:addInstructionsToRoute(data[x].functions[k])
+                                    });
+            }else{
+              routes[x] = {
+                            name:x,
+                            routes:[{
                                     name:k, 
                                     route:addInstructionsToRoute(data[x].functions[k])
-                                  });
-          }else{
-            routes[x] = {
-                          name:x,
-                          routes:[{
-                                  name:k, 
-                                  route:addInstructionsToRoute(data[x].functions[k])
-                                  }]
-                        };
+                                    }]
+                          };
+            }
           }
         }
       }
