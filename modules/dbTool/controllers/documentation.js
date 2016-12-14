@@ -4,12 +4,13 @@ angular.module('dbtools').controller('DocumentationCtrl', ['$scope', '$http', '$
   function($scope, $http, $anchorScroll, $timeout, $sce){
       $scope.msgs = {loading:true};
 
+      /*
       $http.get($scope.apiHost + '/admin/documentation')
         .then(function(response){
           $scope.documentationhtml = $sce.trustAsHtml(response.data);
           $scope.msgs.loading = false;
         });
-      /*
+      */
       $http.get($scope.apiHost + '/admin/restRoutes')
       .then(function(response){
         $scope.msgs = {};
@@ -20,7 +21,7 @@ angular.module('dbtools').controller('DocumentationCtrl', ['$scope', '$http', '$
         }
       });
 
-      $http.get($scope.apiHost + '/admin/models')
+      $http.get($scope.apiHost + '/api/models')
       .then(function(response){
         $scope.models = response.data;
         addTestParams();
@@ -28,22 +29,21 @@ angular.module('dbtools').controller('DocumentationCtrl', ['$scope', '$http', '$
           $scope.buildDiagrams();          
         }
       }); 
-      */
       
-      var dontDisplayModels = ['unitTest','pushNotification','oauth','userToken','userEvent','trackedEvent','page','device','copy','email']
+      var dontDisplayModels = ['unitTest','pushNotification','oauth','userToken','userEvent','trackedEvent','page','device','copy','email'];
       $scope.doNotDisplayModels = function(name){
         return dontDisplayModels.indexOf(name) > -1;
-      }
+      };
       
-      var dontDisplayFields = ['_createdAt', '_v', '_id', '_updatedAt', '_seed']
+      var dontDisplayFields = ['_createdAt', '_v', '_id', '_updatedAt', '_seed'];
       $scope.doNotDisplayFields = function(name){
-        return dontDisplayFields.indexOf(name) > -1
-      } 
+        return dontDisplayFields.indexOf(name) > -1;
+      } ;
       
       var dontDisplayRoutes = ['auth','email','device','graphql','oauth','pushNotification','trackedEvent','user','userEvent','userToken','unitTest'];
       $scope.doNotDisplayRoutes = function(name){
         return dontDisplayRoutes.indexOf(name) > -1;
-      }
+      };
 
       $scope.openAPIExplorer = function(route) {
 
