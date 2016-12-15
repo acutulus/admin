@@ -175,7 +175,7 @@ var relations = [
     new uml.Composition({ source: { id: classes.person.id }, target: { id: classes.bloodgroup.id }})
 ];
 */
-_.each(relations, function(r) { graph.addCell(r); });
+//_.each(relations, function(r) { graph.addCell(r); });
 
 // Here is the real deal. Listen on cell:pointerup and link to an element found below.
 paper.on('cell:pointerup', function(cellView, evt, x, y) {

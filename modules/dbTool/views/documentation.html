@@ -150,17 +150,19 @@
               </tr>
             </tbody>
           </table>
-          <button type="button" class="btn btn-default btn-xs" ng-click="displayJSON(model)" style="margin-bottom:10px;">
-            {{model.displayTable ? 'Hide JSON' : 'Display as raw JSON'}}
-          </button>
-          <pre ng-show="model.displayTable">{{model.jsonDisplayData}}</pre>
+          <div class="no-print">
+            <button type="button" class="btn btn-default btn-xs" ng-click="displayJSON(model)" style="margin-bottom:10px;">
+              {{model.displayTable ? 'Hide JSON' : 'Display as raw JSON'}}
+            </button>
+            <pre ng-show="model.displayTable">{{model.jsonDisplayData}}</pre>
+          </div>
         </div>
       </div>
       <!-- END MODELS -->
 
       <div ng-repeat="(name,controller) in controllers" style="border-top:1px solid #333;">
         <div ng-if="!doNotDisplayRoutes(name)" ng-repeat="item in controller.functions" class="height-fix" >
-          <div class="docs-content col-lg-7 col-md-12 col-sm-12" id="{{::item.restRoute}}">
+          <div class="docs-content print-full-width col-lg-7 col-md-12 col-sm-12" id="{{::item.restRoute}}">
             <h4 style="color:#bbb;font-weight:300;">{{::item.name}}</h4>
             <h3>
               <span class="label label-primary" ng-class="::{'label-success' : item.method === 'get', 'label-primary': item.method === 'post', 'label-danger': item.method === 'delete', 'label-info': item.method === 'put'}">{{::item.method}}</span>
